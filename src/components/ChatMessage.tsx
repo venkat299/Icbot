@@ -1,13 +1,25 @@
 import { motion } from 'motion/react';
+import { InteractiveQuestion, Question } from './InteractiveQuestion';
 
 interface ChatMessageProps {
   message: string;
   isUser: boolean;
   timestamp: string;
   isLatestAI?: boolean;
+  question?: Question;
+  onQuestionSubmit?: (answer: any) => void;
+  questionSubmitted?: boolean;
 }
 
-export function ChatMessage({ message, isUser, timestamp, isLatestAI = false }: ChatMessageProps) {
+export function ChatMessage({ 
+  message, 
+  isUser, 
+  timestamp, 
+  isLatestAI = false,
+  question,
+  onQuestionSubmit,
+  questionSubmitted = false
+}: ChatMessageProps) {
   // Make previous messages smaller and less prominent
   const isPreviousMessage = !isLatestAI && !isUser;
   
@@ -50,6 +62,15 @@ export function ChatMessage({ message, isUser, timestamp, isLatestAI = false }: 
         } ${isLatestAI ? 'text-xs' : 'text-[10px]'}`}>
           {timestamp}
         </span>
+
+        {/* Interactive Question Component */}
+        {!isUser && question && onQuestionSubmit && (
+          <InteractiveQuestion
+            question={question}
+            onSubmit={onQuestionSubmit}
+            isSubmitted={questionSubmitted}
+          />
+        )}
       </div>
     </motion.div>
   );

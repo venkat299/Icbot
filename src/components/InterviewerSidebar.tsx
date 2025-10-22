@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
 import { AlertCircle, TrendingUp } from 'lucide-react';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './ui/resizable';
 
 interface CriteriaItem {
   name: string;
@@ -45,7 +46,7 @@ export function InterviewerSidebar({
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
       className="
-        w-80 h-full
+        h-full w-full
         backdrop-blur-xl bg-white/90 border-l border-gray-200/50
         shadow-[-8px_0_32px_rgba(0,0,0,0.08)]
         flex flex-col
@@ -55,13 +56,13 @@ export function InterviewerSidebar({
         before:pointer-events-none
       "
     >
-      <div className="p-6 border-b border-gray-200/50">
+      <div className="p-6 border-b border-gray-200/50 shrink-0">
         <h3 className="text-gray-900 mb-1">Interviewer View</h3>
         <p className="text-xs text-gray-500">Live evaluation data</p>
       </div>
 
-      <ScrollArea className="flex-1">
-        <div className="p-6 space-y-6">
+      <ScrollArea className="flex-1 h-full">
+        <div className="p-6 space-y-6 pb-8">
           {/* Overall Score */}
           <div className="
             backdrop-blur-xl bg-gradient-to-br from-white to-gray-50/50
