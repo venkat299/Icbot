@@ -28,16 +28,16 @@ export function InterviewerSidebar({
   redFlags
 }: InterviewerSidebarProps) {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+    if (score >= 80) return 'text-gray-900';
+    if (score >= 60) return 'text-gray-700';
+    return 'text-gray-600';
   };
 
   const getLevelColor = (level: string) => {
     const num = parseInt(level);
-    if (num >= 4) return 'bg-green-100 text-green-700 border-green-200';
-    if (num >= 3) return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-    return 'bg-red-100 text-red-700 border-red-200';
+    if (num >= 4) return 'bg-gray-200 text-gray-800 border-gray-300';
+    if (num >= 3) return 'bg-gray-100 text-gray-700 border-gray-200';
+    return 'bg-gray-50 text-gray-600 border-gray-200';
   };
 
   return (
@@ -87,9 +87,9 @@ export function InterviewerSidebar({
                   animate={{ width: `${overallScore}%` }}
                   transition={{ duration: 0.8, ease: 'easeOut' }}
                   className={`h-full rounded-full ${
-                    overallScore >= 80 ? 'bg-green-500' :
-                    overallScore >= 60 ? 'bg-yellow-500' :
-                    'bg-red-500'
+                    overallScore >= 80 ? 'bg-gradient-to-r from-gray-600 to-gray-700' :
+                    overallScore >= 60 ? 'bg-gradient-to-r from-gray-500 to-gray-600' :
+                    'bg-gradient-to-r from-gray-400 to-gray-500'
                   }`}
                 />
               </div>
@@ -100,13 +100,13 @@ export function InterviewerSidebar({
           <div className="space-y-3">
             <div>
               <span className="text-xs text-gray-500 block mb-1">Current Competency</span>
-              <Badge className="bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-100">
+              <Badge className="bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-100">
                 {currentCompetency}
               </Badge>
             </div>
             <div>
               <span className="text-xs text-gray-500 block mb-1">Interview Style</span>
-              <Badge className="bg-purple-100 text-purple-700 border-purple-200 hover:bg-purple-100">
+              <Badge className="bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-100">
                 {interviewStyle}
               </Badge>
             </div>
@@ -168,8 +168,8 @@ export function InterviewerSidebar({
                 {redFlags.length > 0 && (
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <AlertCircle className="w-3.5 h-3.5 text-red-500" />
-                      <span className="text-xs text-red-600">Red Flags</span>
+                      <AlertCircle className="w-3.5 h-3.5 text-gray-600" />
+                      <span className="text-xs text-gray-700">Red Flags</span>
                     </div>
                     <div className="space-y-2">
                       {redFlags.map((flag, index) => (
@@ -179,11 +179,11 @@ export function InterviewerSidebar({
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
                           className="
-                            text-xs text-red-700 bg-red-50/80 rounded-lg p-2.5
-                            border border-red-100 flex items-start gap-2
+                            text-xs text-gray-700 bg-gray-50/80 rounded-lg p-2.5
+                            border border-gray-200 flex items-start gap-2
                           "
                         >
-                          <span className="text-red-400 mt-0.5">•</span>
+                          <span className="text-gray-400 mt-0.5">•</span>
                           <span className="flex-1">{flag}</span>
                         </motion.div>
                       ))}
