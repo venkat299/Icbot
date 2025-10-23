@@ -7,26 +7,11 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Loader2, CheckCircle2, Sparkles, FileText } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
-import { DummyJD_Placeholder } from '../test';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000'; // Resolves backend base URL.
 
 interface Competency {
   id: string;
   name: string;
   interviewStyle: string;
-  rationale?: string;
-}
-
-interface LlmCompetency {
-  competency_id: string;
-  title: string;
-  style_id: string;
-  rationale: string;
-}
-
-interface CompetencyPlanResponse {
-  competencies: LlmCompetency[];
 }
 
 interface SetupPageProps {
@@ -34,15 +19,220 @@ interface SetupPageProps {
 }
 
 export function SetupPage({ onStartInterview }: SetupPageProps) {
-  const [jobDescription, setJobDescription] = useState(DummyJD_Placeholder);
+  const [jobDescription, setJobDescription] = useState('');
   const [resume, setResume] = useState('');
+  const [selectedJobId, setSelectedJobId] = useState('');
+  const [selectedResumeId, setSelectedResumeId] = useState('');
   const [competencies, setCompetencies] = useState<Competency[]>([]);
   const [isGeneratingCompetency, setIsGeneratingCompetency] = useState(false);
   const [competencyGenerated, setCompetencyGenerated] = useState(false);
-  const [competencyError, setCompetencyError] = useState<string | null>(null);
   const [isGeneratingRubric, setIsGeneratingRubric] = useState(false);
   const [rubricGenerated, setRubricGenerated] = useState(false);
   const [isRubricDialogOpen, setIsRubricDialogOpen] = useState(false);
+
+  // Predefined job descriptions
+  const jobDescriptions = [
+    {
+      id: 'swe',
+      title: 'Senior Software Engineer',
+      description: `Senior Software Engineer - Full Stack
+
+We are seeking an experienced Senior Software Engineer to join our dynamic team. The ideal candidate will have:
+
+Requirements:
+• 5+ years of experience in software development
+• Strong proficiency in JavaScript/TypeScript, React, Node.js
+• Experience with cloud platforms (AWS, Azure, or GCP)
+• Solid understanding of microservices architecture
+• Experience with CI/CD pipelines and DevOps practices
+• Strong problem-solving and analytical skills
+• Excellent communication and teamwork abilities
+
+Responsibilities:
+• Design and implement scalable web applications
+• Lead technical discussions and code reviews
+• Mentor junior developers
+• Collaborate with product and design teams
+• Contribute to architectural decisions`
+    },
+    {
+      id: 'pm',
+      title: 'Product Manager',
+      description: `Product Manager - SaaS Platform
+
+Join our product team to drive strategy and execution for our enterprise SaaS platform.
+
+Requirements:
+• 3+ years of product management experience
+• Strong analytical and data-driven decision making
+• Experience with B2B SaaS products
+• Excellent stakeholder management skills
+• Understanding of Agile methodologies
+• Technical background or strong technical acumen
+
+Responsibilities:
+• Define product roadmap and strategy
+• Gather and prioritize product requirements
+• Work closely with engineering, design, and sales teams
+• Analyze metrics and user feedback
+• Conduct market research and competitive analysis`
+    },
+    {
+      id: 'ds',
+      title: 'Data Scientist',
+      description: `Data Scientist - Machine Learning
+
+We're looking for a talented Data Scientist to help us leverage data for business insights.
+
+Requirements:
+• Master's or PhD in Computer Science, Statistics, or related field
+• 3+ years of experience in data science or machine learning
+• Strong programming skills in Python (NumPy, Pandas, Scikit-learn)
+• Experience with deep learning frameworks (TensorFlow, PyTorch)
+• Knowledge of statistical analysis and A/B testing
+• Experience with SQL and big data technologies
+
+Responsibilities:
+• Build and deploy machine learning models
+• Analyze large datasets to extract insights
+• Collaborate with engineering to productionize models
+• Present findings to stakeholders
+• Stay current with ML/AI advancements`
+    }
+  ];
+
+  // Predefined resumes
+  const resumes = [
+    {
+      id: 'candidate1',
+      name: 'Sarah Chen',
+      resume: `SARAH CHEN
+Senior Software Engineer
+Email: sarah.chen@email.com | LinkedIn: linkedin.com/in/sarahchen
+
+PROFESSIONAL SUMMARY
+Results-driven Senior Software Engineer with 6+ years of experience building scalable web applications. Expertise in full-stack development, cloud architecture, and leading technical initiatives.
+
+EXPERIENCE
+
+Senior Software Engineer | TechCorp Inc. | 2021 - Present
+• Led development of microservices architecture serving 2M+ users
+• Reduced API response time by 40% through optimization and caching strategies
+• Mentored 5 junior engineers and conducted technical interviews
+• Technologies: React, Node.js, TypeScript, AWS, Docker, Kubernetes
+
+Software Engineer | StartupXYZ | 2018 - 2021
+• Built real-time collaboration features using WebSocket and Redis
+• Implemented CI/CD pipeline reducing deployment time by 60%
+• Developed RESTful APIs and integrated third-party services
+• Technologies: Vue.js, Python, PostgreSQL, MongoDB
+
+EDUCATION
+B.S. Computer Science | Stanford University | 2018
+
+SKILLS
+Languages: JavaScript, TypeScript, Python, Java
+Frontend: React, Vue.js, Next.js, Redux
+Backend: Node.js, Express, Django, GraphQL
+Cloud: AWS (EC2, S3, Lambda), Docker, Kubernetes
+Databases: PostgreSQL, MongoDB, Redis`
+    },
+    {
+      id: 'candidate2',
+      name: 'Michael Rodriguez',
+      resume: `MICHAEL RODRIGUEZ
+Product Manager
+Email: m.rodriguez@email.com | Phone: (555) 123-4567
+
+SUMMARY
+Strategic Product Manager with 5 years of experience driving product vision and execution for B2B SaaS platforms. Track record of launching successful features that increase user engagement and revenue.
+
+PROFESSIONAL EXPERIENCE
+
+Senior Product Manager | CloudSolutions Inc. | 2022 - Present
+• Led product strategy for enterprise analytics dashboard (ARR: $15M)
+• Increased user engagement by 35% through data-driven feature prioritization
+• Managed cross-functional team of 12 engineers and designers
+• Conducted 50+ customer interviews to validate product hypotheses
+
+Product Manager | DataFlow Systems | 2019 - 2022
+• Launched 3 major product features resulting in 25% revenue growth
+• Defined product roadmap based on market research and user feedback
+• Collaborated with sales team to develop go-to-market strategies
+• Improved feature adoption rate from 40% to 75%
+
+Associate Product Manager | TechStart | 2018 - 2019
+• Assisted in product planning and requirements gathering
+• Analyzed user metrics and created dashboards for stakeholders
+
+EDUCATION
+MBA | Harvard Business School | 2018
+B.A. Economics | UC Berkeley | 2016
+
+SKILLS
+Product Strategy, Agile/Scrum, User Research, A/B Testing, SQL, Analytics (Mixpanel, Amplitude), Wireframing (Figma), Roadmapping (Aha!, ProductBoard)`
+    },
+    {
+      id: 'candidate3',
+      name: 'Dr. Aisha Patel',
+      resume: `DR. AISHA PATEL
+Data Scientist - Machine Learning Engineer
+Email: aisha.patel@email.com | GitHub: github.com/aishapatel
+
+EDUCATION
+Ph.D. Computer Science (Machine Learning) | MIT | 2020
+M.S. Statistics | University of Michigan | 2016
+B.S. Mathematics & Computer Science | Cornell University | 2014
+
+PROFESSIONAL EXPERIENCE
+
+Senior Data Scientist | AI Innovations Lab | 2021 - Present
+• Developed recommendation engine increasing user engagement by 45%
+• Built NLP models for sentiment analysis with 92% accuracy
+• Led team of 4 data scientists on computer vision project
+• Published 3 papers in top-tier ML conferences (NeurIPS, ICML)
+• Technologies: Python, TensorFlow, PyTorch, Kubernetes, MLflow
+
+Data Scientist | FinTech Analytics | 2020 - 2021
+• Created fraud detection model reducing false positives by 30%
+• Implemented real-time scoring pipeline processing 100K+ transactions/day
+• Conducted A/B tests and statistical analysis for product features
+• Technologies: Python, Scikit-learn, Spark, SQL, Airflow
+
+Research Assistant | MIT CSAIL | 2016 - 2020
+• Researched deep learning architectures for computer vision
+• Published dissertation on "Attention Mechanisms in Visual Recognition"
+• Collaborated with industry partners on applied ML projects
+
+TECHNICAL SKILLS
+Languages: Python, R, SQL, Scala
+ML/DL: TensorFlow, PyTorch, Scikit-learn, XGBoost, Keras
+Big Data: Spark, Hadoop, Hive
+Cloud: AWS (SageMaker, EC2), GCP
+Tools: Docker, Kubernetes, Git, MLflow, Jupyter
+
+PUBLICATIONS
+• "Attention Mechanisms in Visual Recognition" - CVPR 2020
+• "Efficient Training of Large-Scale Models" - NeurIPS 2019
+• "Transfer Learning for Few-Shot Classification" - ICML 2019`
+    }
+  ];
+
+  const handleJobSelect = (jobId: string) => {
+    setSelectedJobId(jobId);
+    const selectedJob = jobDescriptions.find(j => j.id === jobId);
+    if (selectedJob) {
+      setJobDescription(selectedJob.description);
+    }
+  };
+
+  const handleResumeSelect = (resumeId: string) => {
+    setSelectedResumeId(resumeId);
+    const selectedResume = resumes.find(r => r.id === resumeId);
+    if (selectedResume) {
+      setResume(selectedResume.resume);
+    }
+  };
 
   // Mock rubric data
   const rubricData = {
@@ -68,46 +258,19 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
     ]
   };
 
-  const handleGenerateCompetency = async () => {
-    if (!jobDescription.trim()) return;
-
+  const handleGenerateCompetency = () => {
     setIsGeneratingCompetency(true);
-    setCompetencyGenerated(false);
-    setCompetencyError(null);
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/competencies/generate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          job_description: jobDescription,
-          resume_text: resume || null,
-          target_roles: [],
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Request failed with status ${response.status}`);
-      }
-
-      const payload: CompetencyPlanResponse = await response.json();
-      const generated: Competency[] = (payload?.competencies ?? []).map((item, index) => ({
-        id: item.competency_id || `competency-${index + 1}`,
-        name: item.title,
-        interviewStyle: item.style_id,
-        rationale: item.rationale,
-      }));
-
-      setCompetencies(generated);
-      setCompetencyGenerated(generated.length > 0);
-    } catch (error) {
-      console.error('Failed to generate competencies', error);
-      setCompetencyError('Unable to generate competencies. Please try again.');
-      setCompetencies([]);
-      setCompetencyGenerated(false);
-    } finally {
+    // Simulate API call
+    setTimeout(() => {
+      setCompetencies([
+        { id: '1', name: 'Technical Problem Solving', interviewStyle: '' },
+        { id: '2', name: 'Communication Skills', interviewStyle: '' },
+        { id: '3', name: 'Leadership & Team Management', interviewStyle: '' },
+        { id: '4', name: 'Domain Expertise', interviewStyle: '' },
+      ]);
       setIsGeneratingCompetency(false);
-    }
+      setCompetencyGenerated(true);
+    }, 2000);
   };
 
   const handleGenerateRubric = () => {
@@ -177,20 +340,34 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
               before:pointer-events-none
             ">
               <h2 className="text-gray-900 mb-3 sm:mb-4">Job Description</h2>
+              
+              {/* Job Description Selector */}
+              <div className="mb-3">
+                <Select value={selectedJobId} onValueChange={handleJobSelect}>
+                  <SelectTrigger className="bg-white/60 border-gray-200/50 w-full">
+                    <SelectValue placeholder="Select a job description" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {jobDescriptions.map((job) => (
+                      <SelectItem key={job.id} value={job.id}>
+                        {job.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
               <Textarea
                 value={jobDescription}
-                onChange={(e) => {
-                  setJobDescription(e.target.value);
-                  setCompetencyGenerated(false);
-                  setCompetencyError(null);
-                }}
+                onChange={(e) => setJobDescription(e.target.value)}
+                placeholder="Paste the job description here or select from dropdown above..."
                 className="min-h-[200px] sm:min-h-[300px] resize-none bg-white/60 border-gray-200/50 focus:border-gray-300 focus:ring-gray-200/50 mb-4"
               />
               
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Button
                   onClick={handleGenerateCompetency}
-                  disabled={!jobDescription || isGeneratingCompetency}
+                  disabled={!jobDescription || isGeneratingCompetency || competencyGenerated}
                   className="
                     w-full sm:w-auto
                     bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800
@@ -213,12 +390,6 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                   <div className="flex items-center justify-center gap-2 text-green-600">
                     <CheckCircle2 className="w-5 h-5" />
                     <span className="text-sm">Completed</span>
-                  </div>
-                )}
-
-                {competencyError && !isGeneratingCompetency && (
-                  <div className="text-sm text-red-600 text-center sm:text-left">
-                    {competencyError}
                   </div>
                 )}
               </div>
@@ -251,11 +422,6 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                   >
                     <div className="relative z-10 flex-1">
                       <span className="text-sm sm:text-base text-gray-900">{competency.name}</span>
-                      {competency.rationale && (
-                        <p className="mt-1 text-xs text-gray-600 leading-relaxed">
-                          {competency.rationale}
-                        </p>
-                      )}
                     </div>
                     <div className="relative z-10 w-full sm:w-64">
                       <Select
@@ -270,7 +436,6 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                           <SelectItem value="technical">Technical</SelectItem>
                           <SelectItem value="situational">Situational</SelectItem>
                           <SelectItem value="case-study">Case Study</SelectItem>
-                          <SelectItem value="debugging">Debugging</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -297,10 +462,27 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
               before:pointer-events-none
             ">
               <h2 className="text-gray-900 mb-3 sm:mb-4">Resume</h2>
+              
+              {/* Resume Selector */}
+              <div className="mb-3">
+                <Select value={selectedResumeId} onValueChange={handleResumeSelect}>
+                  <SelectTrigger className="bg-white/60 border-gray-200/50 w-full">
+                    <SelectValue placeholder="Select a candidate resume" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {resumes.map((resume) => (
+                      <SelectItem key={resume.id} value={resume.id}>
+                        {resume.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
               <Textarea
                 value={resume}
                 onChange={(e) => setResume(e.target.value)}
-                placeholder="Paste the candidate's resume here..."
+                placeholder="Paste the candidate's resume here or select from dropdown above..."
                 className="min-h-[200px] sm:min-h-[300px] resize-none bg-white/60 border-gray-200/50 focus:border-gray-300 focus:ring-gray-200/50 mb-4"
               />
               
