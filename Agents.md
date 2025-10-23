@@ -33,3 +33,4 @@ Pydantic and JSON enforcement:
 
 - All public functions that consume LLM output must accept and return Pydantic models only. No dicts at boundaries.
 - Expose a small registry that maps module/function to its `LlmRoute` and output schema, loaded from the common config.
+
