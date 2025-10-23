@@ -91,3 +91,4 @@ docs/agent-implemetation-overview.md
 docs/codebase-report.md
 docs/interview-session-implementation-plan.md
 package-lock.json
+uv.lock

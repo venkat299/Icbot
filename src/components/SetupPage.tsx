@@ -7,11 +7,26 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Loader2, CheckCircle2, Sparkles, FileText } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
+import { DummyJD_Placeholder } from '../test';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000'; // Resolves backend base URL.
 
 interface Competency {
   id: string;
   name: string;
   interviewStyle: string;
+  rationale?: string;
+}
+
+interface LlmCompetency {
+  competency_id: string;
+  title: string;
+  style_id: string;
+  rationale: string;
+}
+
+interface CompetencyPlanResponse {
+  competencies: LlmCompetency[];
 }
 
 interface SetupPageProps {
@@ -19,11 +34,12 @@ interface SetupPageProps {
 }
 
 export function SetupPage({ onStartInterview }: SetupPageProps) {
-  const [jobDescription, setJobDescription] = useState('');
+  const [jobDescription, setJobDescription] = useState(DummyJD_Placeholder);
   const [resume, setResume] = useState('');
   const [competencies, setCompetencies] = useState<Competency[]>([]);
   const [isGeneratingCompetency, setIsGeneratingCompetency] = useState(false);
   const [competencyGenerated, setCompetencyGenerated] = useState(false);
+  const [competencyError, setCompetencyError] = useState<string | null>(null);
   const [isGeneratingRubric, setIsGeneratingRubric] = useState(false);
   const [rubricGenerated, setRubricGenerated] = useState(false);
   const [isRubricDialogOpen, setIsRubricDialogOpen] = useState(false);
@@ -52,19 +68,46 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
     ]
   };
 
-  const handleGenerateCompetency = () => {
+  const handleGenerateCompetency = async () => {
+    if (!jobDescription.trim()) return;
+
     setIsGeneratingCompetency(true);
-    // Simulate API call
-    setTimeout(() => {
-      setCompetencies([
-        { id: '1', name: 'Technical Problem Solving', interviewStyle: '' },
-        { id: '2', name: 'Communication Skills', interviewStyle: '' },
-        { id: '3', name: 'Leadership & Team Management', interviewStyle: '' },
-        { id: '4', name: 'Domain Expertise', interviewStyle: '' },
-      ]);
+    setCompetencyGenerated(false);
+    setCompetencyError(null);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/competencies/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          job_description: jobDescription,
+          resume_text: resume || null,
+          target_roles: [],
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      const payload: CompetencyPlanResponse = await response.json();
+      const generated: Competency[] = (payload?.competencies ?? []).map((item, index) => ({
+        id: item.competency_id || `competency-${index + 1}`,
+        name: item.title,
+        interviewStyle: item.style_id,
+        rationale: item.rationale,
+      }));
+
+      setCompetencies(generated);
+      setCompetencyGenerated(generated.length > 0);
+    } catch (error) {
+      console.error('Failed to generate competencies', error);
+      setCompetencyError('Unable to generate competencies. Please try again.');
+      setCompetencies([]);
+      setCompetencyGenerated(false);
+    } finally {
       setIsGeneratingCompetency(false);
-      setCompetencyGenerated(true);
-    }, 2000);
+    }
   };
 
   const handleGenerateRubric = () => {
@@ -136,15 +179,18 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
               <h2 className="text-gray-900 mb-3 sm:mb-4">Job Description</h2>
               <Textarea
                 value={jobDescription}
-                onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Paste the job description here..."
+                onChange={(e) => {
+                  setJobDescription(e.target.value);
+                  setCompetencyGenerated(false);
+                  setCompetencyError(null);
+                }}
                 className="min-h-[200px] sm:min-h-[300px] resize-none bg-white/60 border-gray-200/50 focus:border-gray-300 focus:ring-gray-200/50 mb-4"
               />
               
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Button
                   onClick={handleGenerateCompetency}
-                  disabled={!jobDescription || isGeneratingCompetency || competencyGenerated}
+                  disabled={!jobDescription || isGeneratingCompetency}
                   className="
                     w-full sm:w-auto
                     bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800
@@ -167,6 +213,12 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                   <div className="flex items-center justify-center gap-2 text-green-600">
                     <CheckCircle2 className="w-5 h-5" />
                     <span className="text-sm">Completed</span>
+                  </div>
+                )}
+
+                {competencyError && !isGeneratingCompetency && (
+                  <div className="text-sm text-red-600 text-center sm:text-left">
+                    {competencyError}
                   </div>
                 )}
               </div>
@@ -199,6 +251,11 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                   >
                     <div className="relative z-10 flex-1">
                       <span className="text-sm sm:text-base text-gray-900">{competency.name}</span>
+                      {competency.rationale && (
+                        <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+                          {competency.rationale}
+                        </p>
+                      )}
                     </div>
                     <div className="relative z-10 w-full sm:w-64">
                       <Select
@@ -213,6 +270,7 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                           <SelectItem value="technical">Technical</SelectItem>
                           <SelectItem value="situational">Situational</SelectItem>
                           <SelectItem value="case-study">Case Study</SelectItem>
+                          <SelectItem value="debugging">Debugging</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

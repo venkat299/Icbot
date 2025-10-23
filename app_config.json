@@ -1,0 +1,61 @@
+{
+  "llm": {
+    "routes": {
+      "qwen3-4b-local": {
+        "provider": "openai",
+        "model": "qwen/qwen3-4b-2507",
+        "base_url": "http://192.168.0.175:1234",
+        "endpoint": "/v1/chat/completions",
+        "timeout_seconds": 60,
+        "max_retries": 2,
+        "api_key_env": "LLM_API_KEY"
+      }
+    },
+    "registry": {
+      "rubric.generate": {
+        "route": "qwen3-4b-local",
+        "schema_path": "icbot_backend.schemas.rubric.RubricModel"
+      },
+      "competency.generate": {
+        "route": "qwen3-4b-local",
+        "schema_path": "icbot_backend.schemas.competency.CompetencyPlan"
+      },
+      "warmup.opening": {
+        "route": "qwen3-4b-local",
+        "schema_path": "icbot_backend.schemas.warmup.WarmupTurn"
+      },
+      "evaluation.score": {
+        "route": "qwen3-4b-local",
+        "schema_path": "icbot_backend.schemas.evaluation.EvaluationVerdict"
+      }
+    }
+  },
+  "flow": {
+    "stages": [
+      "warmup",
+      "competency-1",
+      "competency-2",
+      "wrapup"
+    ],
+    "competency": {
+      "min": 1,
+      "max": 5
+    },
+    "style_bindings": {
+      "competency-1": "behavioral",
+      "competency-2": "technical"
+    }
+  },
+  "evaluation": {
+    "routes": {
+      "scoring": "qwen3-4b-local"
+    },
+    "schema_registry": {
+      "final_report": "icbot_backend.schemas.evaluation.EvaluationVerdict"
+    },
+    "weights": {
+      "competency-1": 0.5,
+      "competency-2": 0.5
+    }
+  }
+}

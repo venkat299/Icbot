@@ -1,0 +1,14 @@
+{
+  "environment": "development",
+  "llm_providers": {
+    "openai": {
+      "api_key_env": "OPENAI_API_KEY"
+    },
+    "anthropic": {
+      "api_key_env": "ANTHROPIC_API_KEY"
+    }
+  },
+  "http": {
+    "default_timeout_seconds": 60
+  }
+}
