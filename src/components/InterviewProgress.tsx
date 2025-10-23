@@ -79,52 +79,6 @@ export function InterviewProgress({
           "
         />
       </div>
-
-      {/* Minimal stage dots */}
-      <div className="flex items-center justify-between mt-3">
-        {stages.map((stage, index) => {
-          const isCompleted = index < currentIndex;
-          const isCurrent = index === currentIndex;
-          
-          return (
-            <div key={stage.id} className="flex items-center flex-1">
-              {index > 0 && (
-                <div className={`
-                  flex-1 h-px
-                  ${isCompleted ? 'bg-gray-400' : 'bg-gray-200'}
-                `} />
-              )}
-              
-              <div className="relative">
-                <div className={`
-                  w-6 h-6 rounded-full flex items-center justify-center
-                  border transition-all duration-300
-                  ${isCompleted 
-                    ? 'bg-gray-500 border-gray-500' 
-                    : isCurrent
-                    ? 'bg-white border-gray-400 shadow-[0_2px_6px_rgba(0,0,0,0.1)]'
-                    : 'bg-gray-100 border-gray-200'
-                  }
-                `}>
-                  {isCompleted && (
-                    <Check className="w-3.5 h-3.5 text-white" />
-                  )}
-                  {isCurrent && (
-                    <div className="w-2 h-2 rounded-full bg-gray-500" />
-                  )}
-                </div>
-              </div>
-              
-              {index < stages.length - 1 && (
-                <div className={`
-                  flex-1 h-px
-                  ${isCompleted ? 'bg-gray-400' : 'bg-gray-200'}
-                `} />
-              )}
-            </div>
-          );
-        })}
-      </div>
     </motion.div>
   );
 }

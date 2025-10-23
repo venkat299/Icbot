@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Volume2, VolumeX, ChevronRight, RotateCcw } from 'lucide-react';
+import { Volume2, VolumeX, ChevronRight, RotateCcw, Bot, Circle } from 'lucide-react';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
-import { ChatHeader } from './ChatHeader';
 import { InterviewProgress, InterviewStage } from './InterviewProgress';
 import { InterviewerSidebar } from './InterviewerSidebar';
 import { Question } from './InteractiveQuestion';
@@ -221,7 +220,7 @@ export function Chatbot({ isInterviewerView = false }: ChatbotProps) {
   };
 
   // Demo function to add different question types
-  const addDemoQuestion = (type: 'code' | 'latex' | 'multiple-choice' | 'multiple-select' | 'yes-no') => {
+  const addDemoQuestion = (type: 'code' | 'multiple-select' | 'yes-no') => {
     const now = new Date();
     const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     
@@ -239,32 +238,6 @@ export function Chatbot({ isInterviewerView = false }: ChatbotProps) {
             type: 'code',
             language: 'JavaScript',
             initialCode: `class Node {\n  constructor(value) {\n    this.value = value;\n    this.next = null;\n  }\n}\n\nfunction reverseLinkedList(head) {\n  // Your code here\n}`
-          }
-        };
-        break;
-      case 'latex':
-        questionMessage = {
-          id: Date.now().toString(),
-          text: 'Write the formula for calculating the compound interest:',
-          isUser: false,
-          timestamp,
-          question: {
-            id: `q-${Date.now()}`,
-            type: 'latex',
-            placeholder: 'A = P(1 + r/n)^(nt)'
-          }
-        };
-        break;
-      case 'multiple-choice':
-        questionMessage = {
-          id: Date.now().toString(),
-          text: 'What is the time complexity of binary search?',
-          isUser: false,
-          timestamp,
-          question: {
-            id: `q-${Date.now()}`,
-            type: 'multiple-choice',
-            options: ['O(n)', 'O(log n)', 'O(n²)', 'O(1)']
           }
         };
         break;
@@ -315,10 +288,6 @@ export function Chatbot({ isInterviewerView = false }: ChatbotProps) {
     let answerText = '';
     if (answer.type === 'code') {
       answerText = `Submitted code solution in ${answer.language || 'code'}`;
-    } else if (answer.type === 'latex') {
-      answerText = `Submitted formula: ${answer.formula}`;
-    } else if (answer.type === 'multiple-choice') {
-      answerText = `Selected: ${answer.answer}`;
     } else if (answer.type === 'multiple-select') {
       answerText = `Selected: ${answer.answers.join(', ')}`;
     } else if (answer.type === 'yes-no') {
@@ -402,18 +371,38 @@ export function Chatbot({ isInterviewerView = false }: ChatbotProps) {
         {/* Main Chat Area */}
         <ResizablePanel defaultSize={isInterviewerView ? 70 : 100} minSize={40}>
           <div className="relative z-10 flex flex-col h-full">
-            {/* Progress bar at the very top */}
-            <div className="px-4 sm:px-6 pt-6 pb-3 bg-white/50 shrink-0">
-              <InterviewProgress 
-                currentStage={currentStage}
-                competencyNumber={competencyNumber}
-                totalCompetencies={totalCompetencies}
-              />
-            </div>
-            
-            <div className="px-6 pb-0 shrink-0">
+            {/* Bot Avatar, Status and Controls - Single Row */}
+            <div className="px-4 sm:px-6 pt-6 pb-4 bg-white/50 shrink-0">
               <div className="flex items-center justify-between">
-                <ChatHeader status={status} />
+                {/* Left: Bot Avatar and Status */}
+                <div className="flex items-center gap-4">
+                  <div className="
+                    w-12 h-12 rounded-2xl
+                    bg-white/80
+                    backdrop-blur-xl border border-gray-200/60
+                    flex items-center justify-center
+                    shadow-[0_4px_12px_rgba(0,0,0,0.1),0_2px_4px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)]
+                  ">
+                    <Bot className="w-6 h-6 text-gray-700" />
+                  </div>
+                  <div>
+                    <h1 className="text-lg text-gray-900">AI Interviewer</h1>
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Circle 
+                        className={`w-2 h-2 ${
+                          status === 'listening' 
+                            ? 'fill-red-500 text-red-500 animate-pulse' 
+                            : status === 'thinking'
+                            ? 'fill-blue-500 text-blue-500 animate-pulse'
+                            : 'fill-green-500 text-green-500'
+                        }`} 
+                      />
+                      <span className="capitalize">{status}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right: Controls */}
                 <div className="flex items-center gap-2">
                   {/* Demo Question Type Selector */}
                   <div className="relative group">
@@ -445,18 +434,6 @@ export function Chatbot({ isInterviewerView = false }: ChatbotProps) {
                           className="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                         >
                           Code Editor
-                        </button>
-                        <button
-                          onClick={() => addDemoQuestion('latex')}
-                          className="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                        >
-                          LaTeX Formula
-                        </button>
-                        <button
-                          onClick={() => addDemoQuestion('multiple-choice')}
-                          className="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                        >
-                          Multiple Choice
                         </button>
                         <button
                           onClick={() => addDemoQuestion('multiple-select')}
@@ -531,28 +508,43 @@ export function Chatbot({ isInterviewerView = false }: ChatbotProps) {
                 </div>
               </div>
             </div>
+
+            {/* Progress bar */}
+            <div className="px-4 sm:px-6 pb-3 bg-white/50 shrink-0">
+              <InterviewProgress 
+                currentStage={currentStage}
+                competencyNumber={competencyNumber}
+                totalCompetencies={totalCompetencies}
+              />
+            </div>
             
-            <div className="flex-1 overflow-y-auto px-6 py-4 scroll-smooth">
-              {messages.map((message, index) => {
-                // Find the last AI message
-                const aiMessages = messages.filter(m => !m.isUser);
-                const lastAIMessage = aiMessages[aiMessages.length - 1];
-                const isLatestAI = !message.isUser && message.id === lastAIMessage?.id;
+            <div className="flex-1 overflow-y-auto px-6 py-8 scroll-smooth">
+              <div className="relative max-w-5xl mx-auto">
+                {/* Timeline vertical line */}
+                <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-gray-300 via-gray-200 to-gray-100"></div>
                 
-                return (
-                  <ChatMessage
-                    key={message.id}
-                    message={message.text}
-                    isUser={message.isUser}
-                    timestamp={message.timestamp}
-                    isLatestAI={isLatestAI}
-                    question={message.question}
-                    onQuestionSubmit={message.question ? (answer) => handleQuestionSubmit(message.id, answer) : undefined}
-                    questionSubmitted={message.questionSubmitted}
-                  />
-                );
-              })}
-              <div ref={messagesEndRef} />
+                {messages.map((message, index) => {
+                  // Find the last AI message
+                  const aiMessages = messages.filter(m => !m.isUser);
+                  const lastAIMessage = aiMessages[aiMessages.length - 1];
+                  const isLatestAI = !message.isUser && message.id === lastAIMessage?.id;
+                  
+                  return (
+                    <ChatMessage
+                      key={message.id}
+                      message={message.text}
+                      isUser={message.isUser}
+                      timestamp={message.timestamp}
+                      isLatestAI={isLatestAI}
+                      question={message.question}
+                      onQuestionSubmit={message.question ? (answer) => handleQuestionSubmit(message.id, answer) : undefined}
+                      questionSubmitted={message.questionSubmitted}
+                      isLast={index === messages.length - 1}
+                    />
+                  );
+                })}
+                <div ref={messagesEndRef} />
+              </div>
             </div>
             
             <div className="p-6 pt-4 shrink-0">

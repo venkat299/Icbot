@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
-import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Code, CheckCircle2, Send } from 'lucide-react';
 import { Badge } from './ui/badge';
 
-export type QuestionType = 'code' | 'latex' | 'multiple-choice' | 'multiple-select' | 'yes-no';
+export type QuestionType = 'code' | 'multiple-select' | 'yes-no';
 
 interface BaseQuestion {
   id: string;
@@ -23,16 +22,6 @@ interface CodeQuestion extends BaseQuestion {
   debugMode?: boolean;
 }
 
-interface LatexQuestion extends BaseQuestion {
-  type: 'latex';
-  placeholder?: string;
-}
-
-interface MultipleChoiceQuestion extends BaseQuestion {
-  type: 'multiple-choice';
-  options: string[];
-}
-
 interface MultipleSelectQuestion extends BaseQuestion {
   type: 'multiple-select';
   options: string[];
@@ -42,7 +31,7 @@ interface YesNoQuestion extends BaseQuestion {
   type: 'yes-no';
 }
 
-export type Question = CodeQuestion | LatexQuestion | MultipleChoiceQuestion | MultipleSelectQuestion | YesNoQuestion;
+export type Question = CodeQuestion | MultipleSelectQuestion | YesNoQuestion;
 
 interface InteractiveQuestionProps {
   question: Question;
@@ -52,8 +41,6 @@ interface InteractiveQuestionProps {
 
 export function InteractiveQuestion({ question, onSubmit, isSubmitted = false }: InteractiveQuestionProps) {
   const [codeAnswer, setCodeAnswer] = useState((question as CodeQuestion).initialCode || '');
-  const [latexAnswer, setLatexAnswer] = useState('');
-  const [multipleChoiceAnswer, setMultipleChoiceAnswer] = useState('');
   const [multipleSelectAnswers, setMultipleSelectAnswers] = useState<string[]>([]);
   const [yesNoAnswer, setYesNoAnswer] = useState<'yes' | 'no' | null>(null);
 
@@ -61,12 +48,6 @@ export function InteractiveQuestion({ question, onSubmit, isSubmitted = false }:
     switch (question.type) {
       case 'code':
         onSubmit({ type: 'code', code: codeAnswer, language: (question as CodeQuestion).language });
-        break;
-      case 'latex':
-        onSubmit({ type: 'latex', formula: latexAnswer });
-        break;
-      case 'multiple-choice':
-        onSubmit({ type: 'multiple-choice', answer: multipleChoiceAnswer });
         break;
       case 'multiple-select':
         onSubmit({ type: 'multiple-select', answers: multipleSelectAnswers });
@@ -81,10 +62,6 @@ export function InteractiveQuestion({ question, onSubmit, isSubmitted = false }:
     switch (question.type) {
       case 'code':
         return codeAnswer.trim().length > 0;
-      case 'latex':
-        return latexAnswer.trim().length > 0;
-      case 'multiple-choice':
-        return multipleChoiceAnswer.length > 0;
       case 'multiple-select':
         return multipleSelectAnswers.length > 0;
       case 'yes-no':
@@ -151,69 +128,6 @@ export function InteractiveQuestion({ question, onSubmit, isSubmitted = false }:
                 "
               />
             </div>
-          )}
-
-          {/* LaTeX Formula */}
-          {question.type === 'latex' && (
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-600">Enter your formula (LaTeX syntax)</span>
-              </div>
-              <Textarea
-                value={latexAnswer}
-                onChange={(e) => setLatexAnswer(e.target.value)}
-                placeholder={(question as LatexQuestion).placeholder || '\\frac{a}{b} = c'}
-                disabled={isSubmitted}
-                className="
-                  min-h-[120px] font-mono text-sm
-                  bg-white/60 border-gray-200/50
-                  focus:border-gray-300 focus:ring-gray-200/50
-                  resize-none
-                "
-              />
-              {latexAnswer && (
-                <div className="bg-gray-50/80 rounded-xl p-4 border border-gray-200/50">
-                  <p className="text-xs text-gray-500 mb-2">Preview:</p>
-                  <div className="text-center text-gray-900 font-serif text-lg">
-                    {latexAnswer}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Multiple Choice */}
-          {question.type === 'multiple-choice' && (
-            <RadioGroup
-              value={multipleChoiceAnswer}
-              onValueChange={setMultipleChoiceAnswer}
-              disabled={isSubmitted}
-              className="space-y-3"
-            >
-              {(question as MultipleChoiceQuestion).options.map((option, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="
-                    flex items-center gap-3 p-3 rounded-xl
-                    bg-white/60 border border-gray-200/50
-                    hover:bg-gray-50/80 hover:border-gray-300/50
-                    transition-all cursor-pointer
-                  "
-                  onClick={() => !isSubmitted && setMultipleChoiceAnswer(option)}
-                >
-                  <RadioGroupItem value={option} id={`option-${index}`} />
-                  <Label
-                    htmlFor={`option-${index}`}
-                    className="flex-1 cursor-pointer text-sm text-gray-700"
-                  >
-                    {option}
-                  </Label>
-                </motion.div>
-              ))}
-            </RadioGroup>
           )}
 
           {/* Multiple Select */}
