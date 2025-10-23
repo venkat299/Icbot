@@ -40,15 +40,22 @@ def _build_model(route: LlmRoute, env: EnvConfig) -> ChatOpenAI:  # Instantiates
     api_key = os.getenv(provider_cfg.api_key_env)
     if not api_key:
         raise RuntimeError(f"Environment variable '{provider_cfg.api_key_env}' is not set")
-    return ChatOpenAI(
-        model=route.model,
-        api_key=api_key,
-        base_url=str(route.base_url),
-        max_retries=route.max_retries,
-        request_timeout=route.timeout_seconds,
-        response_format={"type": "json_object"},
-        temperature=0
-    )
+    model_kwargs: dict[str, Any] = {}
+    if route.enforce_json:
+        model_kwargs["response_format"] = {"type": "json_object"}
+
+    kwargs: dict[str, Any] = {
+        "model": route.model,
+        "api_key": api_key,
+        "base_url": str(route.base_url),
+        "max_retries": route.max_retries,
+        "request_timeout": route.timeout_seconds,
+        "temperature": 0,
+    }
+    if model_kwargs:
+        kwargs["model_kwargs"] = model_kwargs
+
+    return ChatOpenAI(**kwargs)
 
 
 def _augment_messages(messages: Iterable[BaseMessage], schema: Type[BaseModel], extra_hint: str | None) -> list[BaseMessage]:  # Prepends JSON enforcement hint.

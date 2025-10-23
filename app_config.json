@@ -4,11 +4,12 @@
       "qwen3-4b-local": {
         "provider": "openai",
         "model": "qwen/qwen3-4b-2507",
-        "base_url": "http://192.168.0.175:1234",
+        "base_url": "http://192.168.0.175:1234/v1",
         "endpoint": "/v1/chat/completions",
         "timeout_seconds": 60,
         "max_retries": 2,
-        "api_key_env": "LLM_API_KEY"
+        "api_key_env": "LLM_API_KEY",
+        "enforce_json": false
       }
     },
     "registry": {
@@ -31,19 +32,10 @@
     }
   },
   "flow": {
-    "stages": [
-      "warmup",
-      "competency-1",
-      "competency-2",
-      "wrapup"
-    ],
+    "stages": ["warmup", "competency", "wrapup"],
     "competency": {
-      "min": 1,
-      "max": 5
-    },
-    "style_bindings": {
-      "competency-1": "behavioral",
-      "competency-2": "technical"
+      "min": 3,
+      "max": 3
     }
   },
   "evaluation": {
@@ -54,8 +46,9 @@
       "final_report": "icbot_backend.schemas.evaluation.EvaluationVerdict"
     },
     "weights": {
-      "competency-1": 0.5,
-      "competency-2": 0.5
+      "competency-1": 0.34,
+      "competency-2": 0.33,
+      "competency-3": 0.33
     }
   }
 }

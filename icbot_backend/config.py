@@ -35,6 +35,7 @@ class LlmRoute(BaseModel):  # Describes a concrete LLM route definition.
     max_retries: PositiveInt
     api_key_env: str | None = None
     sequential: bool = False
+    enforce_json: bool = True
 
 
 class LlmRegistryEntry(BaseModel):  # Maps call sites to routes and schemas.
@@ -55,7 +56,6 @@ class CompetencyLimits(BaseModel):  # Stores competency stage range.
 class FlowConfig(BaseModel):  # Defines interview flow sequencing config.
     stages: list[str] = Field(default_factory=list)
     competency: CompetencyLimits
-    style_bindings: dict[str, str] = Field(default_factory=dict)
 
 
 class EvaluationConfig(BaseModel):  # Holds evaluation stage wiring.

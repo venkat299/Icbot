@@ -16,3 +16,5 @@ class CompetencyItem(BaseModel):  # Represents a single competency recommendatio
 
 class CompetencyPlan(BaseModel):  # Bundles competencies returned by the LLM.
     competencies: list[CompetencyItem] = Field(default_factory=list)
+    stage_sequence: list[str] = Field(default_factory=list)
+    stage_styles: dict[str, str] = Field(default_factory=dict)

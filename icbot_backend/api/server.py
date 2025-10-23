@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import FastAPI, HTTPException  # Provides HTTP API surface.
 from fastapi.middleware.cors import CORSMiddleware  # Enables CORS for local dev.
 
@@ -12,6 +14,7 @@ app.add_middleware(
     allow_headers=["*"],
 )  # Allows web clients to access the API during development.
 _competency_agent = CompetencyAgent()  # Initializes agent once per process.
+logger = logging.getLogger(__name__)
 
 
 @app.post("/api/competencies/generate", response_model=CompetencyPlan)  # Handles competency generation requests.
@@ -19,4 +22,5 @@ async def generate_competencies(payload: CompetencyRequest) -> CompetencyPlan:
     try:
         return await _competency_agent.plan(payload)
     except Exception as exc:  # Surface gateway errors to clients.
+        logger.exception("Failed to generate competencies")
         raise HTTPException(status_code=500, detail=str(exc)) from exc
