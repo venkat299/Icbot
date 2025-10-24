@@ -58,6 +58,10 @@ class FlowConfig(BaseModel):  # Defines interview flow sequencing config.
     competency: CompetencyLimits
 
 
+class RubricConfig(BaseModel):  # Configures rubric generation constraints.
+    max_criteria_per_competency: PositiveInt = 3
+
+
 class EvaluationConfig(BaseModel):  # Holds evaluation stage wiring.
     routes: dict[str, str] = Field(default_factory=dict)
     schema_registry: dict[str, str] = Field(default_factory=dict)
@@ -67,6 +71,7 @@ class EvaluationConfig(BaseModel):  # Holds evaluation stage wiring.
 class AppConfig(BaseModel):  # Top-level application configuration model.
     llm: LlmConfig
     flow: FlowConfig
+    rubric: RubricConfig = Field(default_factory=RubricConfig)
     evaluation: EvaluationConfig
 
 

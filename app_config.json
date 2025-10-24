@@ -4,7 +4,7 @@
       "qwen3-4b-local": {
         "provider": "openai",
         "model": "qwen/qwen3-4b-2507",
-        "base_url": "http://192.168.0.175:1234/v1",
+        "base_url": "http://10.42.168.79:1234/v1",
         "endpoint": "/v1/chat/completions",
         "timeout_seconds": 60,
         "max_retries": 2,
@@ -37,6 +37,9 @@
       "min": 3,
       "max": 3
     }
+  },
+  "rubric": {
+    "max_criteria_per_competency": 3
   },
   "evaluation": {
     "routes": {

@@ -22,13 +22,32 @@ interface LlmCompetency {
   competency_id: string;
   title: string;
   style_id: string;
-  rationale: string;
+  rationale?: string | null;
 }
 
 interface CompetencyPlanResponse {
   competencies: LlmCompetency[];
   stage_sequence?: string[];
   stage_styles?: Record<string, string>;
+}
+
+interface RubricCriterion {
+  id: string;
+  name: string;
+  description: string;
+  weight: number;
+}
+
+interface RubricCategory {
+  id: string;
+  name: string;
+  criteria: RubricCriterion[];
+}
+
+interface RubricPayload {
+  role: string;
+  seniority_level: string;
+  categories: RubricCategory[];
 }
 
 interface SetupPageProps {
@@ -47,10 +66,12 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
   const [isGeneratingRubric, setIsGeneratingRubric] = useState(false);
   const [rubricGenerated, setRubricGenerated] = useState(false);
   const [isRubricDialogOpen, setIsRubricDialogOpen] = useState(false);
+  const [rubricData, setRubricData] = useState<RubricPayload | null>(null);
+  const [rubricError, setRubricError] = useState<string | null>(null);
 
   const jobDescriptions = [
-    { id: 'default', title: 'Forecasting Analyst (Default)', description: DummyJD_Placeholder },
     { id: 'custom', title: 'Paste Job Description', description: '' },
+    { id: 'default', title: 'Forecasting Analyst (Default)', description: DummyJD_Placeholder },
     ...JobDescriptionOptions,
   ];
 
@@ -61,6 +82,10 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
     setCompetencyGenerated(false);
     setCompetencyError(null);
     setCompetencies([]);
+    setRubricGenerated(false);
+    setRubricData(null);
+    setRubricError(null);
+    setIsRubricDialogOpen(false);
     const selected = jobDescriptions.find((job) => job.id === jobId);
     if (selected) {
       setJobDescription(selected.description);
@@ -71,33 +96,12 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
     setSelectedResumeId(resumeId);
     setRubricGenerated(false);
     setIsRubricDialogOpen(false);
+    setRubricData(null);
+    setRubricError(null);
     const selected = resumes.find((entry) => entry.id === resumeId);
     if (selected) {
       setResume(selected.resume);
     }
-  };
-
-  const rubricData = {
-    candidateName: 'John Doe',
-    position: 'Senior Software Engineer',
-    evaluationCriteria: [
-      {
-        category: 'Technical Skills',
-        criteria: [
-          { name: 'Programming Languages', description: 'Proficiency in Java, Python, JavaScript', weight: 20 },
-          { name: 'System Design', description: 'Ability to design scalable systems', weight: 25 },
-          { name: 'Data Structures & Algorithms', description: 'Strong foundation in DSA', weight: 20 },
-        ],
-      },
-      {
-        category: 'Soft Skills',
-        criteria: [
-          { name: 'Communication', description: 'Clear and effective communication', weight: 15 },
-          { name: 'Problem Solving', description: 'Analytical thinking and creativity', weight: 10 },
-          { name: 'Teamwork', description: 'Collaboration and leadership', weight: 10 },
-        ],
-      },
-    ],
   };
 
   const handleGenerateCompetency = async () => {
@@ -106,6 +110,10 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
     setIsGeneratingCompetency(true);
     setCompetencyGenerated(false);
     setCompetencyError(null);
+    setRubricGenerated(false);
+    setRubricData(null);
+    setRubricError(null);
+    setIsRubricDialogOpen(false);
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/competencies/generate`, {
@@ -127,7 +135,7 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
         id: item.competency_id || `competency-${index + 1}`,
         name: item.title,
         interviewStyle: item.style_id,
-        rationale: item.rationale,
+        rationale: item.rationale ?? undefined,
       }));
 
       setCompetencies(generated);
@@ -142,22 +150,72 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
     }
   };
 
-  const handleGenerateRubric = () => {
+  const handleGenerateRubric = async () => {
+    if (!jobDescription.trim()) {
+      setRubricError('Provide a job description before generating the rubric.');
+      return;
+    }
+    if (competencies.length === 0) {
+      setRubricError('Generate competencies first so the rubric can align with them.');
+      return;
+    }
+    if (!competencies.every((item) => item.interviewStyle)) {
+      setRubricError('Assign an interview style to every competency before generating the rubric.');
+      return;
+    }
+
     setIsGeneratingRubric(true);
-    setTimeout(() => {
-      setIsGeneratingRubric(false);
+    setRubricError(null);
+    setRubricGenerated(false);
+    setRubricData(null);
+    setIsRubricDialogOpen(false);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/rubrics/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          job_description: jobDescription,
+          resume_text: resume || null,
+          competencies: competencies.map((item) => ({
+            competency_id: item.id,
+            title: item.name,
+            style_id: item.interviewStyle,
+            rationale: item.rationale ?? null,
+          })),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      const payload: RubricPayload = await response.json();
+      setRubricData(payload);
       setRubricGenerated(true);
-    }, 2000);
+      setIsRubricDialogOpen(true);
+    } catch (error) {
+      console.error('Failed to generate rubric', error);
+      setRubricError('Unable to generate rubric. Please try again.');
+      setRubricData(null);
+      setRubricGenerated(false);
+    } finally {
+      setIsGeneratingRubric(false);
+    }
   };
 
   const updateInterviewStyle = (competencyId: string, style: string) => {
     setCompetencies((prev) =>
       prev.map((item) => (item.id === competencyId ? { ...item, interviewStyle: style } : item)),
     );
+    setRubricGenerated(false);
+    setRubricData(null);
+    setRubricError(null);
+    setIsRubricDialogOpen(false);
   };
 
   const allCompetenciesHaveStyle = competencies.length > 0 && competencies.every((item) => item.interviewStyle);
-  const canStartInterview = competencyGenerated && rubricGenerated && allCompetenciesHaveStyle;
+  const canStartInterview = competencyGenerated && rubricGenerated && !!rubricData && allCompetenciesHaveStyle;
 
   return (
     <div className="h-screen w-screen overflow-auto bg-gradient-to-br from-gray-50 to-white">
@@ -211,6 +269,10 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                   setCompetencyGenerated(false);
                   setCompetencyError(null);
                   setCompetencies([]);
+                  setRubricGenerated(false);
+                  setRubricData(null);
+                  setRubricError(null);
+                  setIsRubricDialogOpen(false);
                 }}
                 placeholder="Paste the job description here or select from dropdown above..."
                 className="min-h-[200px] sm:min-h-[300px] resize-none bg-white/60 border-gray-200/50 focus:border-gray-300 focus:ring-gray-200/50 mb-4"
@@ -310,10 +372,12 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
               <Textarea
                 value={resume}
                 onChange={(event) => {
-                  setSelectedResumeId(undefined);
+                  setSelectedResumeId('empty');
                   setResume(event.target.value);
                   setRubricGenerated(false);
                   setIsRubricDialogOpen(false);
+                  setRubricData(null);
+                  setRubricError(null);
                 }}
                 placeholder="Paste the candidate's resume here or select from dropdown above..."
                 className="min-h-[200px] sm:min-h-[300px] resize-none bg-white/60 border-gray-200/50 focus:border-gray-300 focus:ring-gray-200/50 mb-4"
@@ -323,7 +387,7 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   <Button
                     onClick={handleGenerateRubric}
-                    disabled={!resume || isGeneratingRubric || rubricGenerated}
+                    disabled={!allCompetenciesHaveStyle || isGeneratingRubric}
                     className="w-full sm:w-auto bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white shadow-[0_4px_16px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isGeneratingRubric && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
@@ -343,9 +407,13 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                       <span className="text-sm">Completed</span>
                     </div>
                   )}
+
+                  {rubricError && !isGeneratingRubric && (
+                    <div className="text-sm text-red-600 text-center sm:text-left">{rubricError}</div>
+                  )}
                 </div>
 
-                {rubricGenerated && !isGeneratingRubric && (
+                {rubricGenerated && rubricData && !isGeneratingRubric && (
                   <Dialog open={isRubricDialogOpen} onOpenChange={setIsRubricDialogOpen}>
                     <DialogTrigger asChild>
                       <Button
@@ -360,32 +428,35 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                       <DialogHeader>
                         <DialogTitle>Evaluation Rubric</DialogTitle>
                         <DialogDescription>
-                          Detailed assessment criteria for {rubricData.candidateName} - {rubricData.position}
+                          Role: {rubricData.role} · Level: {rubricData.seniority_level}
                         </DialogDescription>
                       </DialogHeader>
                       <ScrollArea className="h-[500px] pr-4">
                         <div className="space-y-6">
-                          {rubricData.evaluationCriteria.map((category, catIndex) => (
+                          {rubricData.categories.map((category, catIndex) => (
                             <motion.div
-                              key={catIndex}
+                              key={category.id || `category-${catIndex}`}
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: catIndex * 0.1 }}
                               className="backdrop-blur-xl bg-gradient-to-br from-white to-gray-50/50 border border-gray-200/50 rounded-2xl p-5 shadow-[0_4px_16px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)]"
                             >
                               <h3 className="text-gray-900 mb-4 flex items-center gap-2">
-                                {category.category}
+                                {category.name}
                                 <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                                  {category.criteria.reduce((sum, c) => sum + c.weight, 0)}%
+                                  {Math.round(category.criteria.reduce((sum, c) => sum + c.weight, 0))}%
                                 </Badge>
                               </h3>
                               <div className="space-y-3">
                                 {category.criteria.map((criterion, critIndex) => (
-                                  <div key={critIndex} className="bg-white/60 border border-gray-200/50 rounded-xl p-4">
+                                  <div
+                                    key={criterion.id || `criterion-${catIndex}-${critIndex}`}
+                                    className="bg-white/60 border border-gray-200/50 rounded-xl p-4"
+                                  >
                                     <div className="flex items-start justify-between gap-3 mb-2">
                                       <h4 className="text-sm text-gray-900">{criterion.name}</h4>
                                       <Badge variant="secondary" className="bg-gray-100 text-gray-700 shrink-0">
-                                        {criterion.weight}%
+                                        {Math.round(criterion.weight)}%
                                       </Badge>
                                     </div>
                                     <p className="text-xs text-gray-600 leading-relaxed">{criterion.description}</p>
