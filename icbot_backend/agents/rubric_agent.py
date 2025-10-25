@@ -49,10 +49,21 @@ class RubricAgent:  # Produces interview rubrics with LLM support.
             criteria = category.criteria[:max_criteria]
             total_weight = sum(item.weight for item in criteria)
             if total_weight <= 0:
-                adjusted = criteria
+                adjusted_weights = criteria
             else:
                 factor = 100 / total_weight
-                adjusted = [item.model_copy(update={"weight": item.weight * factor}) for item in criteria]
-            limited_categories.append(category.model_copy(update={"criteria": adjusted}))
+                adjusted_weights = [item.model_copy(update={"weight": item.weight * factor}) for item in criteria]
+
+            normalized = []
+            for item in adjusted_weights:
+                levels = dict(item.scoring_levels or {})
+                if "Level 0" not in levels:
+                    levels["Level 0"] = "Performs below Level 1 expectations."
+                for level in ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"]:
+                    levels.setdefault(level, f"No guidance provided for {level}.")
+                ordered_levels = {level: levels[level] for level in ["Level 0", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5"]}
+                normalized.append(item.model_copy(update={"scoring_levels": ordered_levels}))
+
+            limited_categories.append(category.model_copy(update={"criteria": normalized}))
 
         return model.model_copy(update={"categories": limited_categories})

@@ -13,6 +13,9 @@ from pydantic import BaseModel  # Validates structured LLM responses.
 from .config import EnvConfig, LlmRoute, load_env_config  # Accesses route and environment settings.
 
 
+_ANON_API_KEY = "anonymous"  # Placeholder for routes that skip authentication.
+
+
 def _system_hint(schema: Type[BaseModel], extra_hint: str | None) -> str:  # Builds enforced JSON response instruction.
     schema_json = json.dumps(schema.model_json_schema(), separators=(",", ":"))
     prefix = "Reply with a single JSON object matching this schema."
@@ -37,9 +40,7 @@ def _build_model(route: LlmRoute, env: EnvConfig) -> ChatOpenAI:  # Instantiates
     provider_cfg = env.llm_providers.get("openai")
     if not provider_cfg:
         raise RuntimeError("Missing OpenAI provider configuration")
-    api_key = os.getenv(provider_cfg.api_key_env)
-    if not api_key:
-        raise RuntimeError(f"Environment variable '{provider_cfg.api_key_env}' is not set")
+    api_key = _resolve_api_key(route, provider_cfg.api_key_env)
     model_kwargs: dict[str, Any] = {}
     if route.enforce_json:
         model_kwargs["response_format"] = {"type": "json_object"}
@@ -56,6 +57,20 @@ def _build_model(route: LlmRoute, env: EnvConfig) -> ChatOpenAI:  # Instantiates
         kwargs["model_kwargs"] = model_kwargs
 
     return ChatOpenAI(**kwargs)
+
+
+def _resolve_api_key(route: LlmRoute, provider_env: str) -> str:  # Chooses the API key or placeholder for a route.
+    env_name = route.api_key_env or provider_env
+    if not env_name:
+        if route.requires_api_key:
+            raise RuntimeError(f"No API key environment configured for route '{route.model}'")
+        return _ANON_API_KEY
+    api_key = os.getenv(env_name)
+    if api_key:
+        return api_key
+    if route.requires_api_key:
+        raise RuntimeError(f"Environment variable '{env_name}' is not set")
+    return _ANON_API_KEY
 
 
 def _augment_messages(messages: Iterable[BaseMessage], schema: Type[BaseModel], extra_hint: str | None) -> list[BaseMessage]:  # Prepends JSON enforcement hint.

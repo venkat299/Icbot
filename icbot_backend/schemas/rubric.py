@@ -6,6 +6,7 @@ class RubricCriterion(BaseModel):  # Represents a single rubric criterion.
     name: str = Field(..., min_length=1)
     description: str = Field(..., min_length=1)
     weight: float = Field(..., ge=0, le=100)
+    scoring_levels: dict[str, str] = Field(default_factory=dict)
 
 
 class RubricCategory(BaseModel):  # Groups related rubric criteria.

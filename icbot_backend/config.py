@@ -34,6 +34,7 @@ class LlmRoute(BaseModel):  # Describes a concrete LLM route definition.
     timeout_seconds: PositiveFloat
     max_retries: PositiveInt
     api_key_env: str | None = None
+    requires_api_key: bool = True
     sequential: bool = False
     enforce_json: bool = True
 

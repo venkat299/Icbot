@@ -68,6 +68,7 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
   const [isRubricDialogOpen, setIsRubricDialogOpen] = useState(false);
   const [rubricData, setRubricData] = useState<RubricPayload | null>(null);
   const [rubricError, setRubricError] = useState<string | null>(null);
+  const [copyStatus, setCopyStatus] = useState<string | null>(null);
 
   const jobDescriptions = [
     { id: 'custom', title: 'Paste Job Description', description: '' },
@@ -86,6 +87,7 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
     setRubricData(null);
     setRubricError(null);
     setIsRubricDialogOpen(false);
+    setCopyStatus(null);
     const selected = jobDescriptions.find((job) => job.id === jobId);
     if (selected) {
       setJobDescription(selected.description);
@@ -98,6 +100,7 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
     setIsRubricDialogOpen(false);
     setRubricData(null);
     setRubricError(null);
+    setCopyStatus(null);
     const selected = resumes.find((entry) => entry.id === resumeId);
     if (selected) {
       setResume(selected.resume);
@@ -114,6 +117,7 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
     setRubricData(null);
     setRubricError(null);
     setIsRubricDialogOpen(false);
+    setCopyStatus(null);
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/competencies/generate`, {
@@ -169,6 +173,7 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
     setRubricGenerated(false);
     setRubricData(null);
     setIsRubricDialogOpen(false);
+    setCopyStatus(null);
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/rubrics/generate`, {
@@ -204,6 +209,19 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
     }
   };
 
+  const handleCopyRubric = async () => {
+    if (!rubricData) return;
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(rubricData, null, 2));
+      setCopyStatus('Rubric JSON copied to clipboard.');
+      setTimeout(() => setCopyStatus(null), 3000);
+    } catch (error) {
+      console.error('Failed to copy rubric', error);
+      setCopyStatus('Unable to copy rubric.');
+      setTimeout(() => setCopyStatus(null), 3000);
+    }
+  };
+
   const updateInterviewStyle = (competencyId: string, style: string) => {
     setCompetencies((prev) =>
       prev.map((item) => (item.id === competencyId ? { ...item, interviewStyle: style } : item)),
@@ -212,6 +230,7 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
     setRubricData(null);
     setRubricError(null);
     setIsRubricDialogOpen(false);
+    setCopyStatus(null);
   };
 
   const allCompetenciesHaveStyle = competencies.length > 0 && competencies.every((item) => item.interviewStyle);
@@ -273,6 +292,7 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                   setRubricData(null);
                   setRubricError(null);
                   setIsRubricDialogOpen(false);
+                  setCopyStatus(null);
                 }}
                 placeholder="Paste the job description here or select from dropdown above..."
                 className="min-h-[200px] sm:min-h-[300px] resize-none bg-white/60 border-gray-200/50 focus:border-gray-300 focus:ring-gray-200/50 mb-4"
@@ -378,6 +398,7 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                   setIsRubricDialogOpen(false);
                   setRubricData(null);
                   setRubricError(null);
+                  setCopyStatus(null);
                 }}
                 placeholder="Paste the candidate's resume here or select from dropdown above..."
                 className="min-h-[200px] sm:min-h-[300px] resize-none bg-white/60 border-gray-200/50 focus:border-gray-300 focus:ring-gray-200/50 mb-4"
@@ -415,15 +436,24 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
 
                 {rubricGenerated && rubricData && !isGeneratingRubric && (
                   <Dialog open={isRubricDialogOpen} onOpenChange={setIsRubricDialogOpen}>
-                    <DialogTrigger asChild>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full sm:w-auto bg-white/80 border-gray-300/50 text-gray-700 hover:bg-gray-50 hover:border-gray-400/50 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                        >
+                          <FileText className="w-4 h-4 mr-2" />
+                          View Rubric
+                        </Button>
+                      </DialogTrigger>
                       <Button
                         variant="outline"
+                        onClick={handleCopyRubric}
                         className="w-full sm:w-auto bg-white/80 border-gray-300/50 text-gray-700 hover:bg-gray-50 hover:border-gray-400/50 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
                       >
-                        <FileText className="w-4 h-4 mr-2" />
-                        View Rubric
+                        Copy Rubric JSON
                       </Button>
-                    </DialogTrigger>
+                    </div>
                     <DialogContent className="max-w-3xl max-h-[80vh]">
                       <DialogHeader>
                         <DialogTitle>Evaluation Rubric</DialogTitle>
@@ -460,6 +490,25 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                                       </Badge>
                                     </div>
                                     <p className="text-xs text-gray-600 leading-relaxed">{criterion.description}</p>
+                                    {criterion.scoring_levels && (
+                                      <div className="mt-3 space-y-1">
+                                        <p className="text-[11px] font-semibold text-gray-700 uppercase tracking-wide">
+                                          Scoring Levels
+                                        </p>
+                                        {Object.entries(criterion.scoring_levels)
+                                          .sort((a, b) => {
+                                            const levelA = parseInt(a[0].replace(/[^0-9]/g, ''), 10) || 0;
+                                            const levelB = parseInt(b[0].replace(/[^0-9]/g, ''), 10) || 0;
+                                            return levelA - levelB;
+                                          })
+                                          .map(([level, guidance]) => (
+                                            <div key={level} className="text-[11px] text-gray-600">
+                                              <span className="font-semibold text-gray-700 mr-2">{level}:</span>
+                                              <span>{guidance}</span>
+                                            </div>
+                                          ))}
+                                      </div>
+                                    )}
                                   </div>
                                 ))}
                               </div>
@@ -475,6 +524,10 @@ export function SetupPage({ onStartInterview }: SetupPageProps) {
                       </ScrollArea>
                     </DialogContent>
                   </Dialog>
+                )}
+
+                {copyStatus && (
+                  <div className="text-[11px] text-gray-600 text-center sm:text-left">{copyStatus}</div>
                 )}
               </div>
             </div>
