@@ -1,123 +1,166 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Chatbot } from './components/Chatbot';
 import { SetupPage, InterviewDetails } from './components/SetupPage';
 import { ScheduledInterviews, ScheduledInterview } from './components/ScheduledInterviews';
+import { API_BASE_URL } from './config';
 
 type AppView = 'setup' | 'scheduled' | 'interview';
 
-// Sample demo interview data
-const demoInterview: ScheduledInterview = {
-  id: 'demo-interview-1',
-  jobTitle: 'Senior Software Engineer',
-  candidateName: 'Sarah Chen',
-  jobDescription: `Senior Software Engineer
+interface ApiCompetency {
+  id: string;
+  name: string;
+  interview_style: string;
+  rationale?: string | null;
+}
 
-We are seeking an experienced Senior Software Engineer to join our growing team. The ideal candidate will have strong technical skills and a passion for building scalable systems.
+interface ApiRubricCriterion {
+  name: string;
+  description: string;
+  weight: number;
+  scoring_levels?: Record<string, string> | null;
+}
 
-Key Responsibilities:
-- Design and implement complex software solutions
-- Lead technical discussions and architecture decisions
-- Mentor junior developers
-- Collaborate with cross-functional teams
+interface ApiRubricCategory {
+  category: string;
+  criteria: ApiRubricCriterion[];
+}
 
-Requirements:
-- 5+ years of software development experience
-- Strong proficiency in modern programming languages
-- Experience with distributed systems
-- Excellent problem-solving skills`,
-  resume: `Sarah Chen
-Senior Software Engineer
+interface ApiScoreDetail {
+  criteria: string;
+  score: number;
+  feedback: string;
+}
 
-Professional Summary:
-Accomplished software engineer with 7+ years of experience building scalable web applications and distributed systems. Proven track record of leading technical initiatives and mentoring development teams.
-
-Experience:
-Senior Software Engineer at Tech Corp (2020-Present)
-- Led migration of monolithic application to microservices architecture
-- Mentored team of 5 junior developers
-- Improved system performance by 40%
-
-Software Engineer at StartupXYZ (2017-2020)
-- Built real-time data processing pipeline handling 1M+ events/day
-- Implemented CI/CD pipeline reducing deployment time by 60%`,
-  competencies: [
-    { id: '1', name: 'Technical Problem Solving', interviewStyle: 'technical' },
-    { id: '2', name: 'System Design', interviewStyle: 'technical' },
-    { id: '3', name: 'Leadership & Mentoring', interviewStyle: 'behavioral' }
-  ],
+interface ApiScheduledInterview {
+  id: string;
+  job_title: string;
+  candidate_name: string;
+  job_description: string;
+  resume: string;
+  competencies: ApiCompetency[];
   rubric: {
-    candidateName: 'Sarah Chen',
-    position: 'Senior Software Engineer',
-    evaluationCriteria: [
-      {
-        category: 'Technical Skills',
-        criteria: [
-          {
-            name: 'Problem Solving',
-            description: 'Ability to break down complex problems and devise effective solutions',
-            weight: 25
-          },
-          {
-            name: 'System Design',
-            description: 'Understanding of scalable architecture and design patterns',
-            weight: 25
-          }
-        ]
-      },
-      {
-        category: 'Leadership',
-        criteria: [
-          {
-            name: 'Mentoring',
-            description: 'Experience guiding and developing junior team members',
-            weight: 20
-          },
-          {
-            name: 'Communication',
-            description: 'Clear articulation of technical concepts to various audiences',
-            weight: 15
-          }
-        ]
-      },
-      {
-        category: 'Domain Expertise',
-        criteria: [
-          {
-            name: 'Technology Stack',
-            description: 'Proficiency in relevant technologies and tools',
-            weight: 15
-          }
-        ]
-      }
-    ]
-  },
-  scheduledDate: new Date('2025-10-25T14:00:00'),
-  status: 'scheduled'
-};
+    candidate_name: string;
+    position: string;
+    evaluation_criteria: ApiRubricCategory[];
+  };
+  scheduled_date: string;
+  status: 'scheduled' | 'completed';
+  overall_score?: number | null;
+  score_details?: ApiScoreDetail[] | null;
+}
 
 export default function App() {
   const [currentView, setCurrentView] = useState<AppView>('setup');
-  const [scheduledInterviews, setScheduledInterviews] = useState<ScheduledInterview[]>([demoInterview]);
+  const [scheduledInterviews, setScheduledInterviews] = useState<ScheduledInterview[]>([]);
   const [currentInterviewId, setCurrentInterviewId] = useState<string | null>(null);
-  
+  const [isLoadingInterviews, setIsLoadingInterviews] = useState(true);
+  const [interviewLoadError, setInterviewLoadError] = useState<string | null>(null);
+
   // Set this to true for interviewer view, false for candidate view
   const isInterviewerView = true; // Toggle this based on user role
 
-  const handleScheduleInterview = (details: InterviewDetails) => {
-    const newInterview: ScheduledInterview = {
-      id: `interview-${Date.now()}`,
-      jobTitle: details.jobTitle,
-      candidateName: details.candidateName,
-      jobDescription: details.jobDescription,
+  const mapFromApi = useCallback((payload: ApiScheduledInterview): ScheduledInterview => ({
+    id: payload.id,
+    jobTitle: payload.job_title,
+    candidateName: payload.candidate_name,
+    jobDescription: payload.job_description,
+    resume: payload.resume,
+    competencies: payload.competencies.map((competency) => ({
+      id: competency.id,
+      name: competency.name,
+      interviewStyle: competency.interview_style,
+      rationale: competency.rationale ?? undefined,
+    })),
+    rubric: {
+      candidateName: payload.rubric.candidate_name,
+      position: payload.rubric.position,
+      evaluationCriteria: payload.rubric.evaluation_criteria.map((category) => ({
+        category: category.category,
+        criteria: category.criteria.map((criterion) => ({
+          name: criterion.name,
+          description: criterion.description,
+          weight: criterion.weight,
+          scoringLevels: criterion.scoring_levels ?? undefined,
+        })),
+      })),
+    },
+    scheduledDate: new Date(payload.scheduled_date),
+    status: payload.status,
+    overallScore: payload.overall_score ?? undefined,
+    scoreDetails: payload.score_details?.map((detail) => ({
+      criteria: detail.criteria,
+      score: detail.score,
+      feedback: detail.feedback,
+    })),
+  }), []);
+
+  const fetchScheduledInterviews = useCallback(async () => {
+    setIsLoadingInterviews(true);
+    setInterviewLoadError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/interviews`);
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+      const payload: ApiScheduledInterview[] = await response.json();
+      setScheduledInterviews(payload.map(mapFromApi));
+    } catch (error) {
+      console.error('Failed to fetch scheduled interviews', error);
+      setInterviewLoadError('Unable to fetch scheduled interviews. Please try again.');
+    } finally {
+      setIsLoadingInterviews(false);
+    }
+  }, [mapFromApi]);
+
+  useEffect(() => {
+    void fetchScheduledInterviews();
+  }, [fetchScheduledInterviews]);
+
+  const handleScheduleInterview = async (details: InterviewDetails) => {
+    const payload = {
+      job_title: details.jobTitle,
+      candidate_name: details.candidateName,
+      job_description: details.jobDescription,
       resume: details.resume,
-      competencies: details.competencies,
-      rubric: details.rubric,
-      scheduledDate: new Date(),
-      status: 'scheduled'
+      competencies: details.competencies.map((competency) => ({
+        id: competency.id,
+        name: competency.name,
+        interview_style: competency.interviewStyle,
+        rationale: competency.rationale ?? null,
+      })),
+      rubric: {
+        candidate_name: details.rubric.candidateName,
+        position: details.rubric.position,
+        evaluation_criteria: details.rubric.evaluationCriteria.map((category) => ({
+          category: category.category,
+          criteria: category.criteria.map((criterion) => ({
+            name: criterion.name,
+            description: criterion.description,
+            weight: criterion.weight,
+            scoring_levels: criterion.scoringLevels ?? null,
+          })),
+        })),
+      },
     };
 
-    setScheduledInterviews([...scheduledInterviews, newInterview]);
-    setCurrentView('scheduled');
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/interviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      const scheduled: ApiScheduledInterview = await response.json();
+      setScheduledInterviews((prev) => [...prev, mapFromApi(scheduled)]);
+      setCurrentView('scheduled');
+    } catch (error) {
+      console.error('Failed to schedule interview', error);
+      throw error;
+    }
   };
 
   const handleStartInterview = (interviewId: string) => {
@@ -183,12 +226,17 @@ export default function App() {
         onStartInterview={handleStartInterview}
         onRedoInterview={handleRedoInterview}
         onScheduleNew={handleScheduleNew}
+        isLoading={isLoadingInterviews}
+        error={interviewLoadError}
+        onRetry={() => {
+          void fetchScheduledInterviews();
+        }}
       />
     );
   }
 
   return (
-    <SetupPage 
+    <SetupPage
       onScheduleInterview={handleScheduleInterview}
       onViewScheduled={handleViewScheduled}
       hasScheduledInterviews={scheduledInterviews.length > 0}

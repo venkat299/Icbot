@@ -8,6 +8,7 @@ import { Loader2, CheckCircle2, Sparkles, FileText, Calendar } from 'lucide-reac
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
 import { DummyJD_Placeholder, JobDescriptionOptions, ResumeOptions } from '../test';
+import { API_BASE_URL } from '../config';
 
 export interface Competency {
   id: string;
@@ -70,8 +71,6 @@ interface RubricPayload {
   categories: RubricCategory[];
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000'; // Resolves backend API host.
-
 const JOB_DESCRIPTION_OPTIONS = [
   { id: 'custom', title: 'Paste Job Description', description: '' },
   { id: 'default', title: 'Forecasting Analyst (Default)', description: DummyJD_Placeholder },
@@ -99,7 +98,7 @@ const mapRubricForInterview = (
 }); // Normalizes rubric payload for scheduled interviews.
 
 interface SetupPageProps {
-  onScheduleInterview: (details: InterviewDetails) => void;
+  onScheduleInterview: (details: InterviewDetails) => Promise<void>;
   onViewScheduled: () => void;
   hasScheduledInterviews: boolean;
 }
@@ -119,6 +118,8 @@ export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledIn
   const [rubricData, setRubricData] = useState<RubricPayload | null>(null);
   const [rubricError, setRubricError] = useState<string | null>(null);
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
+  const [isScheduling, setIsScheduling] = useState(false);
+  const [scheduleError, setScheduleError] = useState<string | null>(null);
 
   const jobDescriptions = JOB_DESCRIPTION_OPTIONS; // Provides JD presets for selection.
   const resumes = RESUME_OPTIONS; // Provides resume presets for selection.
@@ -127,6 +128,7 @@ export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledIn
     setCompetencies([]);
     setCompetencyGenerated(false);
     setCompetencyError(null);
+    setScheduleError(null);
   };
 
   const resetRubricState = () => { // Clears rubric generation artifacts.
@@ -135,6 +137,7 @@ export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledIn
     setRubricData(null);
     setRubricError(null);
     setCopyStatus(null);
+    setScheduleError(null);
   };
 
   const handleJobSelect = (jobId: string) => { // Updates job description based on picker choice.
@@ -270,10 +273,12 @@ export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledIn
   };
 
   const allCompetenciesHaveStyle = competencies.length > 0 && competencies.every((item) => item.interviewStyle);
-  const canScheduleInterview = competencyGenerated && rubricGenerated && allCompetenciesHaveStyle && !!rubricData;
+  const canScheduleInterview = competencyGenerated && rubricGenerated && allCompetenciesHaveStyle && !!rubricData && !isScheduling;
 
-  const handleScheduleInterview = () => { // Emits a fully prepared interview payload upstream.
+  const handleScheduleInterview = async () => { // Emits a fully prepared interview payload upstream.
     if (!rubricData) return;
+    setScheduleError(null);
+    setIsScheduling(true);
     const jobTitle = jobDescription.split('\n')[0]?.trim() || 'Interview';
     const candidateName = resume.split('\n')[0]?.trim() || 'Candidate';
 
@@ -286,9 +291,16 @@ export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledIn
       rubric: mapRubricForInterview(rubricData, candidateName, jobTitle),
     };
 
-    onScheduleInterview(interviewDetails);
-    resetCompetencyState();
-    resetRubricState();
+    try {
+      await onScheduleInterview(interviewDetails);
+      resetCompetencyState();
+      resetRubricState();
+    } catch (error) {
+      console.error('Failed to schedule interview', error);
+      setScheduleError('Unable to schedule interview. Please try again.');
+    } finally {
+      setIsScheduling(false);
+    }
   };
 
   return (
@@ -688,7 +700,7 @@ export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledIn
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="flex justify-center pb-6"
+          className="flex flex-col items-center gap-2 pb-6"
         >
           <Button
             onClick={handleScheduleInterview}
@@ -703,8 +715,16 @@ export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledIn
               transition-all duration-300
             "
           >
-            Schedule Interview
+            {isScheduling ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Scheduling...
+              </>
+            ) : (
+              'Schedule Interview'
+            )}
           </Button>
+          {scheduleError && <p className="text-sm text-red-600 text-center">{scheduleError}</p>}
         </motion.div>
       </div>
     </div>

@@ -4,12 +4,13 @@ import { Badge } from './ui/badge';
 import { Card } from './ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { ScrollArea } from './ui/scroll-area';
-import { Calendar, FileText, Play, RotateCcw, Eye, Award, Sparkles, Plus, ArrowLeft } from 'lucide-react';
+import { Calendar, FileText, Play, RotateCcw, Eye, Award, Sparkles, Plus, ArrowLeft, Loader2, AlertTriangle } from 'lucide-react';
 
 export interface Competency {
   id: string;
   name: string;
   interviewStyle: string;
+  rationale?: string;
 }
 
 export interface ScheduledInterview {
@@ -46,13 +47,19 @@ interface ScheduledInterviewsProps {
   onStartInterview: (interviewId: string) => void;
   onRedoInterview: (interviewId: string) => void;
   onScheduleNew: () => void;
+  isLoading: boolean;
+  error: string | null;
+  onRetry: () => void;
 }
 
 export function ScheduledInterviews({
   interviews,
   onStartInterview,
   onRedoInterview,
-  onScheduleNew
+  onScheduleNew,
+  isLoading,
+  error,
+  onRetry
 }: ScheduledInterviewsProps) {
 
   return (
@@ -95,7 +102,33 @@ export function ScheduledInterviews({
 
         {/* Interviews List */}
         <div className="space-y-4 sm:space-y-6">
-          {interviews.length === 0 ? (
+          {isLoading ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="backdrop-blur-xl bg-white/80 border border-gray-200/50 rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)]"
+            >
+              <Loader2 className="w-12 h-12 text-gray-400 mx-auto mb-4 animate-spin" />
+              <h3 className="text-gray-900 mb-2">Loading Scheduled Interviews</h3>
+              <p className="text-sm text-gray-600">Fetching the latest interview plan from the backend.</p>
+            </motion.div>
+          ) : error ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="backdrop-blur-xl bg-white/80 border border-red-200/60 rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)]"
+            >
+              <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
+              <h3 className="text-gray-900 mb-2">Unable to Load Interviews</h3>
+              <p className="text-sm text-gray-600 mb-6">{error}</p>
+              <Button
+                onClick={onRetry}
+                className="bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white shadow-[0_4px_16px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.2)]"
+              >
+                Try Again
+              </Button>
+            </motion.div>
+          ) : interviews.length === 0 ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
