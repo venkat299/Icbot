@@ -33,3 +33,7 @@ Pydantic and JSON enforcement:
 
 - All public functions that consume LLM output must accept and return Pydantic models only. No dicts at boundaries.
 - Expose a small registry that maps module/function to its `LlmRoute` and output schema, loaded from the common config.
+
+## Codex Workflow Notes
+
+- Whenever updating any UI source under `./src`, also describe the delta in `ui-diff.md` so future Figma syncs can be reconciled quickly.

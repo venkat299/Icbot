@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'react'; // Setup page orchestrates AI interview scheduling flow.
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
@@ -7,11 +7,13 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Loader2, CheckCircle2, Sparkles, FileText, Calendar } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
+import { DummyJD_Placeholder, JobDescriptionOptions, ResumeOptions } from '../test';
 
 export interface Competency {
   id: string;
   name: string;
   interviewStyle: string;
+  rationale?: string;
 }
 
 export interface InterviewDetails {
@@ -29,10 +31,72 @@ export interface InterviewDetails {
         name: string;
         description: string;
         weight: number;
+        scoringLevels?: Record<string, string>;
       }[];
     }[];
   };
 }
+
+interface LlmCompetency {
+  competency_id: string;
+  title: string;
+  style_id: string;
+  rationale?: string | null;
+}
+
+interface CompetencyPlanResponse {
+  competencies: LlmCompetency[];
+  stage_sequence?: string[];
+  stage_styles?: Record<string, string>;
+}
+
+interface RubricCriterion {
+  id: string;
+  name: string;
+  description: string;
+  weight: number;
+  scoring_levels?: Record<string, string>;
+}
+
+interface RubricCategory {
+  id: string;
+  name: string;
+  criteria: RubricCriterion[];
+}
+
+interface RubricPayload {
+  role: string;
+  seniority_level: string;
+  categories: RubricCategory[];
+}
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000'; // Resolves backend API host.
+
+const JOB_DESCRIPTION_OPTIONS = [
+  { id: 'custom', title: 'Paste Job Description', description: '' },
+  { id: 'default', title: 'Forecasting Analyst (Default)', description: DummyJD_Placeholder },
+  ...JobDescriptionOptions,
+]; // Centralizes JD presets.
+
+const RESUME_OPTIONS = [{ id: 'empty', name: 'Paste Resume', resume: '' }, ...ResumeOptions]; // Centralizes resume presets.
+
+const mapRubricForInterview = (
+  payload: RubricPayload,
+  candidateName: string,
+  jobTitle: string,
+): InterviewDetails['rubric'] => ({
+  candidateName,
+  position: jobTitle,
+  evaluationCriteria: payload.categories.map((category) => ({
+    category: category.name,
+    criteria: category.criteria.map((criterion) => ({
+      name: criterion.name,
+      description: criterion.description,
+      weight: Math.round(criterion.weight),
+      scoringLevels: criterion.scoring_levels,
+    })),
+  })),
+}); // Normalizes rubric payload for scheduled interviews.
 
 interface SetupPageProps {
   onScheduleInterview: (details: InterviewDetails) => void;
@@ -40,285 +104,178 @@ interface SetupPageProps {
   hasScheduledInterviews: boolean;
 }
 
-export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledInterviews }: SetupPageProps) {
+export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledInterviews }: SetupPageProps) { // Renders interview setup workflow.
   const [jobDescription, setJobDescription] = useState('');
   const [resume, setResume] = useState('');
-  const [selectedJobId, setSelectedJobId] = useState('');
-  const [selectedResumeId, setSelectedResumeId] = useState('');
+  const [selectedJobId, setSelectedJobId] = useState('custom');
+  const [selectedResumeId, setSelectedResumeId] = useState('empty');
   const [competencies, setCompetencies] = useState<Competency[]>([]);
   const [isGeneratingCompetency, setIsGeneratingCompetency] = useState(false);
   const [competencyGenerated, setCompetencyGenerated] = useState(false);
+  const [competencyError, setCompetencyError] = useState<string | null>(null);
   const [isGeneratingRubric, setIsGeneratingRubric] = useState(false);
   const [rubricGenerated, setRubricGenerated] = useState(false);
   const [isRubricDialogOpen, setIsRubricDialogOpen] = useState(false);
+  const [rubricData, setRubricData] = useState<RubricPayload | null>(null);
+  const [rubricError, setRubricError] = useState<string | null>(null);
+  const [copyStatus, setCopyStatus] = useState<string | null>(null);
 
-  // Predefined job descriptions
-  const jobDescriptions = [
-    {
-      id: 'swe',
-      title: 'Senior Software Engineer',
-      description: `Senior Software Engineer - Full Stack
+  const jobDescriptions = JOB_DESCRIPTION_OPTIONS; // Provides JD presets for selection.
+  const resumes = RESUME_OPTIONS; // Provides resume presets for selection.
 
-We are seeking an experienced Senior Software Engineer to join our dynamic team. The ideal candidate will have:
+  const resetCompetencyState = () => { // Clears competency generation artifacts.
+    setCompetencies([]);
+    setCompetencyGenerated(false);
+    setCompetencyError(null);
+  };
 
-Requirements:
-• 5+ years of experience in software development
-• Strong proficiency in JavaScript/TypeScript, React, Node.js
-• Experience with cloud platforms (AWS, Azure, or GCP)
-• Solid understanding of microservices architecture
-• Experience with CI/CD pipelines and DevOps practices
-• Strong problem-solving and analytical skills
-• Excellent communication and teamwork abilities
+  const resetRubricState = () => { // Clears rubric generation artifacts.
+    setRubricGenerated(false);
+    setIsRubricDialogOpen(false);
+    setRubricData(null);
+    setRubricError(null);
+    setCopyStatus(null);
+  };
 
-Responsibilities:
-• Design and implement scalable web applications
-• Lead technical discussions and code reviews
-• Mentor junior developers
-• Collaborate with product and design teams
-• Contribute to architectural decisions`
-    },
-    {
-      id: 'pm',
-      title: 'Product Manager',
-      description: `Product Manager - SaaS Platform
-
-Join our product team to drive strategy and execution for our enterprise SaaS platform.
-
-Requirements:
-• 3+ years of product management experience
-• Strong analytical and data-driven decision making
-• Experience with B2B SaaS products
-• Excellent stakeholder management skills
-• Understanding of Agile methodologies
-• Technical background or strong technical acumen
-
-Responsibilities:
-• Define product roadmap and strategy
-• Gather and prioritize product requirements
-• Work closely with engineering, design, and sales teams
-• Analyze metrics and user feedback
-• Conduct market research and competitive analysis`
-    },
-    {
-      id: 'ds',
-      title: 'Data Scientist',
-      description: `Data Scientist - Machine Learning
-
-We're looking for a talented Data Scientist to help us leverage data for business insights.
-
-Requirements:
-• Master's or PhD in Computer Science, Statistics, or related field
-• 3+ years of experience in data science or machine learning
-• Strong programming skills in Python (NumPy, Pandas, Scikit-learn)
-• Experience with deep learning frameworks (TensorFlow, PyTorch)
-• Knowledge of statistical analysis and A/B testing
-• Experience with SQL and big data technologies
-
-Responsibilities:
-• Build and deploy machine learning models
-• Analyze large datasets to extract insights
-• Collaborate with engineering to productionize models
-• Present findings to stakeholders
-• Stay current with ML/AI advancements`
-    }
-  ];
-
-  // Predefined resumes
-  const resumes = [
-    {
-      id: 'candidate1',
-      name: 'Sarah Chen',
-      resume: `SARAH CHEN
-Senior Software Engineer
-Email: sarah.chen@email.com | LinkedIn: linkedin.com/in/sarahchen
-
-PROFESSIONAL SUMMARY
-Results-driven Senior Software Engineer with 6+ years of experience building scalable web applications. Expertise in full-stack development, cloud architecture, and leading technical initiatives.
-
-EXPERIENCE
-
-Senior Software Engineer | TechCorp Inc. | 2021 - Present
-• Led development of microservices architecture serving 2M+ users
-• Reduced API response time by 40% through optimization and caching strategies
-• Mentored 5 junior engineers and conducted technical interviews
-• Technologies: React, Node.js, TypeScript, AWS, Docker, Kubernetes
-
-Software Engineer | StartupXYZ | 2018 - 2021
-• Built real-time collaboration features using WebSocket and Redis
-• Implemented CI/CD pipeline reducing deployment time by 60%
-• Developed RESTful APIs and integrated third-party services
-• Technologies: Vue.js, Python, PostgreSQL, MongoDB
-
-EDUCATION
-B.S. Computer Science | Stanford University | 2018
-
-SKILLS
-Languages: JavaScript, TypeScript, Python, Java
-Frontend: React, Vue.js, Next.js, Redux
-Backend: Node.js, Express, Django, GraphQL
-Cloud: AWS (EC2, S3, Lambda), Docker, Kubernetes
-Databases: PostgreSQL, MongoDB, Redis`
-    },
-    {
-      id: 'candidate2',
-      name: 'Michael Rodriguez',
-      resume: `MICHAEL RODRIGUEZ
-Product Manager
-Email: m.rodriguez@email.com | Phone: (555) 123-4567
-
-SUMMARY
-Strategic Product Manager with 5 years of experience driving product vision and execution for B2B SaaS platforms. Track record of launching successful features that increase user engagement and revenue.
-
-PROFESSIONAL EXPERIENCE
-
-Senior Product Manager | CloudSolutions Inc. | 2022 - Present
-• Led product strategy for enterprise analytics dashboard (ARR: $15M)
-• Increased user engagement by 35% through data-driven feature prioritization
-• Managed cross-functional team of 12 engineers and designers
-• Conducted 50+ customer interviews to validate product hypotheses
-
-Product Manager | DataFlow Systems | 2019 - 2022
-• Launched 3 major product features resulting in 25% revenue growth
-• Defined product roadmap based on market research and user feedback
-• Collaborated with sales team to develop go-to-market strategies
-• Improved feature adoption rate from 40% to 75%
-
-Associate Product Manager | TechStart | 2018 - 2019
-• Assisted in product planning and requirements gathering
-• Analyzed user metrics and created dashboards for stakeholders
-
-EDUCATION
-MBA | Harvard Business School | 2018
-B.A. Economics | UC Berkeley | 2016
-
-SKILLS
-Product Strategy, Agile/Scrum, User Research, A/B Testing, SQL, Analytics (Mixpanel, Amplitude), Wireframing (Figma), Roadmapping (Aha!, ProductBoard)`
-    },
-    {
-      id: 'candidate3',
-      name: 'Dr. Aisha Patel',
-      resume: `DR. AISHA PATEL
-Data Scientist - Machine Learning Engineer
-Email: aisha.patel@email.com | GitHub: github.com/aishapatel
-
-EDUCATION
-Ph.D. Computer Science (Machine Learning) | MIT | 2020
-M.S. Statistics | University of Michigan | 2016
-B.S. Mathematics & Computer Science | Cornell University | 2014
-
-PROFESSIONAL EXPERIENCE
-
-Senior Data Scientist | AI Innovations Lab | 2021 - Present
-• Developed recommendation engine increasing user engagement by 45%
-• Built NLP models for sentiment analysis with 92% accuracy
-• Led team of 4 data scientists on computer vision project
-• Published 3 papers in top-tier ML conferences (NeurIPS, ICML)
-• Technologies: Python, TensorFlow, PyTorch, Kubernetes, MLflow
-
-Data Scientist | FinTech Analytics | 2020 - 2021
-• Created fraud detection model reducing false positives by 30%
-• Implemented real-time scoring pipeline processing 100K+ transactions/day
-• Conducted A/B tests and statistical analysis for product features
-• Technologies: Python, Scikit-learn, Spark, SQL, Airflow
-
-Research Assistant | MIT CSAIL | 2016 - 2020
-• Researched deep learning architectures for computer vision
-• Published dissertation on "Attention Mechanisms in Visual Recognition"
-• Collaborated with industry partners on applied ML projects
-
-TECHNICAL SKILLS
-Languages: Python, R, SQL, Scala
-ML/DL: TensorFlow, PyTorch, Scikit-learn, XGBoost, Keras
-Big Data: Spark, Hadoop, Hive
-Cloud: AWS (SageMaker, EC2), GCP
-Tools: Docker, Kubernetes, Git, MLflow, Jupyter
-
-PUBLICATIONS
-• "Attention Mechanisms in Visual Recognition" - CVPR 2020
-• "Efficient Training of Large-Scale Models" - NeurIPS 2019
-• "Transfer Learning for Few-Shot Classification" - ICML 2019`
-    }
-  ];
-
-  const handleJobSelect = (jobId: string) => {
+  const handleJobSelect = (jobId: string) => { // Updates job description based on picker choice.
     setSelectedJobId(jobId);
-    const selectedJob = jobDescriptions.find(j => j.id === jobId);
-    if (selectedJob) {
-      setJobDescription(selectedJob.description);
-    }
+    const selectedJob = jobDescriptions.find((job) => job.id === jobId);
+    setJobDescription(selectedJob?.description ?? '');
+    resetCompetencyState();
+    resetRubricState();
   };
 
-  const handleResumeSelect = (resumeId: string) => {
+  const handleResumeSelect = (resumeId: string) => { // Updates resume text based on picker choice.
     setSelectedResumeId(resumeId);
-    const selectedResume = resumes.find(r => r.id === resumeId);
-    if (selectedResume) {
-      setResume(selectedResume.resume);
+    const selectedResume = resumes.find((entry) => entry.id === resumeId);
+    setResume(selectedResume?.resume ?? '');
+    resetRubricState();
+  };
+
+  const handleGenerateCompetency = async () => { // Requests competency plan from backend.
+    if (!jobDescription.trim()) {
+      setCompetencyError('Provide a job description before generating competencies.');
+      return;
+    }
+
+    setIsGeneratingCompetency(true);
+    resetCompetencyState();
+    resetRubricState();
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/competencies/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          job_description: jobDescription,
+          resume_text: resume || null,
+          target_roles: [],
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      const payload: CompetencyPlanResponse = await response.json();
+      const generated: Competency[] = (payload?.competencies ?? []).map((item, index) => ({
+        id: item.competency_id || `competency-${index + 1}`,
+        name: item.title,
+        interviewStyle: item.style_id ?? '',
+        rationale: item.rationale ?? undefined,
+      }));
+
+      setCompetencies(generated);
+      setCompetencyGenerated(generated.length > 0);
+      if (generated.length === 0) {
+        setCompetencyError('No competencies returned. Try updating the inputs.');
+      }
+    } catch (error) {
+      console.error('Failed to generate competencies', error);
+      setCompetencyError('Unable to generate competencies. Please try again.');
+    } finally {
+      setIsGeneratingCompetency(false);
     }
   };
 
-  // Mock rubric data
-  const rubricData = {
-    candidateName: 'John Doe',
-    position: 'Senior Software Engineer',
-    evaluationCriteria: [
-      {
-        category: 'Technical Skills',
-        criteria: [
-          { name: 'Programming Languages', description: 'Proficiency in Java, Python, JavaScript', weight: 20 },
-          { name: 'System Design', description: 'Ability to design scalable systems', weight: 25 },
-          { name: 'Data Structures & Algorithms', description: 'Strong foundation in DSA', weight: 20 },
-        ]
-      },
-      {
-        category: 'Soft Skills',
-        criteria: [
-          { name: 'Communication', description: 'Clear and effective communication', weight: 15 },
-          { name: 'Problem Solving', description: 'Analytical thinking and creativity', weight: 10 },
-          { name: 'Teamwork', description: 'Collaboration and leadership', weight: 10 },
-        ]
-      }
-    ]
-  };
+  const handleGenerateRubric = async () => { // Requests rubric aligned to competencies.
+    if (!jobDescription.trim()) {
+      setRubricError('Provide a job description before generating the rubric.');
+      return;
+    }
+    if (competencies.length === 0) {
+      setRubricError('Generate competencies first so the rubric can align with them.');
+      return;
+    }
+    if (!competencies.every((item) => item.interviewStyle)) {
+      setRubricError('Assign an interview style to every competency before generating the rubric.');
+      return;
+    }
 
-  const handleGenerateCompetency = () => {
-    setIsGeneratingCompetency(true);
-    // Simulate API call
-    setTimeout(() => {
-      setCompetencies([
-        { id: '1', name: 'Technical Problem Solving', interviewStyle: '' },
-        { id: '2', name: 'Communication Skills', interviewStyle: '' },
-        { id: '3', name: 'Leadership & Team Management', interviewStyle: '' },
-        { id: '4', name: 'Domain Expertise', interviewStyle: '' },
-      ]);
-      setIsGeneratingCompetency(false);
-      setCompetencyGenerated(true);
-    }, 2000);
-  };
-
-  const handleGenerateRubric = () => {
     setIsGeneratingRubric(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsGeneratingRubric(false);
+    setRubricError(null);
+    setRubricGenerated(false);
+    setRubricData(null);
+    setIsRubricDialogOpen(false);
+    setCopyStatus(null);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/rubrics/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          job_description: jobDescription,
+          resume_text: resume || null,
+          competencies: competencies.map((item) => ({
+            competency_id: item.id,
+            title: item.name,
+            style_id: item.interviewStyle,
+            rationale: item.rationale ?? null,
+          })),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      const payload: RubricPayload = await response.json();
+      setRubricData(payload);
       setRubricGenerated(true);
-    }, 2000);
+      setIsRubricDialogOpen(true);
+    } catch (error) {
+      console.error('Failed to generate rubric', error);
+      setRubricError('Unable to generate rubric. Please try again.');
+    } finally {
+      setIsGeneratingRubric(false);
+    }
   };
 
-  const updateInterviewStyle = (competencyId: string, style: string) => {
-    setCompetencies(competencies.map(c => 
-      c.id === competencyId ? { ...c, interviewStyle: style } : c
-    ));
+  const handleCopyRubric = async () => { // Copies rubric JSON for sharing.
+    if (!rubricData) return;
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(rubricData, null, 2));
+      setCopyStatus('Rubric JSON copied to clipboard.');
+    } catch (error) {
+      console.error('Failed to copy rubric', error);
+      setCopyStatus('Unable to copy rubric.');
+    } finally {
+      setTimeout(() => setCopyStatus(null), 3000);
+    }
   };
 
-  const allCompetenciesHaveStyle = competencies.length > 0 && competencies.every(c => c.interviewStyle);
-  const canScheduleInterview = competencyGenerated && rubricGenerated && allCompetenciesHaveStyle;
+  const updateInterviewStyle = (competencyId: string, style: string) => { // Updates selected style per competency.
+    setCompetencies((prev) => prev.map((item) => (item.id === competencyId ? { ...item, interviewStyle: style } : item)));
+    resetRubricState();
+  };
 
-  const handleScheduleInterview = () => {
-    // Extract job title from job description (first line typically)
-    const jobTitle = jobDescription.split('\n')[0].trim();
-    
-    // Extract candidate name from resume (first line typically)
-    const candidateName = resume.split('\n')[0].trim();
+  const allCompetenciesHaveStyle = competencies.length > 0 && competencies.every((item) => item.interviewStyle);
+  const canScheduleInterview = competencyGenerated && rubricGenerated && allCompetenciesHaveStyle && !!rubricData;
+
+  const handleScheduleInterview = () => { // Emits a fully prepared interview payload upstream.
+    if (!rubricData) return;
+    const jobTitle = jobDescription.split('\n')[0]?.trim() || 'Interview';
+    const candidateName = resume.split('\n')[0]?.trim() || 'Candidate';
 
     const interviewDetails: InterviewDetails = {
       jobTitle,
@@ -326,10 +283,12 @@ PUBLICATIONS
       jobDescription,
       resume,
       competencies,
-      rubric: rubricData
+      rubric: mapRubricForInterview(rubricData, candidateName, jobTitle),
     };
 
     onScheduleInterview(interviewDetails);
+    resetCompetencyState();
+    resetRubricState();
   };
 
   return (
@@ -422,7 +381,12 @@ PUBLICATIONS
               
               <Textarea
                 value={jobDescription}
-                onChange={(e) => setJobDescription(e.target.value)}
+                onChange={(e) => {
+                  setSelectedJobId('custom');
+                  setJobDescription(e.target.value);
+                  resetCompetencyState();
+                  resetRubricState();
+                }}
                 placeholder="Paste the job description here or select from dropdown above..."
                 className="min-h-[200px] sm:min-h-[300px] resize-none bg-white/60 border-gray-200/50 focus:border-gray-300 focus:ring-gray-200/50 mb-4"
               />
@@ -430,7 +394,7 @@ PUBLICATIONS
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Button
                   onClick={handleGenerateCompetency}
-                  disabled={!jobDescription || isGeneratingCompetency || competencyGenerated}
+                  disabled={!jobDescription.trim() || isGeneratingCompetency}
                   className="
                     w-full sm:w-auto
                     bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800
@@ -454,6 +418,10 @@ PUBLICATIONS
                     <CheckCircle2 className="w-5 h-5" />
                     <span className="text-sm">Completed</span>
                   </div>
+                )}
+
+                {competencyError && (
+                  <div className="text-sm text-red-600 text-center sm:text-left">{competencyError}</div>
                 )}
               </div>
             </div>
@@ -485,6 +453,9 @@ PUBLICATIONS
                   >
                     <div className="relative z-10 flex-1">
                       <span className="text-sm sm:text-base text-gray-900">{competency.name}</span>
+                      {competency.rationale && (
+                        <p className="mt-1 text-xs text-gray-600 leading-relaxed">{competency.rationale}</p>
+                      )}
                     </div>
                     <div className="relative z-10 w-full sm:w-64">
                       <Select
@@ -533,9 +504,9 @@ PUBLICATIONS
                     <SelectValue placeholder="Select a candidate resume" />
                   </SelectTrigger>
                   <SelectContent>
-                    {resumes.map((resume) => (
-                      <SelectItem key={resume.id} value={resume.id}>
-                        {resume.name}
+                    {resumes.map((resumeOption) => (
+                      <SelectItem key={resumeOption.id} value={resumeOption.id}>
+                        {resumeOption.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -544,7 +515,11 @@ PUBLICATIONS
               
               <Textarea
                 value={resume}
-                onChange={(e) => setResume(e.target.value)}
+                onChange={(e) => {
+                  setSelectedResumeId('empty');
+                  setResume(e.target.value);
+                  resetRubricState();
+                }}
                 placeholder="Paste the candidate's resume here or select from dropdown above..."
                 className="min-h-[200px] sm:min-h-[300px] resize-none bg-white/60 border-gray-200/50 focus:border-gray-300 focus:ring-gray-200/50 mb-4"
               />
@@ -553,7 +528,7 @@ PUBLICATIONS
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   <Button
                     onClick={handleGenerateRubric}
-                    disabled={!resume || isGeneratingRubric || rubricGenerated}
+                    disabled={!allCompetenciesHaveStyle || isGeneratingRubric}
                     className="
                       w-full sm:w-auto
                       bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800
@@ -578,90 +553,130 @@ PUBLICATIONS
                       <span className="text-sm">Completed</span>
                     </div>
                   )}
+
+                  {rubricError && (
+                    <div className="text-sm text-red-600 text-center sm:text-left">{rubricError}</div>
+                  )}
                 </div>
 
-                {rubricGenerated && !isGeneratingRubric && (
-                  <Dialog open={isRubricDialogOpen} onOpenChange={setIsRubricDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="
-                          w-full sm:w-auto
-                          bg-white/80 border-gray-300/50 text-gray-700
-                          hover:bg-gray-50 hover:border-gray-400/50
-                          shadow-[0_2px_8px_rgba(0,0,0,0.06)]
-                        "
-                      >
-                        <FileText className="w-4 h-4 mr-2" />
-                        View Rubric
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-3xl max-h-[80vh]">
-                      <DialogHeader>
-                        <DialogTitle>Evaluation Rubric</DialogTitle>
-                        <DialogDescription>
-                          Detailed assessment criteria for {rubricData.candidateName} - {rubricData.position}
-                        </DialogDescription>
-                      </DialogHeader>
-                      
-                      <ScrollArea className="h-[500px] pr-4">
-                        <div className="space-y-6">
-                          {rubricData.evaluationCriteria.map((category, catIndex) => (
-                            <motion.div
-                              key={catIndex}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: catIndex * 0.1 }}
-                              className="
-                                backdrop-blur-xl bg-gradient-to-br from-white to-gray-50/50
-                                border border-gray-200/50 rounded-2xl p-5
-                                shadow-[0_4px_16px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)]
-                              "
-                            >
-                              <h3 className="text-gray-900 mb-4 flex items-center gap-2">
-                                {category.category}
-                                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                                  {category.criteria.reduce((sum, c) => sum + c.weight, 0)}%
-                                </Badge>
-                              </h3>
-                              
-                              <div className="space-y-3">
-                                {category.criteria.map((criterion, critIndex) => (
-                                  <div
-                                    key={critIndex}
-                                    className="bg-white/60 border border-gray-200/50 rounded-xl p-4"
-                                  >
-                                    <div className="flex items-start justify-between gap-3 mb-2">
-                                      <h4 className="text-sm text-gray-900">{criterion.name}</h4>
-                                      <Badge 
-                                        variant="secondary"
-                                        className="bg-gray-100 text-gray-700 shrink-0"
-                                      >
-                                        {criterion.weight}%
-                                      </Badge>
+                {rubricGenerated && rubricData && !isGeneratingRubric && (
+                  <>
+                    <Dialog open={isRubricDialogOpen} onOpenChange={setIsRubricDialogOpen}>
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className="
+                              w-full sm:w-auto
+                              bg-white/80 border-gray-300/50 text-gray-700
+                              hover:bg-gray-50 hover:border-gray-400/50
+                              shadow-[0_2px_8px_rgba(0,0,0,0.06)]
+                            "
+                          >
+                            <FileText className="w-4 h-4 mr-2" />
+                            View Rubric
+                          </Button>
+                        </DialogTrigger>
+                        <Button
+                          variant="outline"
+                          onClick={handleCopyRubric}
+                          className="
+                            w-full sm:w-auto
+                            bg-white/80 border-gray-300/50 text-gray-700
+                            hover:bg-gray-50 hover:border-gray-400/50
+                            shadow-[0_2px_8px_rgba(0,0,0,0.06)]
+                          "
+                        >
+                          Copy Rubric JSON
+                        </Button>
+                      </div>
+                      <DialogContent className="max-w-3xl max-h-[80vh]">
+                        <DialogHeader>
+                          <DialogTitle>Evaluation Rubric</DialogTitle>
+                          <DialogDescription>
+                            Role: {rubricData.role} · Level: {rubricData.seniority_level}
+                          </DialogDescription>
+                        </DialogHeader>
+                        
+                        <ScrollArea className="h-[500px] pr-4">
+                          <div className="space-y-6">
+                            {rubricData.categories.map((category, catIndex) => (
+                              <motion.div
+                                key={category.id || `category-${catIndex}`}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: catIndex * 0.1 }}
+                                className="
+                                  backdrop-blur-xl bg-gradient-to-br from-white to-gray-50/50
+                                  border border-gray-200/50 rounded-2xl p-5
+                                  shadow-[0_4px_16px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)]
+                                "
+                              >
+                                <h3 className="text-gray-900 mb-4 flex items-center gap-2">
+                                  {category.name}
+                                  <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                                    {Math.round(category.criteria.reduce((sum, c) => sum + c.weight, 0))}%
+                                  </Badge>
+                                </h3>
+                                
+                                <div className="space-y-3">
+                                  {category.criteria.map((criterion, critIndex) => (
+                                    <div
+                                      key={criterion.id || `criterion-${catIndex}-${critIndex}`}
+                                      className="bg-white/60 border border-gray-200/50 rounded-xl p-4"
+                                    >
+                                      <div className="flex items-start justify-between gap-3 mb-2">
+                                        <h4 className="text-sm text-gray-900">{criterion.name}</h4>
+                                        <Badge 
+                                          variant="secondary"
+                                          className="bg-gray-100 text-gray-700 shrink-0"
+                                        >
+                                          {Math.round(criterion.weight)}%
+                                        </Badge>
+                                      </div>
+                                      <p className="text-xs text-gray-600 leading-relaxed">
+                                        {criterion.description}
+                                      </p>
+                                      {criterion.scoring_levels && Object.keys(criterion.scoring_levels).length > 0 && (
+                                        <div className="mt-3 space-y-1">
+                                          <p className="text-[11px] font-semibold text-gray-700 uppercase tracking-wide">
+                                            Scoring Levels
+                                          </p>
+                                          {Object.entries(criterion.scoring_levels)
+                                            .sort((a, b) => {
+                                              const levelA = parseInt(a[0].replace(/[^0-9]/g, ''), 10) || 0;
+                                              const levelB = parseInt(b[0].replace(/[^0-9]/g, ''), 10) || 0;
+                                              return levelA - levelB;
+                                            })
+                                            .map(([level, guidance]) => (
+                                              <div key={level} className="text-[11px] text-gray-600">
+                                                <span className="font-semibold text-gray-700 mr-2">{level}:</span>
+                                                <span>{guidance}</span>
+                                              </div>
+                                            ))}
+                                        </div>
+                                      )}
                                     </div>
-                                    <p className="text-xs text-gray-600 leading-relaxed">
-                                      {criterion.description}
-                                    </p>
-                                  </div>
-                                ))}
-                              </div>
-                            </motion.div>
-                          ))}
-                          
-                          <div className="
-                            bg-gradient-to-br from-blue-50 to-blue-100/50
-                            border border-blue-200/50 rounded-2xl p-4
-                          ">
-                            <p className="text-xs text-blue-800">
-                              <strong>Note:</strong> This rubric will be used to evaluate the candidate's performance
-                              throughout the interview. Each criterion will be scored on a scale of 1-5.
-                            </p>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            ))}
+                            
+                            <div className="
+                              bg-gradient-to-br from-blue-50 to-blue-100/50
+                              border border-blue-200/50 rounded-2xl p-4
+                            ">
+                              <p className="text-xs text-blue-800">
+                                <strong>Note:</strong> This rubric will be used to evaluate the candidate's performance
+                                throughout the interview. Each criterion will be scored on a scale of 1-5.
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </ScrollArea>
-                    </DialogContent>
-                  </Dialog>
+                        </ScrollArea>
+                      </DialogContent>
+                    </Dialog>
+                    {copyStatus && <div className="text-[11px] text-gray-600">{copyStatus}</div>}
+                  </>
                 )}
               </div>
             </div>
