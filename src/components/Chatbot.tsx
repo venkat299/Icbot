@@ -50,9 +50,10 @@ const botResponses = [
 
 interface ChatbotProps {
   isInterviewerView?: boolean;
+  onEndInterview?: () => void;
 }
 
-export function Chatbot({ isInterviewerView = false }: ChatbotProps) {
+export function Chatbot({ isInterviewerView = false, onEndInterview }: ChatbotProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [ttsEnabled, setTtsEnabled] = useState(true);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -505,6 +506,24 @@ export function Chatbot({ isInterviewerView = false }: ChatbotProps) {
                       <VolumeX className="w-5 h-5" />
                     )}
                   </motion.button>
+
+                  {onEndInterview && (
+                    <motion.button
+                      onClick={onEndInterview}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="
+                        px-3 py-1.5 rounded-full text-xs
+                        backdrop-blur-xl border border-gray-200/50
+                        bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700
+                        shadow-[0_4px_12px_rgba(239,68,68,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
+                        transition-all duration-200
+                      "
+                      title="End Interview"
+                    >
+                      End Interview
+                    </motion.button>
+                  )}
                 </div>
               </div>
             </div>
