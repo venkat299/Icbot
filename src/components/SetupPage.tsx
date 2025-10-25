@@ -651,7 +651,7 @@ export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledIn
                                       </p>
                                       {criterion.scoring_levels && Object.keys(criterion.scoring_levels).length > 0 && (
                                         <div className="mt-3 space-y-1">
-                                          <p className="text-[11px] font-semibold text-gray-700 uppercase tracking-wide">
+                                          <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
                                             Scoring Levels
                                           </p>
                                           {Object.entries(criterion.scoring_levels)
@@ -661,9 +661,9 @@ export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledIn
                                               return levelA - levelB;
                                             })
                                             .map(([level, guidance]) => (
-                                              <div key={level} className="text-[11px] text-gray-600">
-                                                <span className="font-semibold text-gray-700 mr-2">{level}:</span>
-                                                <span>{guidance}</span>
+                                              <div key={level} className="text-xs text-gray-600 leading-relaxed">
+                                                <span className="font-semibold text-gray-800 mr-2">{level}:</span>
+                                                <span className="text-gray-600">{guidance}</span>
                                               </div>
                                             ))}
                                         </div>
@@ -687,7 +687,7 @@ export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledIn
                         </ScrollArea>
                       </DialogContent>
                     </Dialog>
-                    {copyStatus && <div className="text-[11px] text-gray-600">{copyStatus}</div>}
+                    {copyStatus && <div className="text-xs text-gray-600">{copyStatus}</div>}
                   </>
                 )}
               </div>

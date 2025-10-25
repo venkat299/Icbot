@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from 'motion/react'; // Scheduled interviews list displays scheduled interview records.
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Card } from './ui/card';
@@ -29,6 +29,7 @@ export interface ScheduledInterview {
         name: string;
         description: string;
         weight: number;
+        scoringLevels?: Record<string, string>;
       }[];
     }[];
   };
@@ -60,7 +61,7 @@ export function ScheduledInterviews({
   isLoading,
   error,
   onRetry
-}: ScheduledInterviewsProps) {
+}: ScheduledInterviewsProps) { // Renders scheduled interview dashboard with actions.
 
   return (
     <div className="h-screen w-screen overflow-auto bg-gradient-to-br from-gray-50 to-white">
@@ -340,7 +341,7 @@ export function ScheduledInterviews({
                                   <h3 className="text-gray-900 mb-4 flex items-center gap-2">
                                     {category.category}
                                     <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                                      {category.criteria.reduce((sum, c) => sum + c.weight, 0)}%
+                                      {Math.round(category.criteria.reduce((sum, c) => sum + c.weight, 0))}%
                                     </Badge>
                                   </h3>
                                   <div className="space-y-3">
@@ -352,17 +353,45 @@ export function ScheduledInterviews({
                                         <div className="flex items-start justify-between gap-3 mb-2">
                                           <h4 className="text-sm text-gray-900">{criterion.name}</h4>
                                           <Badge variant="secondary" className="bg-gray-100 text-gray-700 shrink-0">
-                                            {criterion.weight}%
+                                            {Math.round(criterion.weight)}%
                                           </Badge>
                                         </div>
                                         <p className="text-xs text-gray-600 leading-relaxed">
                                           {criterion.description}
                                         </p>
+                                        {criterion.scoringLevels && Object.keys(criterion.scoringLevels).length > 0 && (
+                                          <div className="mt-3 space-y-1">
+                                            <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                                              Scoring Levels
+                                            </p>
+                                            {Object.entries(criterion.scoringLevels)
+                                              .sort((a, b) => {
+                                                const levelA = parseInt(a[0].replace(/[^0-9]/g, ''), 10) || 0;
+                                                const levelB = parseInt(b[0].replace(/[^0-9]/g, ''), 10) || 0;
+                                                return levelA - levelB;
+                                              })
+                                              .map(([level, guidance]) => (
+                                                <div key={level} className="text-xs text-gray-600 leading-relaxed">
+                                                  <span className="font-semibold text-gray-800 mr-2">{level}:</span>
+                                                  <span className="text-gray-600">{guidance}</span>
+                                                </div>
+                                              ))}
+                                          </div>
+                                        )}
                                       </div>
                                     ))}
                                   </div>
                                 </motion.div>
                               ))}
+                              <div className="
+                                bg-gradient-to-br from-blue-50 to-blue-100/50
+                                border border-blue-200/50 rounded-2xl p-4
+                              ">
+                                <p className="text-xs text-blue-800">
+                                  <strong>Note:</strong> This rubric will be used to evaluate the candidate's performance
+                                  throughout the interview. Each criterion will be scored on a scale of 1-5.
+                                </p>
+                              </div>
                             </div>
                           </ScrollArea>
                         </DialogContent>

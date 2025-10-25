@@ -11,6 +11,8 @@
 2. Restored preset pickers from `../test` plus deterministic ID defaults so manual edits stay in sync.
 3. Tightened gating for schedule CTA (requires generated rubric + styled competencies) and added user-facing errors/resets.
 4. Wired scheduled interviews view to backend persistence with loading/retry UX and camel/snake case adapters.
+5. Harmonized rubric scoring level typography with the shared text scale so level guidance matches surrounding copy.
+6. Synced the scheduled-interviews rubric dialog with the setup dialog so typography, weights, scoring levels, and notes match exactly.
 
 ## Detailed Notes
 
@@ -21,6 +23,7 @@
 - Adds `resetCompetencyState` and `resetRubricState` helpers; updates job/resume text setters to call them for consistent UX.
 - Replaces mock timeouts with real `fetch` calls to `/api/competencies/generate` and `/api/rubrics/generate`, including validation, retry messaging, and rationale propagation.
 - Rubric dialog now shows backend role/level metadata, per-criterion scoring-level guidance, and offers JSON copy control; success badges/errors reflect fetch status.
+- Scoring-level headers and entries now reuse the standard `text-xs` styling to eliminate the mismatched font sizing called out in design QA.
 - Schedule button now emits normalized rubric via `mapRubricForInterview`, ensuring downstream components receive the latest structured rubric.
 - Adds async scheduling handler with spinner/error messaging so failures don't clear state prematurely.
 
@@ -33,3 +36,4 @@
 - Accepts loading/error/retry props, displaying skeleton or error card before rendering schedules.
 - Adds spinner-driven loading state plus retry button aligned with backend fetch.
 - Extends competency display to carry optional rationales for parity with setup view.
+- Rubric modal now mirrors the setup view including rounded weights, scoring-level guidance, and the reminder note for consistent QA styling.
