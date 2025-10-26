@@ -64,6 +64,6 @@
     }
   },
   "features": {
-    "auto_candidate_reply": false
+    "auto_candidate_reply": true
   }
 }
