@@ -8,6 +8,7 @@ from .warmup import (  # Exposes warm-up prompt assets.
     WARMUP_SYSTEM_PROMPT,
     WARMUP_USER_TEMPLATE,
 )
+from .styles import STYLE_DIRECTIVE_SYSTEM_PROMPT, STYLE_DIRECTIVE_USER_TEMPLATE  # Exposes style prompt assets.
 
 __all__ = [
     "COMPETENCY_SYSTEM_PROMPT",
@@ -20,4 +21,6 @@ __all__ = [
     "WARMUP_FOLLOWUP_USER_TEMPLATE",
     "WARMUP_SYSTEM_PROMPT",
     "WARMUP_USER_TEMPLATE",
+    "STYLE_DIRECTIVE_SYSTEM_PROMPT",
+    "STYLE_DIRECTIVE_USER_TEMPLATE",
 ]  # Defines public prompt exports.

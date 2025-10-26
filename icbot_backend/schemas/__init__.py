@@ -20,6 +20,13 @@ from .warmup import (  # Re-exports warmup schemas.
     WarmupState,
     WarmupTurn,
 )
+from ..styles.schemas import (  # Re-exports style schemas.
+    DirectiveSchema,
+    StagePlan,
+    StyleDirectiveRequest,
+    StyleState,
+    TranscriptTurn,
+)
 
 __all__ = [
     "CompetencyItem",
@@ -47,4 +54,9 @@ __all__ = [
     "WarmupHistoryEntry",
     "WarmupContext",
     "WarmupComfortScore",
+    "DirectiveSchema",
+    "StagePlan",
+    "StyleDirectiveRequest",
+    "StyleState",
+    "TranscriptTurn",
 ]  # Exposes schema exports for convenience.

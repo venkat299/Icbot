@@ -7,6 +7,8 @@ from typing import Any, Final, Literal
 
 from pydantic import BaseModel, Field, HttpUrl, PositiveFloat, PositiveInt  # Defines configuration schema models.
 
+from .styles.base import StyleSpec  # Imports style specs for config binding.
+
 PROJECT_ROOT: Final[Path] = Path(__file__).resolve().parents[1]  # Points to project root directory.
 DEFAULT_ENV_PATH: Final[Path] = PROJECT_ROOT / "config.json"  # Default environment config path.
 DEFAULT_APP_PATH: Final[Path] = PROJECT_ROOT / "app_config.json"  # Default application config path.
@@ -81,12 +83,17 @@ class UiConfig(BaseModel):  # Exposes UI-facing defaults.
     auto_candidate_reply: bool = True
 
 
+class StylesConfig(BaseModel):  # Holds all style catalog entries.
+    catalog: dict[str, StyleSpec] = Field(default_factory=dict)
+
+
 class AppConfig(BaseModel):  # Top-level application configuration model.
     llm: LlmConfig
     flow: FlowConfig
     rubric: RubricConfig = Field(default_factory=RubricConfig)
     evaluation: EvaluationConfig
     ui: UiConfig = Field(default_factory=UiConfig)
+    styles: StylesConfig = Field(default_factory=StylesConfig)
 
 
 def _load_json(path: Path) -> dict[str, Any]:  # Reads and parses JSON payloads from disk.
