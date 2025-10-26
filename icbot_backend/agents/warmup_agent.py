@@ -275,4 +275,4 @@ class WarmupAgent:  # Orchestrates warm-up prompts using LangGraph.
 
     def _format_focus(self, focus: list[str]) -> str:  # Produces readable focus summary.
         return ", ".join(item for item in focus if item.strip()) or "general rapport"
-*** End of File
+
