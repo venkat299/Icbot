@@ -4,6 +4,7 @@ from fastapi import FastAPI, HTTPException  # Provides HTTP API surface.
 from fastapi.middleware.cors import CORSMiddleware  # Enables CORS for local dev.
 
 from ..agents import CompetencyAgent, RubricAgent, WarmupAgent  # Imports LLM-driven agents.
+from ..config import load_app_config  # Loads application configuration.
 from ..interview_store import list_interviews, schedule_interview  # Provides interview persistence helpers.
 from ..schemas.competency import CompetencyPlan, CompetencyRequest  # Uses shared competency schema types.
 from ..schemas.interview import ScheduleInterviewRequest, ScheduledInterviewModel  # Uses interview scheduling schemas.
@@ -14,6 +15,7 @@ from ..schemas.warmup import (  # Uses warm-up schema types.
     WarmupRequest,
     WarmupTurn,
 )
+from ..schemas import FeatureFlagsModel  # Uses config schema types.
 
 app = FastAPI(title="icbot-backend")  # Creates FastAPI application instance.
 app.add_middleware(
@@ -91,3 +93,9 @@ async def get_interviews() -> list[ScheduledInterviewModel]:
         return list_interviews()
     except ValueError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.get("/api/config/features", response_model=FeatureFlagsModel)  # Returns frontend feature toggles.
+async def get_feature_flags() -> FeatureFlagsModel:
+    config = load_app_config()
+    return FeatureFlagsModel.model_validate(config.features.model_dump())

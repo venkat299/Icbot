@@ -75,11 +75,16 @@ class EvaluationConfig(BaseModel):  # Holds evaluation stage wiring.
     weights: dict[str, float] = Field(default_factory=dict)
 
 
+class FeatureFlags(BaseModel):  # Captures frontend feature toggles.
+    auto_candidate_reply: bool = False
+
+
 class AppConfig(BaseModel):  # Top-level application configuration model.
     llm: LlmConfig
     flow: FlowConfig
     rubric: RubricConfig = Field(default_factory=RubricConfig)
     evaluation: EvaluationConfig
+    features: FeatureFlags = Field(default_factory=FeatureFlags)
 
 
 def _load_json(path: Path) -> dict[str, Any]:  # Reads and parses JSON payloads from disk.

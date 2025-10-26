@@ -1,5 +1,6 @@
 from .competency import CompetencyItem, CompetencyPlan, CompetencyRequest  # Re-exports competency schemas.
 from .evaluation import EvaluationEvidence, EvaluationVerdict  # Re-exports evaluation schemas.
+from .config import FeatureFlagsModel  # Re-exports feature toggle schema.
 from .interview import (  # Re-exports interview scheduling schemas.
     ScheduleInterviewRequest,
     ScheduledCompetency,
@@ -24,6 +25,7 @@ __all__ = [
     "CompetencyItem",
     "CompetencyPlan",
     "CompetencyRequest",
+    "FeatureFlagsModel",
     "EvaluationEvidence",
     "EvaluationVerdict",
     "ScheduleInterviewRequest",

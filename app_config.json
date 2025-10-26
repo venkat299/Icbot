@@ -26,6 +26,10 @@
         "route": "qwen3-4b-local",
         "schema_path": "icbot_backend.schemas.warmup.WarmupTurn"
       },
+      "candidate.reply": {
+        "route": "qwen3-4b-local",
+        "schema_path": "candidate_service.schemas.CandidateReply"
+      },
       "evaluation.score": {
         "route": "qwen3-4b-local",
         "schema_path": "icbot_backend.schemas.evaluation.EvaluationVerdict"
@@ -58,5 +62,8 @@
       "competency-2": 0.33,
       "competency-3": 0.33
     }
+  },
+  "features": {
+    "auto_candidate_reply": false
   }
 }

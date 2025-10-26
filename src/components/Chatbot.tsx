@@ -8,6 +8,12 @@ import { InterviewerSidebar } from './InterviewerSidebar';
 import { Question } from './InteractiveQuestion';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './ui/resizable';
 import { API_BASE_URL } from '../config';
+import {
+  CandidateConversationEntry,
+  CandidatePersonaPayload,
+  fetchCandidateReply,
+  fetchFeatureFlags,
+} from '../services/candidateAutoReply';
 import { ScheduledInterview } from './ScheduledInterviews';
 
 interface Message {
@@ -87,6 +93,7 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
   const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
   const [warmupPlan, setWarmupPlan] = useState<WarmupPlan | null>(null);
   const [warmupFollowUpPending, setWarmupFollowUpPending] = useState(false);
+  const [autoCandidateReplyEnabled, setAutoCandidateReplyEnabled] = useState(false);
 
   const getCompetencyFocus = () => {
     const items = interview?.competencies ?? [];
@@ -129,6 +136,24 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
     if (window.speechSynthesis.onvoiceschanged !== undefined) {
       window.speechSynthesis.onvoiceschanged = loadVoices;
     }
+  }, []);
+
+  useEffect(() => {
+    let isActive = true;
+
+    fetchFeatureFlags()
+      .then(flags => {
+        if (isActive) {
+          setAutoCandidateReplyEnabled(Boolean(flags.auto_candidate_reply));
+        }
+      })
+      .catch(error => {
+        console.error('Failed to load feature flags', error);
+      });
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   const speak = (text: string) => {
@@ -538,7 +563,71 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
       return;
     }
 
-    // Simulate bot response
+    if (autoCandidateReplyEnabled) {
+      try {
+        const conversation: CandidateConversationEntry[] = messages.map(message => ({
+          role: message.isUser ? 'interviewer' : 'candidate',
+          text: message.text,
+        }));
+
+        const persona: CandidatePersonaPayload = {};
+        if (interview?.candidateName) {
+          persona.name = interview.candidateName;
+        }
+        if (interview?.jobTitle) {
+          persona.title = interview.jobTitle;
+        }
+        const specialties = interview?.competencies
+          ?.map(item => item.name)
+          .filter((name): name is string => Boolean(name?.trim()));
+        if (specialties && specialties.length > 0) {
+          persona.specialties = specialties;
+        }
+        if (warmupPlan?.tone) {
+          const supportedTones = ['enthusiastic', 'calm', 'confident', 'reflective', 'direct', 'warm'];
+          if (supportedTones.includes(warmupPlan.tone)) {
+            persona.tone = warmupPlan.tone as CandidatePersonaPayload['tone'];
+          }
+        }
+
+        const hasPersona = Boolean(
+          persona.name ||
+            persona.title ||
+            (persona.specialties && persona.specialties.length > 0) ||
+            persona.tone
+        );
+
+        const candidateResponse = await fetchCandidateReply({
+          question: text,
+          conversation,
+          ...(hasPersona ? { persona } : {}),
+        });
+
+        const responseTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const botResponse: Message = {
+          id: (Date.now() + 1).toString(),
+          text: candidateResponse.reply,
+          isUser: false,
+          timestamp: responseTimestamp
+        };
+        setMessages(prev => [...prev, botResponse]);
+
+        if (warmupFollowUpPending) {
+          setWarmupFollowUpPending(false);
+        }
+
+        if (ttsEnabled) {
+          setTimeout(() => speak(candidateResponse.reply), 500);
+        }
+
+        setStatus('waiting for answer');
+        return;
+      } catch (error) {
+        console.error('Failed to fetch candidate reply', error);
+      }
+    }
+
+    // Simulate bot response when auto reply is disabled or fails
     setTimeout(() => {
       const plannedFollowUp = warmupPlan?.follow_up;
       const botText = warmupFollowUpPending && warmupPlan && plannedFollowUp
@@ -557,16 +646,11 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
         setWarmupFollowUpPending(false);
       }
 
-      // Speak the bot's response if TTS is enabled
       if (ttsEnabled) {
         setTimeout(() => speak(botText), 500);
       }
 
       setStatus('waiting for answer');
-
-      // Auto-progress stages for demo (remove this in production)
-      // Uncomment the line below to auto-progress after each exchange
-      // setTimeout(() => progressToNextStage(), 2000);
     }, 1000);
   };
 

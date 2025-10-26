@@ -16,6 +16,7 @@
 7. Chat view now requests the warm-up plan from the backend, replacing seeded copy with live interview context and follow-up prompts.
 8. Warm-up follow-ups are generated on demand from the backend using the candidate's reply instead of static placeholders.
 9. Removed the legacy hardcoded warm-up fallback so UI surfaces a transient availability notice when the backend call fails.
+10. Added an opt-in candidate auto-reply pipeline that pulls feature flags, calls the dedicated microservice, and falls back to demo copy when disabled or unavailable.
 
 ## Detailed Notes
 
@@ -49,3 +50,13 @@
 - Persists the warm-up session state returned by the backend so every follow-up request includes conversation history, readiness flags, and context.
 - Respects the updated backend responses by surfacing readiness-closing messages, rearming pending state only when another warm-up prompt is expected, and preventing duplicate TTS playback on state-only updates.
 - Drops the static warm-up fallback plan and follow-up phrasing; on failure the assistant now emits an availability notice without fabricating questions.
+- Loads feature flags on mount to toggle auto replies, calls the candidate microservice with normalized history/persona data, and gracefully falls back to demo responses when disabled or failing.
+
+### src/services/candidateAutoReply.ts
+- Provides typed helpers for fetching feature flags and submitting candidate reply requests to the standalone service.
+
+### src/config.ts
+- Exposes a dedicated candidate service base URL with env override fallback to the main API host.
+
+### src/components/ui/button.tsx
+- Wraps the button component with `forwardRef` so Radix dialog triggers can attach refs without runtime warnings.
