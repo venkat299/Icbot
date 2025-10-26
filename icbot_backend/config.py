@@ -54,9 +54,15 @@ class CompetencyLimits(BaseModel):  # Stores competency stage range.
     max: PositiveInt
 
 
+class WarmupConfig(BaseModel):  # Configures warm-up stage thresholds.
+    max_turns: PositiveInt = 4
+    ready_threshold: float = Field(default=0.75, ge=0.0, le=1.0)
+
+
 class FlowConfig(BaseModel):  # Defines interview flow sequencing config.
     stages: list[str] = Field(default_factory=list)
     competency: CompetencyLimits
+    warmup: WarmupConfig = Field(default_factory=WarmupConfig)
 
 
 class RubricConfig(BaseModel):  # Configures rubric generation constraints.

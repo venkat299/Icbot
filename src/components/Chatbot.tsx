@@ -7,6 +7,8 @@ import { InterviewProgress, InterviewStage } from './InterviewProgress';
 import { InterviewerSidebar } from './InterviewerSidebar';
 import { Question } from './InteractiveQuestion';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './ui/resizable';
+import { API_BASE_URL } from '../config';
+import { ScheduledInterview } from './ScheduledInterviews';
 
 interface Message {
   id: string;
@@ -15,28 +17,8 @@ interface Message {
   timestamp: string;
   question?: Question;
   questionSubmitted?: boolean;
+  objective?: string;
 }
-
-const initialMessages: Message[] = [
-  {
-    id: '1',
-    text: 'Welcome to your technical interview! Let\'s start with a warm-up question.',
-    isUser: false,
-    timestamp: '2:30 PM'
-  },
-  {
-    id: '2',
-    text: 'Tell me about a challenging project you worked on recently.',
-    isUser: false,
-    timestamp: '2:30 PM'
-  },
-  {
-    id: '3',
-    text: 'I worked on a microservices architecture migration project that involved...',
-    isUser: true,
-    timestamp: '2:31 PM'
-  }
-];
 
 // Simple bot responses for demonstration
 const botResponses = [
@@ -48,21 +30,70 @@ const botResponses = [
   "Great point! I've been thinking about this too:",
 ];
 
+interface WarmupContextState {
+  candidate_name?: string | null;
+  job_title?: string | null;
+  interview_style?: string | null;
+  competency_focus: string[];
+  resume_excerpt?: string | null;
+}
+
+interface WarmupHistoryEntry {
+  role: 'interviewer' | 'candidate';
+  text: string;
+}
+
+interface WarmupState {
+  history: WarmupHistoryEntry[];
+  last_question: string | null;
+  last_answer: string | null;
+  turns: number;
+  comfort: number;
+  done: boolean;
+  context: WarmupContextState;
+}
+
+interface WarmupPlan {
+  prompt: {
+    greeting: string;
+    question: string;
+    objective: string;
+  };
+  follow_up?: string;
+  tone: string;
+  state: WarmupState;
+}
+
+interface WarmupFollowUpResult {
+  follow_up?: string | null;
+  state?: WarmupState;
+}
+
 interface ChatbotProps {
+  interview?: ScheduledInterview | null;
   isInterviewerView?: boolean;
   onEndInterview?: () => void;
 }
 
-export function Chatbot({ isInterviewerView = false, onEndInterview }: ChatbotProps) {
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+export function Chatbot({ interview = null, isInterviewerView = false, onEndInterview }: ChatbotProps) {
+  const [messages, setMessages] = useState<Message[]>([]);
   const [ttsEnabled, setTtsEnabled] = useState(true);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [status, setStatus] = useState<'listening' | 'thinking' | 'waiting for answer'>('waiting for answer');
+  const [status, setStatus] = useState<'listening' | 'thinking' | 'waiting for answer'>('thinking');
   const [currentStage, setCurrentStage] = useState<InterviewStage>('warmup');
   const [competencyNumber, setCompetencyNumber] = useState(1);
-  const [totalCompetencies] = useState(3);
+  const totalCompetencies = interview?.competencies.length ?? 3;
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const [warmupPlan, setWarmupPlan] = useState<WarmupPlan | null>(null);
+  const [warmupFollowUpPending, setWarmupFollowUpPending] = useState(false);
+
+  const getCompetencyFocus = () => {
+    const items = interview?.competencies ?? [];
+    return items
+      .map(item => item.name)
+      .filter((name): name is string => Boolean(name?.trim()));
+  }; // Derives competency focus list from the active interview.
 
   // Mock data for interviewer sidebar
   const [overallScore] = useState(78);
@@ -199,6 +230,111 @@ export function Chatbot({ isInterviewerView = false, onEndInterview }: ChatbotPr
     };
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    const loadWarmup = async () => {
+      if (!interview) {
+        setCurrentStage('warmup');
+        setCompetencyNumber(1);
+        setMessages([]);
+        setWarmupPlan(null);
+        setWarmupFollowUpPending(false);
+        setStatus('waiting for answer');
+        return;
+      }
+
+      setCurrentStage('warmup');
+      setCompetencyNumber(1);
+      setStatus('thinking');
+      setWarmupPlan(null);
+      setWarmupFollowUpPending(false);
+
+      const competencyFocus = getCompetencyFocus();
+      const payload = {
+        candidate_name: interview.candidateName,
+        job_title: interview.jobTitle,
+        resume_text: interview.resume,
+        competency_focus: competencyFocus,
+        interview_style: interview.competencies[0]?.interviewStyle ?? null,
+      };
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/warmup/opening`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+
+        const plan: WarmupPlan = await response.json();
+        if (!plan.state) {
+          throw new Error('Warm-up state missing from response');
+        }
+        if (cancelled) return;
+
+        const now = new Date();
+        const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const warmupMessages: Message[] = [
+          {
+            id: `warmup-greeting-${now.getTime()}`,
+            text: `${plan.prompt.greeting}\n\nObjective: ${plan.prompt.objective}`,
+            objective: plan.prompt.objective,
+            isUser: false,
+            timestamp,
+          },
+          {
+            id: `warmup-question-${now.getTime() + 1}`,
+            text: plan.prompt.question,
+            isUser: false,
+            timestamp,
+          },
+        ];
+
+        setWarmupPlan(plan);
+        setWarmupFollowUpPending(true);
+        setMessages(warmupMessages);
+        setStatus('waiting for answer');
+      } catch (error) {
+        console.error('Failed to load warm-up plan', error);
+        if (cancelled) return;
+
+        const now = new Date();
+        const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const notice: Message = {
+          id: `warmup-unavailable-${now.getTime()}`,
+          text: 'The warm-up assistant is temporarily unavailable. We can move forward whenever you are ready.',
+          isUser: false,
+          timestamp,
+        };
+
+        setWarmupPlan(null);
+        setWarmupFollowUpPending(false);
+        setMessages([notice]);
+        setStatus('waiting for answer');
+      }
+    };
+
+    void loadWarmup();
+    return () => {
+      cancelled = true;
+    };
+  }, [interview]);
+
+  useEffect(() => {
+    if (!warmupPlan || !ttsEnabled) {
+      return;
+    }
+    stopSpeaking();
+    const combined = `${warmupPlan.prompt.greeting} ${warmupPlan.prompt.question}`;
+    const timer = setTimeout(() => speak(combined), 400);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [warmupPlan?.prompt.greeting, warmupPlan?.prompt.question, ttsEnabled]);
+
   // Helper function to progress to next stage
   const progressToNextStage = () => {
     if (currentStage === 'warmup') {
@@ -319,10 +455,10 @@ export function Chatbot({ isInterviewerView = false, onEndInterview }: ChatbotPr
     }, 1500);
   };
 
-  const handleSendMessage = (text: string) => {
+  const handleSendMessage = async (text: string) => {
     const now = new Date();
     const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    
+
     const userMessage: Message = {
       id: Date.now().toString(),
       text,
@@ -333,24 +469,101 @@ export function Chatbot({ isInterviewerView = false, onEndInterview }: ChatbotPr
     setMessages(prev => [...prev, userMessage]);
     setStatus('thinking');
 
+    if (warmupFollowUpPending && warmupPlan) {
+      try {
+        const payload = {
+          prompt: warmupPlan.prompt,
+          candidate_response: text,
+          tone: warmupPlan.tone,
+          candidate_name: interview?.candidateName ?? null,
+          job_title: interview?.jobTitle ?? null,
+          interview_style: interview?.competencies[0]?.interviewStyle ?? null,
+          competency_focus: getCompetencyFocus(),
+          state: warmupPlan.state,
+        };
+
+        const response = await fetch(`${API_BASE_URL}/api/warmup/followup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+
+        const result: WarmupFollowUpResult = await response.json();
+        const updatedState = result.state ?? warmupPlan.state;
+        const botText = (result.follow_up ?? warmupPlan.follow_up ?? '').trim();
+        const responseTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        if (botText) {
+          const botResponse: Message = {
+            id: (Date.now() + 1).toString(),
+            text: botText,
+            isUser: false,
+            timestamp: responseTimestamp
+          };
+          setMessages(prev => [...prev, botResponse]);
+
+          if (ttsEnabled) {
+            setTimeout(() => speak(botText), 500);
+          }
+        }
+
+        const nextFollowUp = (result.follow_up ?? warmupPlan.follow_up ?? '').trim();
+        setWarmupPlan(prev => prev ? { ...prev, follow_up: result.follow_up ?? prev.follow_up, state: updatedState } : prev);
+        const pendingNext = !updatedState.done && nextFollowUp.length > 0;
+        setWarmupFollowUpPending(pendingNext);
+      } catch (error) {
+        console.error('Failed to generate warm-up follow-up', error);
+        const fallbackText = (warmupPlan.follow_up ?? '').trim();
+        if (fallbackText) {
+          const responseTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const botResponse: Message = {
+            id: (Date.now() + 1).toString(),
+            text: fallbackText,
+            isUser: false,
+            timestamp: responseTimestamp
+          };
+          setMessages(prev => [...prev, botResponse]);
+
+          if (ttsEnabled) {
+            setTimeout(() => speak(fallbackText), 500);
+          }
+        }
+        setWarmupFollowUpPending(false);
+      } finally {
+        setStatus('waiting for answer');
+      }
+      return;
+    }
+
     // Simulate bot response
     setTimeout(() => {
-      const botText = botResponses[Math.floor(Math.random() * botResponses.length)];
+      const plannedFollowUp = warmupPlan?.follow_up;
+      const botText = warmupFollowUpPending && warmupPlan && plannedFollowUp
+        ? plannedFollowUp
+        : botResponses[Math.floor(Math.random() * botResponses.length)];
+      const responseTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
         text: botText,
         isUser: false,
-        timestamp
+        timestamp: responseTimestamp
       };
       setMessages(prev => [...prev, botResponse]);
-      
+
+      if (warmupFollowUpPending) {
+        setWarmupFollowUpPending(false);
+      }
+
       // Speak the bot's response if TTS is enabled
       if (ttsEnabled) {
         setTimeout(() => speak(botText), 500);
       }
-      
+
       setStatus('waiting for answer');
-      
+
       // Auto-progress stages for demo (remove this in production)
       // Uncomment the line below to auto-progress after each exchange
       // setTimeout(() => progressToNextStage(), 2000);

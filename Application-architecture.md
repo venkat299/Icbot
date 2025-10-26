@@ -1,7 +1,7 @@
 # Application Flow Overview
 
 - Rubric generation kicks off the flow: the rubric designer agent pulls configuration, queries the LLM via llm_gateway, and produces a calibrated rubric model shared with downstream stages.
-- Warm-up stage eases candidates into the conversation: the warm-up agent greets, sets expectations, and gathers baseline context without grading against core competencies.
+- Warm-up stage runs a LangGraph state machine: the warm-up agent greets, scores readiness, logs transition metrics, and generates follow-ups through the shared warm-up route before handing off to competency stages.
 - Competency stages run in sequence, one per competency: each agent instance uses the rubric slice for its focus area, requests tailored prompts and probes through the gateway, captures candidate responses, and logs structured evidence and provisional scores.
 - Wrap-up stage synthesizes the interaction: the wrap-up agent confirms completion, collects final signals (e.g., self-reflection), and prepares a summary payload for evaluators.
 - Evaluation closes the loop: the evaluator agent ingests transcripts, evidence, and rubric data, asks the LLM for scored assessments with justifications, validates against schemas, and outputs the final decision package for reporting

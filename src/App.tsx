@@ -188,8 +188,8 @@ export default function App() {
   const handleBackToScheduled = () => {
     // Mark the current interview as completed with mock score
     if (currentInterviewId) {
-      setScheduledInterviews(scheduledInterviews.map(interview => 
-        interview.id === currentInterviewId 
+      setScheduledInterviews(scheduledInterviews.map(interview =>
+        interview.id === currentInterviewId
           ? { 
               ...interview, 
               status: 'completed',
@@ -208,10 +208,15 @@ export default function App() {
     setCurrentView('scheduled');
   };
 
+  const activeInterview = currentInterviewId
+    ? scheduledInterviews.find((interview) => interview.id === currentInterviewId) ?? null
+    : null;
+
   if (currentView === 'interview') {
     return (
       <div className="h-screen w-screen overflow-hidden">
-        <Chatbot 
+        <Chatbot
+          interview={activeInterview}
           isInterviewerView={isInterviewerView}
           onEndInterview={handleBackToScheduled}
         />

@@ -37,6 +37,10 @@
     "competency": {
       "min": 3,
       "max": 3
+    },
+    "warmup": {
+      "max_turns": 4,
+      "ready_threshold": 0.75
     }
   },
   "rubric": {
