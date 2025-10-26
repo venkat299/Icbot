@@ -15,7 +15,7 @@ from ..schemas.warmup import (  # Uses warm-up schema types.
     WarmupRequest,
     WarmupTurn,
 )
-from ..schemas import FeatureFlagsModel  # Uses config schema types.
+from ..schemas import UiConfigModel  # Uses config schema types.
 
 app = FastAPI(title="icbot-backend")  # Creates FastAPI application instance.
 app.add_middleware(
@@ -95,7 +95,7 @@ async def get_interviews() -> list[ScheduledInterviewModel]:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
-@app.get("/api/config/features", response_model=FeatureFlagsModel)  # Returns frontend feature toggles.
-async def get_feature_flags() -> FeatureFlagsModel:
+@app.get("/api/config/ui", response_model=UiConfigModel)  # Returns UI defaults.
+async def get_ui_config() -> UiConfigModel:
     config = load_app_config()
-    return FeatureFlagsModel.model_validate(config.features.model_dump())
+    return UiConfigModel.model_validate(config.ui.model_dump())

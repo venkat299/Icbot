@@ -35,12 +35,19 @@
 - Imports shared API config and introduces DTO adapters for interview persistence.
 - Fetches scheduled interviews from `/api/interviews` on load with retry wiring and shares loading/error flags.
 - Posts new interviews via `/api/interviews`, transforms payloads between camel/snake case, and updates local state on success.
+- Loads the backend `ui` config to pick the default view mode and pass TTS/auto-reply defaults into the chat experience.
 
 ### src/components/ScheduledInterviews.tsx
 - Accepts loading/error/retry props, displaying skeleton or error card before rendering schedules.
 - Adds spinner-driven loading state plus retry button aligned with backend fetch.
 - Extends competency display to carry optional rationales for parity with setup view.
 - Rubric modal now mirrors the setup view including rounded weights, scoring-level guidance, and the reminder note for consistent QA styling.
+
+### app_config.json
+- Consolidates UI behavior under the `ui` block (TTS default off per request) and removes the redundant `features` object so there is a single source of truth for auto-reply toggles.
+
+### icbot_backend/config.py
+- Drops the unused `FeatureFlags` model and surfaces the UI defaults exclusively through `UiConfig`, keeping the runtime schema aligned with `app_config.json`.
 
 ### src/components/Chatbot.tsx
 - Replaces seeded warm-up transcript with an async fetch to `/api/warmup/opening`, rendering greeting/objective/question from the backend.
@@ -50,13 +57,23 @@
 - Persists the warm-up session state returned by the backend so every follow-up request includes conversation history, readiness flags, and context.
 - Respects the updated backend responses by surfacing readiness-closing messages, rearming pending state only when another warm-up prompt is expected, and preventing duplicate TTS playback on state-only updates.
 - Drops the static warm-up fallback plan and follow-up phrasing; on failure the assistant now emits an availability notice without fabricating questions.
-- Loads feature flags on mount to toggle auto replies, calls the candidate microservice with normalized history/persona data, and gracefully falls back to demo responses when disabled or failing.
+- Respects injected UI config for view mode, TTS, and auto-reply settings so environments can centrally control those behaviors without touching the code.
+- Tags interviewer prompts with `expectCandidateReply`, mirrors conversation roles through a shared mapper, and introduces an auto-reply loop that watches the latest AI prompt, pulls persona/context, and submits a generated candidate response via `fetchCandidateReply` without synthesizing placeholder dialog.
+- Removes the canned fallback utterances so every bot reply either comes from `/api/candidate/reply` or emits a clear availability notice when the service/feature is disabled.
+- Routes auto-generated answers through the same warm-up follow-up pipeline as real candidate replies so the backend receives proper `candidate_response` submissions before issuing the next prompt.
 
 ### src/services/candidateAutoReply.ts
-- Provides typed helpers for fetching feature flags and submitting candidate reply requests to the standalone service.
+- Focuses solely on candidate reply submissions while UI config duties move into a dedicated helper.
+
+### src/services/uiConfig.ts
+- Adds a shared fetcher for the backend-driven UI config so multiple components can reuse the same defaults.
+
+### icbot_backend/api/server.py
+- Removes the legacy `/api/config/features` route; clients now retrieve all UI toggles via `/api/config/ui`.
+- Adds a shared fetcher for the backend-driven UI config so multiple components can reuse the same defaults.
 
 ### src/config.ts
-- Exposes a dedicated candidate service base URL with env override fallback to the main API host.
+- Centralizes backend and candidate default hosts, setting the candidate service fallback to `http://127.0.0.1:8100` so browsers can reach the responder via a routable loopback URL even without env overrides.
 
 ### src/components/ui/button.tsx
 - Wraps the button component with `forwardRef` so Radix dialog triggers can attach refs without runtime warnings.

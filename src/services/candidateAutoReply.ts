@@ -1,4 +1,4 @@
-import { API_BASE_URL, CANDIDATE_API_BASE_URL } from '../config'; // Imports API hosts.
+import { CANDIDATE_API_BASE_URL } from '../config'; // Imports candidate service host.
 
 export interface CandidateConversationEntry {
   role: 'interviewer' | 'candidate';
@@ -24,10 +24,6 @@ export interface CandidateReplyResponse {
   confidence: number;
 }
 
-export interface FeatureFlagsResponse {
-  auto_candidate_reply: boolean;
-}
-
 export async function fetchCandidateReply(payload: CandidateReplyPayload): Promise<CandidateReplyResponse> {
   const response = await fetch(`${CANDIDATE_API_BASE_URL}/api/candidate/reply`, {
     method: 'POST',
@@ -40,14 +36,4 @@ export async function fetchCandidateReply(payload: CandidateReplyPayload): Promi
   }
 
   return (await response.json()) as CandidateReplyResponse;
-}
-
-export async function fetchFeatureFlags(): Promise<FeatureFlagsResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/config/features`);
-
-  if (!response.ok) {
-    throw new Error(`Feature flag request failed with status ${response.status}`);
-  }
-
-  return (await response.json()) as FeatureFlagsResponse;
 }

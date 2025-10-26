@@ -43,7 +43,7 @@
       "max": 3
     },
     "warmup": {
-      "max_turns": 4,
+      "max_turns": 3,
       "ready_threshold": 0.75
     }
   },
@@ -63,7 +63,9 @@
       "competency-3": 0.33
     }
   },
-  "features": {
+  "ui": {
+    "default_view_mode": "interviewer",
+    "tts_enabled": false,
     "auto_candidate_reply": true
   }
 }

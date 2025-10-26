@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { Volume2, VolumeX, ChevronRight, RotateCcw, Bot, Circle } from 'lucide-react';
 import { ChatMessage } from './ChatMessage';
@@ -12,7 +12,6 @@ import {
   CandidateConversationEntry,
   CandidatePersonaPayload,
   fetchCandidateReply,
-  fetchFeatureFlags,
 } from '../services/candidateAutoReply';
 import { ScheduledInterview } from './ScheduledInterviews';
 
@@ -21,19 +20,19 @@ interface Message {
   text: string;
   isUser: boolean;
   timestamp: string;
+  expectCandidateReply?: boolean;
   question?: Question;
   questionSubmitted?: boolean;
   objective?: string;
 }
 
-// Simple bot responses for demonstration
-const botResponses = [
-  "That's a great question! Let me think about that...",
-  "I'd be happy to help you with that. Here's what I know:",
-  "Interesting! From my perspective, I think:",
-  "That's a fascinating topic. In my experience:",
-  "I understand what you're asking. Here's my take:",
-  "Great point! I've been thinking about this too:",
+const SUPPORTED_PERSONA_TONES: CandidatePersonaPayload['tone'][] = [
+  'enthusiastic',
+  'calm',
+  'confident',
+  'reflective',
+  'direct',
+  'warm',
 ];
 
 interface WarmupContextState {
@@ -78,22 +77,44 @@ interface WarmupFollowUpResult {
 interface ChatbotProps {
   interview?: ScheduledInterview | null;
   isInterviewerView?: boolean;
+  autoReplyEnabled?: boolean;
+  initialTtsEnabled?: boolean;
   onEndInterview?: () => void;
 }
 
-export function Chatbot({ interview = null, isInterviewerView = false, onEndInterview }: ChatbotProps) {
+export function Chatbot({
+  interview = null,
+  isInterviewerView = false,
+  autoReplyEnabled = false,
+  initialTtsEnabled = true,
+  onEndInterview,
+}: ChatbotProps) {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [ttsEnabled, setTtsEnabled] = useState(true);
+  const [ttsEnabled, setTtsEnabled] = useState(initialTtsEnabled);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [status, setStatus] = useState<'listening' | 'thinking' | 'waiting for answer'>('thinking');
   const [currentStage, setCurrentStage] = useState<InterviewStage>('warmup');
   const [competencyNumber, setCompetencyNumber] = useState(1);
   const totalCompetencies = interview?.competencies.length ?? 3;
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesRef = useRef<Message[]>([]);
   const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
   const [warmupPlan, setWarmupPlan] = useState<WarmupPlan | null>(null);
   const [warmupFollowUpPending, setWarmupFollowUpPending] = useState(false);
-  const [autoCandidateReplyEnabled, setAutoCandidateReplyEnabled] = useState(false);
+  const autoReplyInFlightRef = useRef(false);
+  const lastAutoReplyPromptRef = useRef<string | null>(null);
+  const replaceMessages = useCallback((next: Message[]) => {
+    messagesRef.current = next;
+    setMessages(next);
+  }, []);
+
+  const patchMessages = useCallback((builder: (prev: Message[]) => Message[]) => {
+    setMessages(prev => {
+      const next = builder(prev);
+      messagesRef.current = next;
+      return next;
+    });
+  }, []);
 
   const getCompetencyFocus = () => {
     const items = interview?.competencies ?? [];
@@ -101,6 +122,56 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
       .map(item => item.name)
       .filter((name): name is string => Boolean(name?.trim()));
   }; // Derives competency focus list from the active interview.
+
+  const buildCandidatePersona = useCallback(() => {
+    const persona: CandidatePersonaPayload = {};
+
+    if (interview?.candidateName) {
+      persona.name = interview.candidateName;
+    }
+    if (interview?.jobTitle) {
+      persona.title = interview.jobTitle;
+    }
+
+    const specialties = interview?.competencies
+      ?.map(item => item.name)
+      .filter((name): name is string => Boolean(name?.trim()));
+    if (specialties && specialties.length > 0) {
+      persona.specialties = specialties;
+    }
+
+    if (warmupPlan?.tone && SUPPORTED_PERSONA_TONES.includes(warmupPlan.tone as CandidatePersonaPayload['tone'])) {
+      persona.tone = warmupPlan.tone as CandidatePersonaPayload['tone'];
+    }
+
+    const hasPersona =
+      Boolean(persona.name) ||
+      Boolean(persona.title) ||
+      Boolean(persona.tone) ||
+      Boolean(persona.specialties && persona.specialties.length > 0);
+
+    return hasPersona ? persona : null;
+  }, [interview, warmupPlan]); // Builds candidate persona payload when interview context is available.
+
+  const mapConversationEntries = useCallback(
+    (history: Message[]): CandidateConversationEntry[] =>
+    history.map(message => ({
+      role: isInterviewerView
+        ? (message.isUser ? 'interviewer' : 'candidate')
+        : (message.isUser ? 'candidate' : 'interviewer'),
+      text: message.text,
+    })),
+    [isInterviewerView],
+  ); // Maps UI messages into candidate service conversation entries.
+
+  const hasCandidateReplyAfterPrompt = (promptId: string) => {
+    const history = messagesRef.current;
+    const promptIndex = history.findIndex(message => message.id === promptId);
+    if (promptIndex === -1) {
+      return true;
+    }
+    return history.slice(promptIndex + 1).some(message => !message.isUser);
+  }; // Detects whether a prompt already received a candidate reply.
 
   // Mock data for interviewer sidebar
   const [overallScore] = useState(78);
@@ -126,6 +197,18 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
+
+  useEffect(() => {
+    lastAutoReplyPromptRef.current = null;
+  }, [interview?.id, autoReplyEnabled, isInterviewerView]);
+
+  useEffect(() => {
+    setTtsEnabled(initialTtsEnabled);
+  }, [initialTtsEnabled]);
+
   // Load voices when available
   useEffect(() => {
     const loadVoices = () => {
@@ -138,25 +221,7 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
     }
   }, []);
 
-  useEffect(() => {
-    let isActive = true;
-
-    fetchFeatureFlags()
-      .then(flags => {
-        if (isActive) {
-          setAutoCandidateReplyEnabled(Boolean(flags.auto_candidate_reply));
-        }
-      })
-      .catch(error => {
-        console.error('Failed to load feature flags', error);
-      });
-
-    return () => {
-      isActive = false;
-    };
-  }, []);
-
-  const speak = (text: string) => {
+  const speak = useCallback((text: string) => {
     if (!ttsEnabled || !window.speechSynthesis) return;
 
     // Cancel any ongoing speech
@@ -234,7 +299,109 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
 
     speechSynthesisRef.current = utterance;
     window.speechSynthesis.speak(utterance);
-  };
+  }, [ttsEnabled]);
+
+  const handleCandidateReply = useCallback(
+    async (text: string) => {
+      const responseTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const candidateMessage: Message = {
+        id: `candidate-reply-${Date.now()}`,
+        text,
+        isUser: false,
+        timestamp: responseTimestamp,
+        expectCandidateReply: false,
+      };
+      patchMessages(prev => [...prev, candidateMessage]);
+
+      if (ttsEnabled) {
+        setTimeout(() => speak(text), 500);
+      }
+
+      if (warmupFollowUpPending && warmupPlan) {
+        try {
+          setStatus('thinking');
+          const payload = {
+            prompt: warmupPlan.prompt,
+            candidate_response: text,
+            tone: warmupPlan.tone,
+            candidate_name: interview?.candidateName ?? null,
+            job_title: interview?.jobTitle ?? null,
+            interview_style: interview?.competencies[0]?.interviewStyle ?? null,
+            competency_focus: getCompetencyFocus(),
+            state: warmupPlan.state,
+          };
+
+          const response = await fetch(`${API_BASE_URL}/api/warmup/followup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+
+          if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}`);
+          }
+
+          const result: WarmupFollowUpResult = await response.json();
+          const updatedState = result.state ?? warmupPlan.state;
+          const botText = (result.follow_up ?? warmupPlan.follow_up ?? '').trim();
+          const nextFollowUp = (result.follow_up ?? warmupPlan.follow_up ?? '').trim();
+          const pendingNext = !updatedState.done && nextFollowUp.length > 0;
+
+          if (botText) {
+            const followUpMessage: Message = {
+              id: `warmup-followup-${Date.now()}`,
+              text: botText,
+              isUser: false,
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              expectCandidateReply: pendingNext,
+            };
+            patchMessages(prev => [...prev, followUpMessage]);
+
+            if (ttsEnabled) {
+              setTimeout(() => speak(botText), 500);
+            }
+          }
+
+          setWarmupPlan(prev =>
+            prev ? { ...prev, follow_up: result.follow_up ?? prev.follow_up, state: updatedState } : prev,
+          );
+          setWarmupFollowUpPending(pendingNext);
+        } catch (error) {
+          console.error('Failed to generate warm-up follow-up', error);
+          const fallbackText = (warmupPlan.follow_up ?? '').trim();
+          if (fallbackText) {
+            const fallbackMessage: Message = {
+              id: `warmup-followup-fallback-${Date.now()}`,
+              text: fallbackText,
+              isUser: false,
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              expectCandidateReply: false,
+            };
+            patchMessages(prev => [...prev, fallbackMessage]);
+
+            if (ttsEnabled) {
+              setTimeout(() => speak(fallbackText), 500);
+            }
+          }
+          setWarmupFollowUpPending(false);
+        } finally {
+          setStatus('waiting for answer');
+        }
+        return;
+      }
+
+      setStatus('waiting for answer');
+    },
+    [
+      patchMessages,
+      ttsEnabled,
+      speak,
+      warmupFollowUpPending,
+      warmupPlan,
+      interview,
+      getCompetencyFocus,
+    ],
+  );
 
   const stopSpeaking = () => {
     window.speechSynthesis.cancel();
@@ -261,7 +428,7 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
       if (!interview) {
         setCurrentStage('warmup');
         setCompetencyNumber(1);
-        setMessages([]);
+        replaceMessages([]);
         setWarmupPlan(null);
         setWarmupFollowUpPending(false);
         setStatus('waiting for answer');
@@ -309,18 +476,20 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
             objective: plan.prompt.objective,
             isUser: false,
             timestamp,
+            expectCandidateReply: false,
           },
           {
             id: `warmup-question-${now.getTime() + 1}`,
             text: plan.prompt.question,
             isUser: false,
             timestamp,
+            expectCandidateReply: true,
           },
         ];
 
         setWarmupPlan(plan);
         setWarmupFollowUpPending(true);
-        setMessages(warmupMessages);
+        replaceMessages(warmupMessages);
         setStatus('waiting for answer');
       } catch (error) {
         console.error('Failed to load warm-up plan', error);
@@ -333,11 +502,12 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
           text: 'The warm-up assistant is temporarily unavailable. We can move forward whenever you are ready.',
           isUser: false,
           timestamp,
+          expectCandidateReply: false,
         };
 
         setWarmupPlan(null);
         setWarmupFollowUpPending(false);
-        setMessages([notice]);
+        replaceMessages([notice]);
         setStatus('waiting for answer');
       }
     };
@@ -347,6 +517,71 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
       cancelled = true;
     };
   }, [interview]);
+
+  useEffect(() => {
+    if (!autoReplyEnabled) {
+      return;
+    }
+    if (!messages.length || autoReplyInFlightRef.current) {
+      return;
+    }
+
+    const prompt = [...messages].reverse().find(message => !message.isUser && message.expectCandidateReply);
+    if (!prompt) {
+      return;
+    }
+    if (lastAutoReplyPromptRef.current === prompt.id) {
+      return;
+    }
+
+    const persona = buildCandidatePersona();
+    const historySnapshot = [...messages];
+    const payload = {
+      question: prompt.text,
+      conversation: mapConversationEntries(historySnapshot),
+      ...(persona ? { persona } : {}),
+    };
+
+    lastAutoReplyPromptRef.current = prompt.id;
+    autoReplyInFlightRef.current = true;
+
+    const respond = async () => {
+      try {
+        setStatus('thinking');
+        const candidateResponse = await fetchCandidateReply(payload);
+        if (hasCandidateReplyAfterPrompt(prompt.id)) {
+          setStatus('waiting for answer');
+          return;
+        }
+        await handleCandidateReply(candidateResponse.reply);
+      } catch (error) {
+        console.error('Failed to auto-generate candidate reply', error);
+        if (!hasCandidateReplyAfterPrompt(prompt.id)) {
+          const failureTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const notice: Message = {
+            id: `candidate-auto-error-${Date.now()}`,
+            text: 'Candidate auto-response is unavailable. Please retry shortly.',
+            isUser: false,
+            timestamp: failureTimestamp,
+            expectCandidateReply: false,
+          };
+          patchMessages(prev => [...prev, notice]);
+        }
+        setStatus('waiting for answer');
+      } finally {
+        autoReplyInFlightRef.current = false;
+      }
+    };
+
+    void respond();
+  }, [
+    messages,
+    autoReplyEnabled,
+    buildCandidatePersona,
+    mapConversationEntries,
+    patchMessages,
+    handleCandidateReply,
+  ]);
 
   useEffect(() => {
     if (!warmupPlan || !ttsEnabled) {
@@ -395,6 +630,7 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
           text: 'Please implement a function to reverse a linked list:',
           isUser: false,
           timestamp,
+          expectCandidateReply: true,
           question: {
             id: `q-${Date.now()}`,
             type: 'code',
@@ -409,6 +645,7 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
           text: 'Which of the following are JavaScript frameworks? (Select all that apply)',
           isUser: false,
           timestamp,
+          expectCandidateReply: true,
           question: {
             id: `q-${Date.now()}`,
             type: 'multiple-select',
@@ -422,6 +659,7 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
           text: 'Have you worked with microservices architecture before?',
           isUser: false,
           timestamp,
+          expectCandidateReply: true,
           question: {
             id: `q-${Date.now()}`,
             type: 'yes-no'
@@ -431,13 +669,13 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
     }
 
     if (questionMessage) {
-      setMessages(prev => [...prev, questionMessage]);
+      patchMessages(prev => [...prev, questionMessage]);
     }
   };
 
   const handleQuestionSubmit = (messageId: string, answer: any) => {
     // Mark the question as submitted
-    setMessages(prev => prev.map(msg => 
+    patchMessages(prev => prev.map(msg => 
       msg.id === messageId 
         ? { ...msg, questionSubmitted: true }
         : msg
@@ -463,7 +701,7 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
       timestamp
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    patchMessages(prev => [...prev, userMessage]);
     setStatus('thinking');
 
     // Simulate bot response to the answer
@@ -475,12 +713,12 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       
-      setMessages(prev => [...prev, botMessage]);
+      patchMessages(prev => [...prev, botMessage]);
       setStatus('waiting for answer');
     }, 1500);
   };
 
-  const handleSendMessage = async (text: string) => {
+  const handleSendMessage = async (text: string, options?: { skipAutoReply?: boolean }) => {
     const now = new Date();
     const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -488,11 +726,19 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
       id: Date.now().toString(),
       text,
       isUser: true,
-      timestamp
+      timestamp,
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    const updatedHistory = [...messagesRef.current, userMessage];
+    replaceMessages(updatedHistory);
     setStatus('thinking');
+
+    if (!options?.skipAutoReply) {
+      const activePrompt = [...messagesRef.current].reverse().find(message => !message.isUser && message.expectCandidateReply);
+      if (activePrompt) {
+        lastAutoReplyPromptRef.current = activePrompt.id;
+      }
+    }
 
     if (warmupFollowUpPending && warmupPlan) {
       try {
@@ -520,24 +766,25 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
         const result: WarmupFollowUpResult = await response.json();
         const updatedState = result.state ?? warmupPlan.state;
         const botText = (result.follow_up ?? warmupPlan.follow_up ?? '').trim();
+        const nextFollowUp = (result.follow_up ?? warmupPlan.follow_up ?? '').trim();
+        const pendingNext = !updatedState.done && nextFollowUp.length > 0;
         const responseTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         if (botText) {
           const botResponse: Message = {
             id: (Date.now() + 1).toString(),
             text: botText,
             isUser: false,
-            timestamp: responseTimestamp
+            timestamp: responseTimestamp,
+            expectCandidateReply: pendingNext,
           };
-          setMessages(prev => [...prev, botResponse]);
+          patchMessages(prev => [...prev, botResponse]);
 
           if (ttsEnabled) {
             setTimeout(() => speak(botText), 500);
           }
         }
 
-        const nextFollowUp = (result.follow_up ?? warmupPlan.follow_up ?? '').trim();
         setWarmupPlan(prev => prev ? { ...prev, follow_up: result.follow_up ?? prev.follow_up, state: updatedState } : prev);
-        const pendingNext = !updatedState.done && nextFollowUp.length > 0;
         setWarmupFollowUpPending(pendingNext);
       } catch (error) {
         console.error('Failed to generate warm-up follow-up', error);
@@ -548,9 +795,10 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
             id: (Date.now() + 1).toString(),
             text: fallbackText,
             isUser: false,
-            timestamp: responseTimestamp
+            timestamp: responseTimestamp,
+            expectCandidateReply: false,
           };
-          setMessages(prev => [...prev, botResponse]);
+          patchMessages(prev => [...prev, botResponse]);
 
           if (ttsEnabled) {
             setTimeout(() => speak(fallbackText), 500);
@@ -563,95 +811,39 @@ export function Chatbot({ interview = null, isInterviewerView = false, onEndInte
       return;
     }
 
-    if (autoCandidateReplyEnabled) {
+    if (options?.skipAutoReply) {
+      setStatus('waiting for answer');
+      return;
+    }
+
+    if (autoReplyEnabled) {
       try {
-        const conversation: CandidateConversationEntry[] = messages.map(message => ({
-          role: message.isUser ? 'interviewer' : 'candidate',
-          text: message.text,
-        }));
-
-        const persona: CandidatePersonaPayload = {};
-        if (interview?.candidateName) {
-          persona.name = interview.candidateName;
-        }
-        if (interview?.jobTitle) {
-          persona.title = interview.jobTitle;
-        }
-        const specialties = interview?.competencies
-          ?.map(item => item.name)
-          .filter((name): name is string => Boolean(name?.trim()));
-        if (specialties && specialties.length > 0) {
-          persona.specialties = specialties;
-        }
-        if (warmupPlan?.tone) {
-          const supportedTones = ['enthusiastic', 'calm', 'confident', 'reflective', 'direct', 'warm'];
-          if (supportedTones.includes(warmupPlan.tone)) {
-            persona.tone = warmupPlan.tone as CandidatePersonaPayload['tone'];
-          }
-        }
-
-        const hasPersona = Boolean(
-          persona.name ||
-            persona.title ||
-            (persona.specialties && persona.specialties.length > 0) ||
-            persona.tone
-        );
-
+        const conversation = mapConversationEntries(updatedHistory);
+        const persona = buildCandidatePersona();
         const candidateResponse = await fetchCandidateReply({
           question: text,
           conversation,
-          ...(hasPersona ? { persona } : {}),
+          ...(persona ? { persona } : {}),
         });
-
-        const responseTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const botResponse: Message = {
-          id: (Date.now() + 1).toString(),
-          text: candidateResponse.reply,
-          isUser: false,
-          timestamp: responseTimestamp
-        };
-        setMessages(prev => [...prev, botResponse]);
-
-        if (warmupFollowUpPending) {
-          setWarmupFollowUpPending(false);
-        }
-
-        if (ttsEnabled) {
-          setTimeout(() => speak(candidateResponse.reply), 500);
-        }
-
-        setStatus('waiting for answer');
+        await handleCandidateReply(candidateResponse.reply);
         return;
       } catch (error) {
         console.error('Failed to fetch candidate reply', error);
+        const failureTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const failureNotice: Message = {
+          id: `candidate-reply-error-${Date.now()}`,
+          text: 'Candidate auto-response is unavailable. Please try again in a moment.',
+          isUser: false,
+          timestamp: failureTimestamp,
+          expectCandidateReply: false,
+        };
+        patchMessages(prev => [...prev, failureNotice]);
+        setStatus('waiting for answer');
+        return;
       }
     }
 
-    // Simulate bot response when auto reply is disabled or fails
-    setTimeout(() => {
-      const plannedFollowUp = warmupPlan?.follow_up;
-      const botText = warmupFollowUpPending && warmupPlan && plannedFollowUp
-        ? plannedFollowUp
-        : botResponses[Math.floor(Math.random() * botResponses.length)];
-      const responseTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const botResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        text: botText,
-        isUser: false,
-        timestamp: responseTimestamp
-      };
-      setMessages(prev => [...prev, botResponse]);
-
-      if (warmupFollowUpPending) {
-        setWarmupFollowUpPending(false);
-      }
-
-      if (ttsEnabled) {
-        setTimeout(() => speak(botText), 500);
-      }
-
-      setStatus('waiting for answer');
-    }, 1000);
+    setStatus('waiting for answer');
   };
 
   return (

@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Final
+from typing import Any, Final, Literal
 
 from pydantic import BaseModel, Field, HttpUrl, PositiveFloat, PositiveInt  # Defines configuration schema models.
 
@@ -75,8 +75,10 @@ class EvaluationConfig(BaseModel):  # Holds evaluation stage wiring.
     weights: dict[str, float] = Field(default_factory=dict)
 
 
-class FeatureFlags(BaseModel):  # Captures frontend feature toggles.
-    auto_candidate_reply: bool = False
+class UiConfig(BaseModel):  # Exposes UI-facing defaults.
+    default_view_mode: Literal["interviewer", "candidate"] = "interviewer"
+    tts_enabled: bool = True
+    auto_candidate_reply: bool = True
 
 
 class AppConfig(BaseModel):  # Top-level application configuration model.
@@ -84,7 +86,7 @@ class AppConfig(BaseModel):  # Top-level application configuration model.
     flow: FlowConfig
     rubric: RubricConfig = Field(default_factory=RubricConfig)
     evaluation: EvaluationConfig
-    features: FeatureFlags = Field(default_factory=FeatureFlags)
+    ui: UiConfig = Field(default_factory=UiConfig)
 
 
 def _load_json(path: Path) -> dict[str, Any]:  # Reads and parses JSON payloads from disk.

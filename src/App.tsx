@@ -3,6 +3,7 @@ import { Chatbot } from './components/Chatbot';
 import { SetupPage, InterviewDetails } from './components/SetupPage';
 import { ScheduledInterviews, ScheduledInterview } from './components/ScheduledInterviews';
 import { API_BASE_URL } from './config';
+import { fetchUiConfig, UiClientConfig } from './services/uiConfig';
 
 type AppView = 'setup' | 'scheduled' | 'interview';
 
@@ -55,9 +56,8 @@ export default function App() {
   const [currentInterviewId, setCurrentInterviewId] = useState<string | null>(null);
   const [isLoadingInterviews, setIsLoadingInterviews] = useState(true);
   const [interviewLoadError, setInterviewLoadError] = useState<string | null>(null);
-
-  // Set this to true for interviewer view, false for candidate view
-  const isInterviewerView = true; // Toggle this based on user role
+  const [uiConfig, setUiConfig] = useState<UiClientConfig | null>(null);
+  const [isInterviewerView, setIsInterviewerView] = useState(true);
 
   const mapFromApi = useCallback((payload: ApiScheduledInterview): ScheduledInterview => ({
     id: payload.id,
@@ -115,6 +115,26 @@ export default function App() {
   useEffect(() => {
     void fetchScheduledInterviews();
   }, [fetchScheduledInterviews]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const loadUiConfig = async () => {
+      try {
+        const config = await fetchUiConfig();
+        if (cancelled) {
+          return;
+        }
+        setUiConfig(config);
+        setIsInterviewerView(config.default_view_mode === 'interviewer');
+      } catch (error) {
+        console.error('Failed to load UI config', error);
+      }
+    };
+    void loadUiConfig();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleScheduleInterview = async (details: InterviewDetails) => {
     const payload = {
@@ -218,6 +238,8 @@ export default function App() {
         <Chatbot
           interview={activeInterview}
           isInterviewerView={isInterviewerView}
+          autoReplyEnabled={uiConfig?.auto_candidate_reply ?? true}
+          initialTtsEnabled={uiConfig?.tts_enabled ?? true}
           onEndInterview={handleBackToScheduled}
         />
       </div>

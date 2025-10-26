@@ -2,11 +2,18 @@
 import logging
 
 from fastapi import FastAPI, HTTPException  # Provides FastAPI primitives.
+from fastapi.middleware.cors import CORSMiddleware  # Enables cross-origin access.
 
 from ..agents import CandidateResponderAgent  # Imports candidate responder agent.
 from ..schemas import CandidateReply, CandidateReplyRequest  # Imports schema models.
 
 app = FastAPI(title="candidate-service")  # Creates FastAPI application instance.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)  # Allows browser clients to call the service during development.
 _agent = CandidateResponderAgent()  # Initializes agent once per process.
 logger = logging.getLogger(__name__)
 
