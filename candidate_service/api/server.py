@@ -23,6 +23,11 @@ async def generate_candidate_reply(payload: CandidateReplyRequest) -> CandidateR
     try:
         return await _agent.respond(payload)
     except ValueError as exc:
+        logger.warning(
+            "Candidate reply request failed validation: %s | payload=%s",
+            exc,
+            payload.model_dump(),
+        )
         raise HTTPException(status_code=400, detail=str(exc)) from exc  # Maps validation errors to client errors.
     except Exception as exc:
         logger.exception("Failed to generate candidate reply")

@@ -3,8 +3,7 @@ COMPETENCY_SYSTEM_PROMPT = (
     "Given a job description, optional resume signals, and optional target roles, "
     "design between {min_competencies} and {max_competencies} actionable competency focus areas "
     "(when the range collapses to a single value, produce exactly that many). "
-    "For each competency assign an most appropriate interview style chosen from "
-    "['behavioral','technical','situational','case-study','debugging'] "
+    "For each competency assign the most appropriate interview style chosen from {style_choices} "
     "and justify the selection. you can reuse the styles. Always return JSON that matches the provided schema."
 )  # Guides the LLM toward structured competency planning.
 

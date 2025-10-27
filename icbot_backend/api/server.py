@@ -3,10 +3,17 @@ import logging
 from fastapi import FastAPI, HTTPException  # Provides HTTP API surface.
 from fastapi.middleware.cors import CORSMiddleware  # Enables CORS for local dev.
 
-from ..agents import CompetencyAgent, RubricAgent, WarmupAgent  # Imports LLM-driven agents.
+from ..agents import CompetencyAgent, CompetencyStageAgent, RubricAgent, WarmupAgent  # Imports LLM-driven agents.
 from ..config import load_app_config  # Loads application configuration.
-from ..interview_store import list_interviews, schedule_interview  # Provides interview persistence helpers.
+from ..interview_sessions import (
+    InterviewSessionEvent,
+    InterviewSessionManager,
+    InterviewSessionResponse,
+)  # Coordinates interview flow sessions.
+from ..interview_store import delete_interview, list_interviews, schedule_interview  # Provides interview persistence helpers.
+from ..schemas import StagePlan, StyleSummary  # Uses shared style plan schema.
 from ..schemas.competency import CompetencyPlan, CompetencyRequest  # Uses shared competency schema types.
+from ..schemas.competency_stage import CompetencyStageRequest  # Uses competency stage request schema.
 from ..schemas.interview import ScheduleInterviewRequest, ScheduledInterviewModel  # Uses interview scheduling schemas.
 from ..schemas.rubric import RubricModel, RubricRequest  # Uses rubric schema types.
 from ..schemas.warmup import (  # Uses warm-up schema types.
@@ -16,6 +23,7 @@ from ..schemas.warmup import (  # Uses warm-up schema types.
     WarmupTurn,
 )
 from ..schemas import UiConfigModel  # Uses config schema types.
+from ..styles.toolkit import list_style_summaries  # Lists available style summaries.
 
 app = FastAPI(title="icbot-backend")  # Creates FastAPI application instance.
 app.add_middleware(
@@ -25,9 +33,18 @@ app.add_middleware(
     allow_headers=["*"],
 )  # Allows web clients to access the API during development.
 _competency_agent = CompetencyAgent()  # Initializes competency agent once per process.
+_competency_stage_agent = CompetencyStageAgent()  # Initializes competency stage agent once per process.
 _rubric_agent = RubricAgent()  # Initializes rubric agent once per process.
 _warmup_agent = WarmupAgent()  # Initializes warm-up agent once per process.
+_session_manager = InterviewSessionManager()  # Coordinates interview runtime sessions.
 logger = logging.getLogger(__name__)
+
+
+def _get_interview_or_404(interview_id: str) -> ScheduledInterviewModel:  # Retrieves a scheduled interview or raises 404.
+    for interview in list_interviews():
+        if interview.id == interview_id:
+            return interview
+    raise HTTPException(status_code=404, detail=f"Interview '{interview_id}' not found")
 
 
 @app.post("/api/competencies/generate", response_model=CompetencyPlan)  # Handles competency generation requests.
@@ -76,6 +93,53 @@ async def generate_warmup_followup(payload: WarmupFollowUpRequest) -> WarmupFoll
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
+@app.post(
+    "/api/interviews/{interview_id}/sessions",
+    response_model=InterviewSessionResponse,
+    status_code=201,
+)  # Creates a new interview session and returns the warm-up prompt.
+async def create_interview_session(interview_id: str) -> InterviewSessionResponse:
+    interview = _get_interview_or_404(interview_id)
+    try:
+        return await _session_manager.start(interview)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Failed to start interview session")
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.post(
+    "/api/interview_sessions/{session_id}/advance",
+    response_model=InterviewSessionResponse,
+)  # Applies an event to an existing session and returns the next step.
+async def advance_interview_session(session_id: str, payload: InterviewSessionEvent) -> InterviewSessionResponse:
+    try:
+        return await _session_manager.advance(session_id, payload)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        logger.warning("Interview session advance validation failed: %s | session_id=%s | payload=%s", exc, session_id, payload.model_dump())
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Failed to advance interview session")
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.post("/api/competency/stage", response_model=StagePlan)  # Produces next directive for a competency stage.
+async def generate_competency_stage(payload: CompetencyStageRequest) -> StagePlan:
+    try:
+        return await _competency_stage_agent.directive(payload)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        logger.warning("Competency stage request failed validation: %s | payload=%s", exc, payload.model_dump())
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Failed to generate competency stage directive")
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
 @app.post("/api/interviews", response_model=ScheduledInterviewModel, status_code=201)  # Persists scheduled interview payloads.
 async def create_interview(payload: ScheduleInterviewRequest) -> ScheduledInterviewModel:
     try:
@@ -99,3 +163,23 @@ async def get_interviews() -> list[ScheduledInterviewModel]:
 async def get_ui_config() -> UiConfigModel:
     config = load_app_config()
     return UiConfigModel.model_validate(config.ui.model_dump())
+
+
+@app.get("/api/styles", response_model=list[StyleSummary])  # Returns configured interview styles.
+async def list_styles() -> list[StyleSummary]:
+    try:
+        return list_style_summaries()
+    except Exception as exc:
+        logger.exception("Failed to list interview styles")
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.delete("/api/interviews/{interview_id}", status_code=204)  # Removes a scheduled interview.
+async def remove_interview(interview_id: str) -> None:
+    try:
+        delete_interview(interview_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Failed to delete interview")
+        raise HTTPException(status_code=500, detail=str(exc)) from exc

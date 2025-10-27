@@ -1,78 +1,43 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react'; // Chatbot renders interviewer-facing chat experience.
 import { motion } from 'motion/react';
-import { Volume2, VolumeX, ChevronRight, RotateCcw, Bot, Circle } from 'lucide-react';
+import { Volume2, VolumeX, Bot, Circle } from 'lucide-react';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { InterviewProgress, InterviewStage } from './InterviewProgress';
 import { InterviewerSidebar } from './InterviewerSidebar';
-import { Question } from './InteractiveQuestion';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './ui/resizable';
-import { API_BASE_URL } from '../config';
 import {
   CandidateConversationEntry,
   CandidatePersonaPayload,
   fetchCandidateReply,
 } from '../services/candidateAutoReply';
-import { ScheduledInterview } from './ScheduledInterviews';
+import { startInterviewSession, advanceInterviewSession, extractSidebarSnapshot } from '../services/interviewSession';
+import type { SessionMessage, InterviewSessionResponse, SidebarSnapshot } from '../types/interviewSession';
+import type { ScheduledInterview } from './ScheduledInterviews';
 
-interface Message {
+interface Message { // Represents a chat transcript entry for the UI.
   id: string;
   text: string;
   isUser: boolean;
   timestamp: string;
   expectCandidateReply?: boolean;
-  question?: Question;
-  questionSubmitted?: boolean;
   objective?: string;
+  kind?: 'directive';
+  question?: any;
+  questionSubmitted?: boolean;
 }
 
-const SUPPORTED_PERSONA_TONES: CandidatePersonaPayload['tone'][] = [
-  'enthusiastic',
-  'calm',
-  'confident',
-  'reflective',
-  'direct',
-  'warm',
-];
+type ChatStatus = 'listening' | 'thinking' | 'waiting for answer';
 
-interface WarmupContextState {
-  candidate_name?: string | null;
-  job_title?: string | null;
-  interview_style?: string | null;
-  competency_focus: string[];
-  resume_excerpt?: string | null;
-}
-
-interface WarmupHistoryEntry {
-  role: 'interviewer' | 'candidate';
-  text: string;
-}
-
-interface WarmupState {
-  history: WarmupHistoryEntry[];
-  last_question: string | null;
-  last_answer: string | null;
-  turns: number;
-  comfort: number;
-  done: boolean;
-  context: WarmupContextState;
-}
-
-interface WarmupPlan {
-  prompt: {
-    greeting: string;
-    question: string;
-    objective: string;
-  };
-  follow_up?: string;
-  tone: string;
-  state: WarmupState;
-}
-
-interface WarmupFollowUpResult {
-  follow_up?: string | null;
-  state?: WarmupState;
-}
+const mapSessionMessage = (entry: SessionMessage): Message => ({ // Maps backend session payload to UI message.
+  id: entry.messageId,
+  text: entry.text,
+  isUser: entry.role === 'interviewer',
+  timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  expectCandidateReply: entry.expectCandidateReply,
+  objective: entry.objective ?? undefined,
+  kind: entry.role === 'directive' ? 'directive' : undefined,
+});
 
 interface ChatbotProps {
   interview?: ScheduledInterview | null;
@@ -88,25 +53,39 @@ export function Chatbot({
   autoReplyEnabled = false,
   initialTtsEnabled = true,
   onEndInterview,
-}: ChatbotProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [ttsEnabled, setTtsEnabled] = useState(initialTtsEnabled);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [status, setStatus] = useState<'listening' | 'thinking' | 'waiting for answer'>('thinking');
-  const [currentStage, setCurrentStage] = useState<InterviewStage>('warmup');
-  const [competencyNumber, setCompetencyNumber] = useState(1);
-  const totalCompetencies = interview?.competencies.length ?? 3;
+}: ChatbotProps) { // Orchestrates chat UI backed by backend session flow.
+  const [messages, setMessages] = useState<Message[]>([]); // Chat transcript state.
+  const [ttsEnabled, setTtsEnabled] = useState(initialTtsEnabled); // Tracks text-to-speech toggle.
+  const [isSpeaking, setIsSpeaking] = useState(false); // Indicates active speech synthesis.
+  const [status, setStatus] = useState<ChatStatus>('thinking'); // Reflects assistant status indicator.
+  const [sessionId, setSessionId] = useState<string | null>(null); // Holds active session identifier.
+  const [currentStage, setCurrentStage] = useState<InterviewStage>('warmup'); // Mirrors backend stage for progress UI.
+  const [competencyNumber, setCompetencyNumber] = useState(1); // Tracks active competency index.
+  const totalCompetencies = interview?.competencies.length ?? 3; // Total competencies for progress UI.
+  const [sidebarSnapshot, setSidebarSnapshot] = useState<SidebarSnapshot | null>(null); // Stores sidebar data derived from session.
+  const [sessionError, setSessionError] = useState<string | null>(null); // Stores session bootstrap/advance errors.
+  const [isLoadingSession, setIsLoadingSession] = useState(false); // Indicates session bootstrap.
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<Message[]>([]);
-  const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
-  const [warmupPlan, setWarmupPlan] = useState<WarmupPlan | null>(null);
-  const [warmupFollowUpPending, setWarmupFollowUpPending] = useState(false);
   const autoReplyInFlightRef = useRef(false);
   const lastAutoReplyPromptRef = useRef<string | null>(null);
+  const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  const fallbackSidebar = useMemo<SidebarSnapshot>(() => ({
+    overallScore: 0,
+    currentCompetency: interview?.competencies?.[0]?.name ?? 'Competency',
+    interviewStyle: interview?.competencies?.[0]?.interviewStyle ?? 'Style',
+    criteria: [],
+    scoreNotes: 'No evaluation notes yet.',
+    redFlags: [],
+  }), [interview]); // Provides stable sidebar defaults.
+
+  const sidebarData = sidebarSnapshot ?? fallbackSidebar;
+
   const replaceMessages = useCallback((next: Message[]) => {
     messagesRef.current = next;
     setMessages(next);
-  }, []);
+  }, []); // Resets chat history to provided messages.
 
   const patchMessages = useCallback((builder: (prev: Message[]) => Message[]) => {
     setMessages(prev => {
@@ -114,737 +93,338 @@ export function Chatbot({
       messagesRef.current = next;
       return next;
     });
-  }, []);
+  }, []); // Applies functional update to chat history.
 
-  const getCompetencyFocus = () => {
-    const items = interview?.competencies ?? [];
-    return items
-      .map(item => item.name)
-      .filter((name): name is string => Boolean(name?.trim()));
-  }; // Derives competency focus list from the active interview.
-
-  const buildCandidatePersona = useCallback(() => {
-    const persona: CandidatePersonaPayload = {};
-
-    if (interview?.candidateName) {
-      persona.name = interview.candidateName;
-    }
-    if (interview?.jobTitle) {
-      persona.title = interview.jobTitle;
-    }
-
-    const specialties = interview?.competencies
-      ?.map(item => item.name)
-      .filter((name): name is string => Boolean(name?.trim()));
-    if (specialties && specialties.length > 0) {
-      persona.specialties = specialties;
-    }
-
-    if (warmupPlan?.tone && SUPPORTED_PERSONA_TONES.includes(warmupPlan.tone as CandidatePersonaPayload['tone'])) {
-      persona.tone = warmupPlan.tone as CandidatePersonaPayload['tone'];
-    }
-
-    const hasPersona =
-      Boolean(persona.name) ||
-      Boolean(persona.title) ||
-      Boolean(persona.tone) ||
-      Boolean(persona.specialties && persona.specialties.length > 0);
-
-    return hasPersona ? persona : null;
-  }, [interview, warmupPlan]); // Builds candidate persona payload when interview context is available.
-
-  const mapConversationEntries = useCallback(
-    (history: Message[]): CandidateConversationEntry[] =>
-    history.map(message => ({
-      role: isInterviewerView
-        ? (message.isUser ? 'interviewer' : 'candidate')
-        : (message.isUser ? 'candidate' : 'interviewer'),
-      text: message.text,
-    })),
-    [isInterviewerView],
-  ); // Maps UI messages into candidate service conversation entries.
-
-  const hasCandidateReplyAfterPrompt = (promptId: string) => {
-    const history = messagesRef.current;
-    const promptIndex = history.findIndex(message => message.id === promptId);
-    if (promptIndex === -1) {
-      return true;
-    }
-    return history.slice(promptIndex + 1).some(message => !message.isUser);
-  }; // Detects whether a prompt already received a candidate reply.
-
-  // Mock data for interviewer sidebar
-  const [overallScore] = useState(78);
-  const [currentCompetency] = useState('Technical Problem Solving');
-  const [interviewStyle] = useState('Behavioral');
-  const [criteria] = useState([
-    { name: 'Problem Analysis', level: '4', maxLevel: 5 },
-    { name: 'Solution Design', level: '3', maxLevel: 5 },
-    { name: 'Code Quality', level: '4', maxLevel: 5 },
-    { name: 'Communication', level: '3', maxLevel: 5 },
-  ]);
-  const [scoreNotes] = useState('Candidate demonstrates strong analytical skills and provides well-structured solutions. Good understanding of design patterns, though could improve on edge case handling.');
-  const [redFlags] = useState([
-    'Incomplete answer on scalability concerns',
-    'Vague about previous project experience',
-  ]);
-
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []); // Scrolls transcript to latest entry.
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, scrollToBottom]);
 
   useEffect(() => {
     messagesRef.current = messages;
   }, [messages]);
 
-  useEffect(() => {
-    lastAutoReplyPromptRef.current = null;
-  }, [interview?.id, autoReplyEnabled, isInterviewerView]);
+  const stopSpeaking = useCallback(() => {
+    window.speechSynthesis.cancel();
+    setIsSpeaking(false);
+  }, []); // Halts active speech synthesis playback.
 
-  useEffect(() => {
-    setTtsEnabled(initialTtsEnabled);
-  }, [initialTtsEnabled]);
+  const toggleTTS = useCallback(() => {
+    if (ttsEnabled && isSpeaking) {
+      stopSpeaking();
+    }
+    setTtsEnabled(prev => !prev);
+  }, [isSpeaking, stopSpeaking, ttsEnabled]); // Toggles text-to-speech usage.
 
-  // Load voices when available
+  const speak = useCallback(
+    (text: string) => {
+      if (!ttsEnabled || !window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voices = window.speechSynthesis.getVoices();
+      const femaleVoice = voices.find(voice => voice.lang.startsWith('en') && voice.name.toLowerCase().includes('female'));
+      if (femaleVoice) {
+        utterance.voice = femaleVoice;
+      }
+      utterance.rate = 0.95;
+      utterance.pitch = 1.1;
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      speechSynthesisRef.current = utterance;
+      window.speechSynthesis.speak(utterance);
+    },
+    [ttsEnabled],
+  ); // Plays candidate replies via speech synthesis when enabled.
+
   useEffect(() => {
     const loadVoices = () => {
       window.speechSynthesis.getVoices();
     };
-    
     loadVoices();
     if (window.speechSynthesis.onvoiceschanged !== undefined) {
       window.speechSynthesis.onvoiceschanged = loadVoices;
     }
-  }, []);
+  }, []); // Primes voice list for speech synthesis.
 
-  const speak = useCallback((text: string) => {
-    if (!ttsEnabled || !window.speechSynthesis) return;
-
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    
-    // Select an Indian female voice with priority
-    const voices = window.speechSynthesis.getVoices();
-    
-    // Male voice names to exclude
-    const maleVoiceNames = ['rishi', 'male', 'guy', 'david', 'james', 'tom', 'alex (male)', 'daniel'];
-    
-    // Filter to get only female voices
-    const isFemaleVoice = (voice: SpeechSynthesisVoice) => {
-      const nameLower = voice.name.toLowerCase();
-      
-      // Exclude male voices
-      if (maleVoiceNames.some(male => nameLower.includes(male))) {
-        return false;
+  const resolveCompetencyNumber = useCallback(
+    (competencyId: string | null | undefined) => {
+      if (!interview || !competencyId) {
+        return 1;
       }
-      
-      // Include explicit female voices
-      return nameLower.includes('female') ||
-             nameLower.includes('woman') ||
-             nameLower.includes('heera') ||
-             nameLower.includes('priya') ||
-             nameLower.includes('samantha') ||
-             nameLower.includes('karen') ||
-             nameLower.includes('victoria') ||
-             nameLower.includes('zira') ||
-             nameLower.includes('salli') ||
-             nameLower.includes('joanna') ||
-             nameLower.includes('kendra') ||
-             nameLower.includes('kimberly') ||
-             nameLower.includes('naja') ||
-             nameLower.includes('lekha');
-    };
-    
-    // Priority 1: Indian female voices
-    let selectedVoice = voices.find(voice => 
-      (voice.lang.includes('en-IN') || voice.name.toLowerCase().includes('indian')) &&
-      isFemaleVoice(voice)
-    );
-    
-    // Priority 2: Google UK/US female voices
-    if (!selectedVoice) {
-      selectedVoice = voices.find(voice => 
-        (voice.name.toLowerCase().includes('google uk english female') ||
-         voice.name.toLowerCase().includes('google us english female')) &&
-        isFemaleVoice(voice)
-      );
-    }
-    
-    // Priority 3: Any female voice
-    if (!selectedVoice) {
-      selectedVoice = voices.find(voice => isFemaleVoice(voice));
-    }
-    
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
-      console.log('Using voice:', selectedVoice.name, '- Language:', selectedVoice.lang);
-    } else {
-      console.warn('No female voice found. Available voices:', voices.map(v => v.name));
-    }
-    
-    // Soft and soothing voice settings
-    utterance.rate = 0.85; // Slower, more calming pace
-    utterance.pitch = 1.1; // Slightly higher pitch for feminine tone
-    utterance.volume = 0.9; // Slightly softer volume
+      const index = interview.competencies.findIndex(entry => entry.id === competencyId);
+      return index >= 0 ? index + 1 : 1;
+    },
+    [interview],
+  ); // Resolves competency ordinal from identifier.
 
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
+  const applySessionResponse = useCallback(
+    (response: InterviewSessionResponse, mode: 'replace' | 'append') => {
+      setSessionId(response.sessionId);
+      const uiMessages = response.messages.map(mapSessionMessage);
+      if (uiMessages.length) {
+        if (mode === 'replace') {
+          replaceMessages(uiMessages);
+        } else {
+          patchMessages(prev => [...prev, ...uiMessages]);
+        }
+      } else if (mode === 'replace') {
+        replaceMessages([]);
+      }
+      const expectsReply = response.messages.some(entry => entry.expectCandidateReply);
+      setStatus(expectsReply ? 'waiting for answer' : 'thinking');
+      if (response.stage === 'competency') {
+        setCurrentStage('competency');
+        setCompetencyNumber(resolveCompetencyNumber(response.competencyId));
+      } else if (response.stage === 'warmup') {
+        setCurrentStage('warmup');
+        setCompetencyNumber(1);
+      } else {
+        setCurrentStage('wrapup');
+      }
+      setSidebarSnapshot(extractSidebarSnapshot(response));
+    },
+    [patchMessages, replaceMessages, resolveCompetencyNumber],
+  ); // Synchronizes UI state with backend session snapshot.
 
-    speechSynthesisRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
-  }, [ttsEnabled]);
+  const resetSession = useCallback(() => {
+    setSessionId(null);
+    setCurrentStage('warmup');
+    setCompetencyNumber(1);
+    replaceMessages([]);
+    setSessionError(null);
+    setStatus('thinking');
+    lastAutoReplyPromptRef.current = null;
+    autoReplyInFlightRef.current = false;
+    stopSpeaking();
+    setSidebarSnapshot(null);
+  }, [replaceMessages, stopSpeaking]); // Clears state when interview changes or session ends.
+
+  const bootstrapSession = useCallback(async () => {
+    if (!interview) {
+      resetSession();
+      return;
+    }
+    resetSession();
+    setIsLoadingSession(true);
+    setSessionError(null);
+    setStatus('thinking');
+    try {
+      const response = await startInterviewSession(interview.id);
+      applySessionResponse(response, 'replace');
+    } catch (error) {
+      console.error('Failed to start interview session', error);
+      setSessionError('Unable to load interview session. Please try again.');
+      replaceMessages([]);
+    } finally {
+      setIsLoadingSession(false);
+    }
+  }, [applySessionResponse, interview, replaceMessages, resetSession, setStatus]);
+
+  useEffect(() => {
+    bootstrapSession();
+  }, [bootstrapSession]);
+
+  const buildCandidatePersona = useCallback(() => {
+    if (!interview) {
+      return null;
+    }
+    const persona: CandidatePersonaPayload = {};
+    if (interview.candidateName) {
+      persona.name = interview.candidateName;
+    }
+    if (interview.jobTitle) {
+      persona.title = interview.jobTitle;
+    }
+    const specialties = interview.competencies
+      .map(item => item.name)
+      .filter((name): name is string => Boolean(name?.trim()));
+    if (specialties.length) {
+      persona.specialties = specialties;
+    }
+    const hasPersona = persona.name || persona.title || (persona.specialties && persona.specialties.length > 0);
+    return hasPersona ? persona : null;
+  }, [interview]); // Builds persona payload for candidate auto reply service.
+
+  const mapConversationEntries = useCallback(
+    (history: Message[]): CandidateConversationEntry[] =>
+      history.reduce<CandidateConversationEntry[]>((acc, message) => {
+        const trimmed = message.text.trim();
+        if (!trimmed) {
+          return acc;
+        }
+        const role: 'interviewer' | 'candidate' =
+          message.isUser || message.expectCandidateReply
+            ? (isInterviewerView ? 'interviewer' : 'candidate')
+            : (isInterviewerView ? 'candidate' : 'interviewer');
+        acc.push({ role, text: trimmed });
+        return acc;
+      }, []),
+    [isInterviewerView],
+  ); // Converts transcript into candidate service conversation payload.
 
   const handleCandidateReply = useCallback(
     async (text: string) => {
-      const responseTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const candidateMessage: Message = {
         id: `candidate-reply-${Date.now()}`,
         text,
         isUser: false,
-        timestamp: responseTimestamp,
+        timestamp,
         expectCandidateReply: false,
       };
       patchMessages(prev => [...prev, candidateMessage]);
-
       if (ttsEnabled) {
-        setTimeout(() => speak(text), 500);
+        setTimeout(() => speak(text), 400);
       }
-
-      if (warmupFollowUpPending && warmupPlan) {
-        try {
-          setStatus('thinking');
-          const payload = {
-            prompt: warmupPlan.prompt,
-            candidate_response: text,
-            tone: warmupPlan.tone,
-            candidate_name: interview?.candidateName ?? null,
-            job_title: interview?.jobTitle ?? null,
-            interview_style: interview?.competencies[0]?.interviewStyle ?? null,
-            competency_focus: getCompetencyFocus(),
-            state: warmupPlan.state,
-          };
-
-          const response = await fetch(`${API_BASE_URL}/api/warmup/followup`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
-
-          if (!response.ok) {
-            throw new Error(`Request failed with status ${response.status}`);
-          }
-
-          const result: WarmupFollowUpResult = await response.json();
-          const updatedState = result.state ?? warmupPlan.state;
-          const botText = (result.follow_up ?? warmupPlan.follow_up ?? '').trim();
-          const nextFollowUp = (result.follow_up ?? warmupPlan.follow_up ?? '').trim();
-          const pendingNext = !updatedState.done && nextFollowUp.length > 0;
-
-          if (botText) {
-            const followUpMessage: Message = {
-              id: `warmup-followup-${Date.now()}`,
-              text: botText,
-              isUser: false,
-              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-              expectCandidateReply: pendingNext,
-            };
-            patchMessages(prev => [...prev, followUpMessage]);
-
-            if (ttsEnabled) {
-              setTimeout(() => speak(botText), 500);
-            }
-          }
-
-          setWarmupPlan(prev =>
-            prev ? { ...prev, follow_up: result.follow_up ?? prev.follow_up, state: updatedState } : prev,
-          );
-          setWarmupFollowUpPending(pendingNext);
-        } catch (error) {
-          console.error('Failed to generate warm-up follow-up', error);
-          const fallbackText = (warmupPlan.follow_up ?? '').trim();
-          if (fallbackText) {
-            const fallbackMessage: Message = {
-              id: `warmup-followup-fallback-${Date.now()}`,
-              text: fallbackText,
-              isUser: false,
-              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-              expectCandidateReply: false,
-            };
-            patchMessages(prev => [...prev, fallbackMessage]);
-
-            if (ttsEnabled) {
-              setTimeout(() => speak(fallbackText), 500);
-            }
-          }
-          setWarmupFollowUpPending(false);
-        } finally {
-          setStatus('waiting for answer');
-        }
-        return;
-      }
-
-      setStatus('waiting for answer');
-    },
-    [
-      patchMessages,
-      ttsEnabled,
-      speak,
-      warmupFollowUpPending,
-      warmupPlan,
-      interview,
-      getCompetencyFocus,
-    ],
-  );
-
-  const stopSpeaking = () => {
-    window.speechSynthesis.cancel();
-    setIsSpeaking(false);
-  };
-
-  const toggleTTS = () => {
-    if (ttsEnabled && isSpeaking) {
-      stopSpeaking();
-    }
-    setTtsEnabled(!ttsEnabled);
-  };
-
-  useEffect(() => {
-    return () => {
-      // Cleanup on unmount
-      window.speechSynthesis.cancel();
-    };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    const loadWarmup = async () => {
-      if (!interview) {
-        setCurrentStage('warmup');
-        setCompetencyNumber(1);
-        replaceMessages([]);
-        setWarmupPlan(null);
-        setWarmupFollowUpPending(false);
+      if (!sessionId) {
         setStatus('waiting for answer');
         return;
       }
-
-      setCurrentStage('warmup');
-      setCompetencyNumber(1);
       setStatus('thinking');
-      setWarmupPlan(null);
-      setWarmupFollowUpPending(false);
-
-      const competencyFocus = getCompetencyFocus();
-      const payload = {
-        candidate_name: interview.candidateName,
-        job_title: interview.jobTitle,
-        resume_text: interview.resume,
-        competency_focus: competencyFocus,
-        interview_style: interview.competencies[0]?.interviewStyle ?? null,
-      };
-
       try {
-        const response = await fetch(`${API_BASE_URL}/api/warmup/opening`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Request failed with status ${response.status}`);
-        }
-
-        const plan: WarmupPlan = await response.json();
-        if (!plan.state) {
-          throw new Error('Warm-up state missing from response');
-        }
-        if (cancelled) return;
-
-        const now = new Date();
-        const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const warmupMessages: Message[] = [
-          {
-            id: `warmup-greeting-${now.getTime()}`,
-            text: `${plan.prompt.greeting}\n\nObjective: ${plan.prompt.objective}`,
-            objective: plan.prompt.objective,
-            isUser: false,
-            timestamp,
-            expectCandidateReply: false,
-          },
-          {
-            id: `warmup-question-${now.getTime() + 1}`,
-            text: plan.prompt.question,
-            isUser: false,
-            timestamp,
-            expectCandidateReply: true,
-          },
-        ];
-
-        setWarmupPlan(plan);
-        setWarmupFollowUpPending(true);
-        replaceMessages(warmupMessages);
-        setStatus('waiting for answer');
+        const response = await advanceInterviewSession(sessionId, { event: 'candidate_reply', text });
+        applySessionResponse(response, 'append');
       } catch (error) {
-        console.error('Failed to load warm-up plan', error);
-        if (cancelled) return;
-
-        const now = new Date();
-        const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const notice: Message = {
-          id: `warmup-unavailable-${now.getTime()}`,
-          text: 'The warm-up assistant is temporarily unavailable. We can move forward whenever you are ready.',
+        console.error('Failed to advance interview session', error);
+        const failure: Message = {
+          id: `session-advance-error-${Date.now()}`,
+          text: 'Unable to advance the interview. Please retry shortly.',
           isUser: false,
-          timestamp,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           expectCandidateReply: false,
         };
-
-        setWarmupPlan(null);
-        setWarmupFollowUpPending(false);
-        replaceMessages([notice]);
-        setStatus('waiting for answer');
-      }
-    };
-
-    void loadWarmup();
-    return () => {
-      cancelled = true;
-    };
-  }, [interview]);
-
-  useEffect(() => {
-    if (!autoReplyEnabled) {
-      return;
-    }
-    if (!messages.length || autoReplyInFlightRef.current) {
-      return;
-    }
-
-    const prompt = [...messages].reverse().find(message => !message.isUser && message.expectCandidateReply);
-    if (!prompt) {
-      return;
-    }
-    if (lastAutoReplyPromptRef.current === prompt.id) {
-      return;
-    }
-
-    const persona = buildCandidatePersona();
-    const historySnapshot = [...messages];
-    const payload = {
-      question: prompt.text,
-      conversation: mapConversationEntries(historySnapshot),
-      ...(persona ? { persona } : {}),
-    };
-
-    lastAutoReplyPromptRef.current = prompt.id;
-    autoReplyInFlightRef.current = true;
-
-    const respond = async () => {
-      try {
-        setStatus('thinking');
-        const candidateResponse = await fetchCandidateReply(payload);
-        if (hasCandidateReplyAfterPrompt(prompt.id)) {
-          setStatus('waiting for answer');
-          return;
-        }
-        await handleCandidateReply(candidateResponse.reply);
-      } catch (error) {
-        console.error('Failed to auto-generate candidate reply', error);
-        if (!hasCandidateReplyAfterPrompt(prompt.id)) {
-          const failureTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          const notice: Message = {
-            id: `candidate-auto-error-${Date.now()}`,
-            text: 'Candidate auto-response is unavailable. Please retry shortly.',
-            isUser: false,
-            timestamp: failureTimestamp,
-            expectCandidateReply: false,
-          };
-          patchMessages(prev => [...prev, notice]);
-        }
-        setStatus('waiting for answer');
+        patchMessages(prev => [...prev, failure]);
       } finally {
-        autoReplyInFlightRef.current = false;
+        setStatus('waiting for answer');
       }
-    };
+    },
+    [applySessionResponse, patchMessages, sessionId, speak, ttsEnabled],
+  ); // Handles candidate responses and advances backend session.
 
-    void respond();
-  }, [
-    messages,
-    autoReplyEnabled,
-    buildCandidatePersona,
-    mapConversationEntries,
-    patchMessages,
-    handleCandidateReply,
-  ]);
-
-  useEffect(() => {
-    if (!warmupPlan || !ttsEnabled) {
-      return;
-    }
-    stopSpeaking();
-    const combined = `${warmupPlan.prompt.greeting} ${warmupPlan.prompt.question}`;
-    const timer = setTimeout(() => speak(combined), 400);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [warmupPlan?.prompt.greeting, warmupPlan?.prompt.question, ttsEnabled]);
-
-  // Helper function to progress to next stage
-  const progressToNextStage = () => {
-    if (currentStage === 'warmup') {
-      setCurrentStage('competency');
-      setCompetencyNumber(1);
-    } else if (currentStage === 'competency') {
-      if (competencyNumber < totalCompetencies) {
-        setCompetencyNumber(prev => prev + 1);
-      } else {
-        setCurrentStage('wrapup');
+  const handleSendMessage = useCallback(
+    async (text: string, options?: { skipAutoReply?: boolean }) => {
+      const trimmedText = text.trim();
+      if (!trimmedText) {
+        return;
       }
-    }
-    // If already at wrapup, stay there
-  };
-
-  // Helper function to reset to beginning
-  const resetInterview = () => {
-    setCurrentStage('warmup');
-    setCompetencyNumber(1);
-  };
-
-  // Demo function to add different question types
-  const addDemoQuestion = (type: 'code' | 'multiple-select' | 'yes-no') => {
-    const now = new Date();
-    const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    
-    let questionMessage: Message | null = null;
-
-    switch (type) {
-      case 'code':
-        questionMessage = {
-          id: Date.now().toString(),
-          text: 'Please implement a function to reverse a linked list:',
-          isUser: false,
-          timestamp,
-          expectCandidateReply: true,
-          question: {
-            id: `q-${Date.now()}`,
-            type: 'code',
-            language: 'JavaScript',
-            initialCode: `class Node {\n  constructor(value) {\n    this.value = value;\n    this.next = null;\n  }\n}\n\nfunction reverseLinkedList(head) {\n  // Your code here\n}`
-          }
-        };
-        break;
-      case 'multiple-select':
-        questionMessage = {
-          id: Date.now().toString(),
-          text: 'Which of the following are JavaScript frameworks? (Select all that apply)',
-          isUser: false,
-          timestamp,
-          expectCandidateReply: true,
-          question: {
-            id: `q-${Date.now()}`,
-            type: 'multiple-select',
-            options: ['React', 'Angular', 'Django', 'Vue.js', 'Flask', 'Svelte']
-          }
-        };
-        break;
-      case 'yes-no':
-        questionMessage = {
-          id: Date.now().toString(),
-          text: 'Have you worked with microservices architecture before?',
-          isUser: false,
-          timestamp,
-          expectCandidateReply: true,
-          question: {
-            id: `q-${Date.now()}`,
-            type: 'yes-no'
-          }
-        };
-        break;
-    }
-
-    if (questionMessage) {
-      patchMessages(prev => [...prev, questionMessage]);
-    }
-  };
-
-  const handleQuestionSubmit = (messageId: string, answer: any) => {
-    // Mark the question as submitted
-    patchMessages(prev => prev.map(msg => 
-      msg.id === messageId 
-        ? { ...msg, questionSubmitted: true }
-        : msg
-    ));
-
-    // Add the answer as a user message
-    const now = new Date();
-    const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    
-    let answerText = '';
-    if (answer.type === 'code') {
-      answerText = `Submitted code solution in ${answer.language || 'code'}`;
-    } else if (answer.type === 'multiple-select') {
-      answerText = `Selected: ${answer.answers.join(', ')}`;
-    } else if (answer.type === 'yes-no') {
-      answerText = `Answer: ${answer.answer}`;
-    }
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      text: answerText,
-      isUser: true,
-      timestamp
-    };
-
-    patchMessages(prev => [...prev, userMessage]);
-    setStatus('thinking');
-
-    // Simulate bot response to the answer
-    setTimeout(() => {
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: "Great! I've reviewed your answer. Let's move to the next question.",
-        isUser: false,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        text: trimmedText,
+        isUser: true,
+        timestamp,
+        expectCandidateReply: false,
       };
-      
-      patchMessages(prev => [...prev, botMessage]);
-      setStatus('waiting for answer');
-    }, 1500);
-  };
-
-  const handleSendMessage = async (text: string, options?: { skipAutoReply?: boolean }) => {
-    const now = new Date();
-    const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      text,
-      isUser: true,
-      timestamp,
-    };
-
-    const updatedHistory = [...messagesRef.current, userMessage];
-    replaceMessages(updatedHistory);
-    setStatus('thinking');
-
-    if (!options?.skipAutoReply) {
-      const activePrompt = [...messagesRef.current].reverse().find(message => !message.isUser && message.expectCandidateReply);
-      if (activePrompt) {
-        lastAutoReplyPromptRef.current = activePrompt.id;
+      const updatedHistory = [...messagesRef.current, userMessage];
+      replaceMessages(updatedHistory);
+      setStatus('thinking');
+      if (sessionId) {
+        try {
+          await advanceInterviewSession(sessionId, { event: 'interviewer_message', text: trimmedText });
+        } catch (error) {
+          console.error('Failed to record interviewer message', error);
+        }
       }
-    }
-
-    if (warmupFollowUpPending && warmupPlan) {
-      try {
-        const payload = {
-          prompt: warmupPlan.prompt,
-          candidate_response: text,
-          tone: warmupPlan.tone,
-          candidate_name: interview?.candidateName ?? null,
-          job_title: interview?.jobTitle ?? null,
-          interview_style: interview?.competencies[0]?.interviewStyle ?? null,
-          competency_focus: getCompetencyFocus(),
-          state: warmupPlan.state,
-        };
-
-        const response = await fetch(`${API_BASE_URL}/api/warmup/followup`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Request failed with status ${response.status}`);
-        }
-
-        const result: WarmupFollowUpResult = await response.json();
-        const updatedState = result.state ?? warmupPlan.state;
-        const botText = (result.follow_up ?? warmupPlan.follow_up ?? '').trim();
-        const nextFollowUp = (result.follow_up ?? warmupPlan.follow_up ?? '').trim();
-        const pendingNext = !updatedState.done && nextFollowUp.length > 0;
-        const responseTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        if (botText) {
-          const botResponse: Message = {
-            id: (Date.now() + 1).toString(),
-            text: botText,
-            isUser: false,
-            timestamp: responseTimestamp,
-            expectCandidateReply: pendingNext,
-          };
-          patchMessages(prev => [...prev, botResponse]);
-
-          if (ttsEnabled) {
-            setTimeout(() => speak(botText), 500);
-          }
-        }
-
-        setWarmupPlan(prev => prev ? { ...prev, follow_up: result.follow_up ?? prev.follow_up, state: updatedState } : prev);
-        setWarmupFollowUpPending(pendingNext);
-      } catch (error) {
-        console.error('Failed to generate warm-up follow-up', error);
-        const fallbackText = (warmupPlan.follow_up ?? '').trim();
-        if (fallbackText) {
-          const responseTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          const botResponse: Message = {
-            id: (Date.now() + 1).toString(),
-            text: fallbackText,
-            isUser: false,
-            timestamp: responseTimestamp,
-            expectCandidateReply: false,
-          };
-          patchMessages(prev => [...prev, botResponse]);
-
-          if (ttsEnabled) {
-            setTimeout(() => speak(fallbackText), 500);
-          }
-        }
-        setWarmupFollowUpPending(false);
-      } finally {
+      if (options?.skipAutoReply) {
         setStatus('waiting for answer');
+        return;
       }
-      return;
-    }
-
-    if (options?.skipAutoReply) {
-      setStatus('waiting for answer');
-      return;
-    }
-
-    if (autoReplyEnabled) {
+      if (!autoReplyEnabled) {
+        setStatus('waiting for answer');
+        return;
+      }
+      const prompt = [...messagesRef.current].reverse().find(message => !message.isUser && message.expectCandidateReply);
+      if (!prompt) {
+        setStatus('waiting for answer');
+        return;
+      }
+      lastAutoReplyPromptRef.current = prompt.id;
+      autoReplyInFlightRef.current = true;
       try {
         const conversation = mapConversationEntries(updatedHistory);
         const persona = buildCandidatePersona();
         const candidateResponse = await fetchCandidateReply({
-          question: text,
+          question: trimmedText,
           conversation,
           ...(persona ? { persona } : {}),
         });
         await handleCandidateReply(candidateResponse.reply);
-        return;
       } catch (error) {
-        console.error('Failed to fetch candidate reply', error);
+        console.error('Failed to auto-generate candidate reply', error);
         const failureTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const failureNotice: Message = {
-          id: `candidate-reply-error-${Date.now()}`,
-          text: 'Candidate auto-response is unavailable. Please try again in a moment.',
+        const notice: Message = {
+          id: `candidate-auto-error-${Date.now()}`,
+          text: 'Candidate auto-response is unavailable. Please retry shortly.',
           isUser: false,
           timestamp: failureTimestamp,
           expectCandidateReply: false,
         };
-        patchMessages(prev => [...prev, failureNotice]);
+        patchMessages(prev => [...prev, notice]);
         setStatus('waiting for answer');
-        return;
+      } finally {
+        autoReplyInFlightRef.current = false;
       }
-    }
+    },
+    [
+      autoReplyEnabled,
+      buildCandidatePersona,
+      handleCandidateReply,
+      mapConversationEntries,
+      patchMessages,
+      replaceMessages,
+      sessionId,
+    ],
+  ); // Handles interviewer messages and optionally triggers auto candidate replies.
 
-    setStatus('waiting for answer');
-  };
+  useEffect(() => {
+    if (!autoReplyEnabled || !sessionId) {
+      return;
+    }
+    const prompt = [...messages].reverse().find(message => !message.isUser && message.expectCandidateReply);
+    if (!prompt) {
+      return;
+    }
+    if (lastAutoReplyPromptRef.current === prompt.id || autoReplyInFlightRef.current) {
+      return;
+    }
+    const trimmedQuestion = prompt.text.trim();
+    if (!trimmedQuestion) {
+      return;
+    }
+    lastAutoReplyPromptRef.current = prompt.id;
+    autoReplyInFlightRef.current = true;
+    const respond = async () => {
+      try {
+        setStatus('thinking');
+        const conversation = mapConversationEntries(messages);
+        const persona = buildCandidatePersona();
+        const candidateResponse = await fetchCandidateReply({
+          question: trimmedQuestion,
+          conversation,
+          ...(persona ? { persona } : {}),
+        });
+        await handleCandidateReply(candidateResponse.reply);
+      } catch (error) {
+        console.error('Failed to auto-generate candidate reply', error);
+      } finally {
+        autoReplyInFlightRef.current = false;
+        setStatus('waiting for answer');
+      }
+    };
+    void respond();
+  }, [
+    autoReplyEnabled,
+    buildCandidatePersona,
+    handleCandidateReply,
+    mapConversationEntries,
+    messages,
+    sessionId,
+    setStatus,
+  ]); // Auto-generates candidate replies when feature flag enabled.
 
   return (
     <motion.div
@@ -858,122 +438,39 @@ export function Chatbot({
       "
     >
       <ResizablePanelGroup direction="horizontal" className="h-full">
-        {/* Main Chat Area */}
         <ResizablePanel defaultSize={isInterviewerView ? 70 : 100} minSize={40}>
           <div className="relative z-10 flex flex-col h-full">
-            {/* Bot Avatar, Status and Controls - Single Row */}
             <div className="px-4 sm:px-6 pt-6 pb-4 bg-white/50 shrink-0">
               <div className="flex items-center justify-between">
-                {/* Left: Bot Avatar and Status */}
                 <div className="flex items-center gap-4">
-                  <div className="
-                    w-12 h-12 rounded-2xl
-                    bg-white/80
-                    backdrop-blur-xl border border-gray-200/60
-                    flex items-center justify-center
-                    shadow-[0_4px_12px_rgba(0,0,0,0.1),0_2px_4px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)]
-                  ">
+                  <div
+                    className="
+                      w-12 h-12 rounded-2xl
+                      bg-white/80
+                      backdrop-blur-xl border border-gray-200/60
+                      flex items-center justify-center
+                      shadow-[0_4px_12px_rgba(0,0,0,0.1),0_2px_4px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)]
+                    "
+                  >
                     <Bot className="w-6 h-6 text-gray-700" />
                   </div>
                   <div>
                     <h1 className="text-lg text-gray-900">AI Interviewer</h1>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Circle 
+                      <Circle
                         className={`w-2 h-2 ${
-                          status === 'listening' 
-                            ? 'fill-red-500 text-red-500 animate-pulse' 
+                          status === 'listening'
+                            ? 'fill-red-500 text-red-500 animate-pulse'
                             : status === 'thinking'
                             ? 'fill-blue-500 text-blue-500 animate-pulse'
                             : 'fill-green-500 text-green-500'
-                        }`} 
+                        }`}
                       />
                       <span className="capitalize">{status}</span>
                     </div>
                   </div>
                 </div>
-
-                {/* Right: Controls */}
                 <div className="flex items-center gap-2">
-                  {/* Demo Question Type Selector */}
-                  <div className="relative group">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="
-                        px-3 py-1.5 rounded-full text-xs
-                        backdrop-blur-xl border border-gray-200/50
-                        bg-gradient-to-br from-white to-gray-100/80 text-gray-700 hover:from-gray-50 hover:to-gray-200/80
-                        shadow-[0_4px_12px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)]
-                        transition-all duration-200
-                      "
-                    >
-                      + Add Question
-                    </motion.button>
-                    
-                    {/* Dropdown menu */}
-                    <div className="
-                      absolute top-full right-0 mt-2 w-48
-                      backdrop-blur-xl bg-white/95 border border-gray-200/50
-                      rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)]
-                      opacity-0 invisible group-hover:opacity-100 group-hover:visible
-                      transition-all duration-200 z-50
-                    ">
-                      <div className="p-2 space-y-1">
-                        <button
-                          onClick={() => addDemoQuestion('code')}
-                          className="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                        >
-                          Code Editor
-                        </button>
-                        <button
-                          onClick={() => addDemoQuestion('multiple-select')}
-                          className="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                        >
-                          Multiple Select
-                        </button>
-                        <button
-                          onClick={() => addDemoQuestion('yes-no')}
-                          className="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                        >
-                          Yes/No
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Demo Controls - Remove in production */}
-                  <motion.button
-                    onClick={resetInterview}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="
-                      p-2 rounded-full
-                      backdrop-blur-xl border border-gray-200/50
-                      bg-gradient-to-br from-white to-gray-100/80 text-gray-600 hover:from-gray-50 hover:to-gray-200/80
-                      shadow-[0_4px_12px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)]
-                      transition-all duration-200
-                    "
-                    title="Reset Interview (Demo)"
-                  >
-                    <RotateCcw className="w-4 h-4" />
-                  </motion.button>
-                  
-                  <motion.button
-                    onClick={progressToNextStage}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="
-                      p-2 rounded-full
-                      backdrop-blur-xl border border-gray-200/50
-                      bg-gradient-to-br from-white to-gray-100/80 text-gray-600 hover:from-gray-50 hover:to-gray-200/80
-                      shadow-[0_4px_12px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)]
-                      transition-all duration-200
-                    "
-                    title="Next Stage (Demo)"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </motion.button>
-                  
                   <motion.button
                     onClick={toggleTTS}
                     whileHover={{ scale: 1.05 }}
@@ -982,20 +479,16 @@ export function Chatbot({
                       p-2 rounded-full
                       backdrop-blur-xl border border-gray-200/50
                       transition-all duration-200
-                      ${ttsEnabled 
-                        ? 'bg-gradient-to-br from-gray-200 to-gray-300/80 text-gray-700 hover:from-gray-300 hover:to-gray-400/80 shadow-[0_4px_12px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.6)]' 
-                        : 'bg-gradient-to-br from-white to-gray-100/80 text-gray-500 hover:from-gray-50 hover:to-gray-200/80 shadow-[0_4px_12px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)]'
+                      ${
+                        ttsEnabled
+                          ? 'bg-gradient-to-br from-gray-200 to-gray-300/80 text-gray-700 hover:from-gray-300 hover:to-gray-400/80 shadow-[0_4px_12px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.6)]'
+                          : 'bg-gradient-to-br from-white to-gray-100/80 text-gray-500 hover:from-gray-50 hover:to-gray-200/80 shadow-[0_4px_12px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)]'
                       }
                     `}
                     title={ttsEnabled ? 'Text-to-Speech enabled' : 'Text-to-Speech disabled'}
                   >
-                    {ttsEnabled ? (
-                      <Volume2 className="w-5 h-5" />
-                    ) : (
-                      <VolumeX className="w-5 h-5" />
-                    )}
+                    {ttsEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
                   </motion.button>
-
                   {onEndInterview && (
                     <motion.button
                       onClick={onEndInterview}
@@ -1015,67 +508,65 @@ export function Chatbot({
                   )}
                 </div>
               </div>
+              {sessionError && (
+                <div className="mt-3 rounded-lg bg-red-50 border border-red-200 px-3 py-2 text-xs text-red-700">
+                  {sessionError}
+                </div>
+              )}
             </div>
 
-            {/* Progress bar */}
             <div className="px-4 sm:px-6 pb-3 bg-white/50 shrink-0">
-              <InterviewProgress 
-                currentStage={currentStage}
-                competencyNumber={competencyNumber}
-                totalCompetencies={totalCompetencies}
-              />
+              <InterviewProgress currentStage={currentStage} competencyNumber={competencyNumber} totalCompetencies={totalCompetencies} />
             </div>
-            
+
             <div className="flex-1 overflow-y-auto px-6 py-8 scroll-smooth">
               <div className="relative max-w-5xl mx-auto">
-                {/* Timeline vertical line */}
                 <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-gray-300 via-gray-200 to-gray-100"></div>
-                
-                {messages.map((message, index) => {
-                  // Find the last AI message
-                  const aiMessages = messages.filter(m => !m.isUser);
-                  const lastAIMessage = aiMessages[aiMessages.length - 1];
-                  const isLatestAI = !message.isUser && message.id === lastAIMessage?.id;
-                  
-                  return (
-                    <ChatMessage
-                      key={message.id}
-                      message={message.text}
-                      isUser={message.isUser}
-                      timestamp={message.timestamp}
-                      isLatestAI={isLatestAI}
-                      question={message.question}
-                      onQuestionSubmit={message.question ? (answer) => handleQuestionSubmit(message.id, answer) : undefined}
-                      questionSubmitted={message.questionSubmitted}
-                      isLast={index === messages.length - 1}
-                    />
-                  );
-                })}
+                {isLoadingSession && messages.length === 0 ? (
+                  <div className="flex items-center justify-center py-16 text-sm text-gray-600">
+                    Loading interview session...
+                  </div>
+                ) : (
+                  messages.map((message, index) => {
+                    const aiMessages = messages.filter(m => !m.isUser);
+                    const lastAIMessage = aiMessages[aiMessages.length - 1];
+                    const isLatestAI = !message.isUser && message.id === lastAIMessage?.id;
+                    return (
+                      <ChatMessage
+                        key={message.id}
+                        message={message.text}
+                        isUser={message.isUser}
+                        timestamp={message.timestamp}
+                        isLatestAI={isLatestAI}
+                        question={message.question}
+                        onQuestionSubmit={undefined}
+                        questionSubmitted={message.questionSubmitted}
+                        isLast={index === messages.length - 1}
+                      />
+                    );
+                  })
+                )}
                 <div ref={messagesEndRef} />
               </div>
             </div>
-            
+
             <div className="p-6 pt-4 shrink-0">
-              <ChatInput 
-                onSendMessage={handleSendMessage}
-                onListeningChange={(isListening) => setStatus(isListening ? 'listening' : 'waiting for answer')}
-              />
+              <ChatInput onSendMessage={handleSendMessage} onListeningChange={isListening => setStatus(isListening ? 'listening' : 'waiting for answer')} />
             </div>
           </div>
         </ResizablePanel>
 
-        {/* Interviewer Sidebar - Only visible in interviewer view */}
         {isInterviewerView && (
           <>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
+            <ResizableHandle />
+            <ResizablePanel defaultSize={30} minSize={20}>
               <InterviewerSidebar
-                overallScore={overallScore}
-                currentCompetency={currentCompetency}
-                interviewStyle={interviewStyle}
-                criteria={criteria}
-                scoreNotes={scoreNotes}
-                redFlags={redFlags}
+                overallScore={sidebarData.overallScore}
+                currentCompetency={sidebarData.currentCompetency}
+                interviewStyle={sidebarData.interviewStyle}
+                criteria={sidebarData.criteria}
+                scoreNotes={sidebarData.scoreNotes}
+                redFlags={sidebarData.redFlags}
               />
             </ResizablePanel>
           </>

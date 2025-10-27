@@ -1,4 +1,4 @@
-import { useState } from 'react'; // Setup page orchestrates AI interview scheduling flow.
+import { useEffect, useState } from 'react'; // Setup page orchestrates AI interview scheduling flow.
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
@@ -49,6 +49,12 @@ interface CompetencyPlanResponse {
   competencies: LlmCompetency[];
   stage_sequence?: string[];
   stage_styles?: Record<string, string>;
+}
+
+interface StyleOption {
+  style_id: string;
+  label: string;
+  summary: string;
 }
 
 interface RubricCriterion {
@@ -120,6 +126,31 @@ export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledIn
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
   const [isScheduling, setIsScheduling] = useState(false);
   const [scheduleError, setScheduleError] = useState<string | null>(null);
+  const [styleOptions, setStyleOptions] = useState<StyleOption[]>([]); // Stores configured interview styles.
+
+  useEffect(() => {
+    let active = true;
+    const fetchStyles = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/styles`);
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+        const data: StyleOption[] = await response.json();
+        if (active) {
+          setStyleOptions(
+            data.slice().sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: 'base' })),
+          );
+        }
+      } catch (error) {
+        console.error('Failed to load interview styles', error);
+      }
+    };
+    fetchStyles();
+    return () => {
+      active = false;
+    };
+  }, []); // Loads available interview styles for the dropdown.
 
   const jobDescriptions = JOB_DESCRIPTION_OPTIONS; // Provides JD presets for selection.
   const resumes = RESUME_OPTIONS; // Provides resume presets for selection.
@@ -474,14 +505,21 @@ export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledIn
                         value={competency.interviewStyle}
                         onValueChange={(value) => updateInterviewStyle(competency.id, value)}
                       >
-                        <SelectTrigger className="bg-white/60 border-gray-200/50 w-full">
+                        <SelectTrigger className="bg-white/60 border-gray-200/50 w-full" disabled={styleOptions.length === 0}>
                           <SelectValue placeholder="Select interview style" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="behavioral">Behavioral</SelectItem>
-                          <SelectItem value="technical">Technical</SelectItem>
-                          <SelectItem value="situational">Situational</SelectItem>
-                          <SelectItem value="case-study">Case Study</SelectItem>
+                          {styleOptions.length === 0 ? (
+                            <SelectItem value="__unavailable" disabled>
+                              No styles available
+                            </SelectItem>
+                          ) : (
+                            styleOptions.map((style) => (
+                              <SelectItem key={style.style_id} value={style.style_id}>
+                                {style.label}
+                              </SelectItem>
+                            ))
+                          )}
                         </SelectContent>
                       </Select>
                     </div>

@@ -4,7 +4,7 @@ import { Badge } from './ui/badge';
 import { Card } from './ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { ScrollArea } from './ui/scroll-area';
-import { Calendar, FileText, Play, RotateCcw, Eye, Award, Sparkles, Plus, ArrowLeft, Loader2, AlertTriangle } from 'lucide-react';
+import { Calendar, FileText, Play, RotateCcw, Eye, Award, Sparkles, Plus, ArrowLeft, Loader2, AlertTriangle, Trash } from 'lucide-react';
 
 export interface Competency {
   id: string;
@@ -51,6 +51,7 @@ interface ScheduledInterviewsProps {
   isLoading: boolean;
   error: string | null;
   onRetry: () => void;
+  onDeleteInterview: (interviewId: string) => void;
 }
 
 export function ScheduledInterviews({
@@ -60,8 +61,15 @@ export function ScheduledInterviews({
   onScheduleNew,
   isLoading,
   error,
-  onRetry
+  onRetry,
+  onDeleteInterview
 }: ScheduledInterviewsProps) { // Renders scheduled interview dashboard with actions.
+
+  const handleDelete = (interviewId: string) => {
+    if (window.confirm('Delete this scheduled interview? This action cannot be undone.')) {
+      onDeleteInterview(interviewId);
+    }
+  };
 
   return (
     <div className="h-screen w-screen overflow-auto bg-gradient-to-br from-gray-50 to-white">
@@ -193,21 +201,33 @@ export function ScheduledInterviews({
                           Scheduled: {interview.scheduledDate.toLocaleDateString()} at {interview.scheduledDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
-                      
-                      {interview.status === 'completed' && interview.overallScore !== undefined && (
-                        <div className="
-                          backdrop-blur-xl bg-gradient-to-br from-white to-gray-50/50
-                          border border-gray-200/50 rounded-xl p-3 sm:p-4
-                          shadow-[0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)]
-                          text-center min-w-[100px]
-                        ">
-                          <div className="flex items-center justify-center gap-2 mb-1">
-                            <Award className="w-4 h-4 text-gray-600" />
-                            <span className="text-xs text-gray-600">Score</span>
+                      <div className="flex flex-col items-start sm:items-end gap-3">
+                        {interview.status === 'completed' && interview.overallScore !== undefined && (
+                          <div className="
+                            backdrop-blur-xl bg-gradient-to-br from-white to-gray-50/50
+                            border border-gray-200/50 rounded-xl p-3 sm:p-4
+                            shadow-[0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)]
+                            text-center min-w-[100px]
+                          ">
+                            <div className="flex items-center justify-center gap-2 mb-1">
+                              <Award className="w-4 h-4 text-gray-600" />
+                              <span className="text-xs text-gray-600">Score</span>
+                            </div>
+                            <div className="text-gray-900">{interview.overallScore}%</div>
                           </div>
-                          <div className="text-gray-900">{interview.overallScore}%</div>
+                        )}
+                        <div className="flex items-center gap-2 self-end">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => handleDelete(interview.id)}
+                            title="Delete interview"
+                          >
+                            <Trash className="w-5 h-5" />
+                          </Button>
                         </div>
-                      )}
+                      </div>
                     </div>
 
                     {/* Competencies Preview */}

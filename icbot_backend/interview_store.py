@@ -50,3 +50,12 @@ def schedule_interview(payload: ScheduleInterviewRequest) -> ScheduledInterviewM
     interviews.append(interview)
     _write_store(interviews)
     return interview
+
+
+def delete_interview(interview_id: str) -> None:  # Removes a scheduled interview by id.
+    interviews = _read_store()
+    index = next((idx for idx, item in enumerate(interviews) if item.id == interview_id), None)
+    if index is None:
+        raise KeyError(f"Interview '{interview_id}' not found")
+    interviews.pop(index)
+    _write_store(interviews)

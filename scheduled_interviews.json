@@ -8,20 +8,20 @@
       {
         "id": "ml_model_development",
         "name": "Machine Learning Model Development",
-        "interview_style": "technical",
-        "rationale": "Given the requirement for building and deploying machine learning models, a technical interview style is most appropriate to assess hands-on proficiency with deep learning frameworks like TensorFlow and PyTorch, as well as model training, validation, and optimization techniques."
+        "interview_style": "debugging",
+        "rationale": "Given the responsibility to build and deploy machine learning models, a deep understanding of debugging is essential to identify and resolve issues in model performance, data pipelines, and training processes. This ensures robust and reliable model development cycles."
       },
       {
-        "id": "data_analysis_and_insights",
+        "id": "data_analysis_insight",
         "name": "Large-Scale Data Analysis and Insight Extraction",
-        "interview_style": "behavioral",
-        "rationale": "This competency focuses on the ability to analyze large datasets and extract actionable business insights. A behavioral interview style allows candidates to demonstrate past experiences in data analysis, problem framing, and stakeholder communication, which are critical for real-world data science impact."
+        "interview_style": "data_insight",
+        "rationale": "The role involves analyzing large datasets to extract actionable business insights. The data insight style enables candidates to demonstrate their ability to interpret complex data patterns, perform statistical analysis, and communicate findings effectively to stakeholders."
       },
       {
-        "id": "cross_functional_collaboration",
-        "name": "Collaboration with Engineering Teams",
-        "interview_style": "situational",
-        "rationale": "Effective model production and deployment require close collaboration with engineering teams. A situational interview assesses how candidates handle real-world cross-functional challenges, such as model integration, versioning, and deployment issues in a production environment."
+        "id": "model_productionization",
+        "name": "Model Production and Integration with Engineering",
+        "interview_style": "system_design_scaling",
+        "rationale": "Collaboration with engineering to productionize models requires understanding of system design and scalability. The system design scaling style ensures candidates can discuss how models are integrated into production systems, monitored, and maintained at scale."
       }
     ],
     "rubric": {
@@ -32,42 +32,42 @@
           "category": "Machine Learning Model Development",
           "criteria": [
             {
+              "name": "Debugging Model Performance and Data Pipelines",
+              "description": "Ability to identify and resolve issues in model training, data preprocessing, and feature engineering that impact performance and reliability.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Fails to identify or resolve errors; model performance degrades without intervention; no logs or error tracking.",
+                "Level 1": "Can identify basic errors in code or data; uses logging and basic debugging tools; limited impact on model output.",
+                "Level 2": "Systematically debugs model performance issues; uses profiling and error tracing; identifies data drift or pipeline bugs.",
+                "Level 3": "Proactively identifies and resolves complex model failures; uses A/B testing and model monitoring tools to validate fixes.",
+                "Level 4": "Diagnoses and resolves edge-case failures in distributed or large-scale environments; implements automated error detection and alerting.",
+                "Level 5": "Anticipates and prevents model failures through proactive monitoring, anomaly detection, and robust error handling in production."
+              }
+            },
+            {
               "name": "Proficiency with Deep Learning Frameworks",
-              "description": "Demonstrated ability to implement and tune deep learning models using TensorFlow and PyTorch.",
+              "description": "Demonstrated ability to implement and tune deep learning models using TensorFlow, PyTorch, or equivalent frameworks.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Unable to implement or configure deep learning frameworks; requires significant guidance.",
-                "Level 1": "Can set up basic frameworks but lacks experience in tuning or debugging models.",
-                "Level 2": "Can implement and configure frameworks with minimal supervision; limited optimization experience.",
-                "Level 3": "Proficient in implementing and tuning models across multiple frameworks; can compare performance.",
-                "Level 4": "Exhibits advanced use of frameworks including custom layers, distributed training, and model pruning.",
-                "Level 5": "Demonstrates mastery in framework selection, optimization, and integration with production systems."
+                "Level 0": "Does not use deep learning frameworks; relies on basic statistical methods only; no implementation of neural networks.",
+                "Level 1": "Can implement simple neural networks with basic layers; limited customization and no optimization.",
+                "Level 2": "Implements and trains standard architectures (e.g., CNN, RNN); tunes hyperparameters with basic optimization techniques.",
+                "Level 3": "Builds and optimizes complex models (e.g., attention-based, transformer models); uses gradient clipping, batch normalization.",
+                "Level 4": "Designs and deploys custom architectures for domain-specific tasks; integrates with distributed training frameworks.",
+                "Level 5": "Innovates model architecture to improve performance; applies advanced techniques like mixed precision, quantization, and pruning."
               }
             },
             {
-              "name": "Model Validation and Evaluation",
-              "description": "Ability to design and execute rigorous model validation strategies including cross-validation and bias detection.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Does not apply validation techniques; models are deployed without evaluation.",
-                "Level 1": "Applies basic validation (e.g., train/test split) but lacks awareness of overfitting or data leakage.",
-                "Level 2": "Uses cross-validation and basic metrics; can identify overfitting in simple models.",
-                "Level 3": "Applies multiple validation strategies (e.g., time-series, stratified) and interprets results effectively.",
-                "Level 4": "Designs robust validation pipelines with metrics for business impact (e.g., A/B test alignment).",
-                "Level 5": "Proactively identifies and mitigates data leakage, selection bias, and distribution shifts."
-              }
-            },
-            {
-              "name": "Model Productionization and Deployment",
-              "description": "Experience in deploying ML models into production environments with monitoring and versioning.",
+              "name": "Model Evaluation and Validation",
+              "description": "Ability to select, apply, and interpret appropriate evaluation metrics (e.g., precision, recall, F1, AUC) in context of business goals.",
               "weight": 40,
               "scoring_levels": {
-                "Level 0": "No experience with deployment; models remain in research or prototype stage.",
-                "Level 1": "Can deploy models with basic tools (e.g., Flask) but lacks monitoring or rollback capabilities.",
-                "Level 2": "Can deploy and document models; uses basic versioning (e.g., MLflow).",
-                "Level 3": "Uses CI/CD pipelines and model registry for deployment; monitors performance baseline.",
-                "Level 4": "Implements automated retraining, alerting, and A/B testing in production.",
-                "Level 5": "Owns end-to-end deployment lifecycle including rollback, canary releases, and A/B testing in live environments."
+                "Level 0": "Uses only basic metrics without context; fails to interpret or report results meaningfully.",
+                "Level 1": "Applies common metrics but does not interpret them in business context; lacks validation strategy.",
+                "Level 2": "Selects and applies relevant metrics; validates results with cross-validation and baseline comparisons.",
+                "Level 3": "Critically evaluates model performance across domains; considers bias, fairness, and data drift.",
+                "Level 4": "Uses multi-metric evaluation and interprets results for stakeholders; justifies model selection based on business impact.",
+                "Level 5": "Designs custom evaluation frameworks for novel use cases; integrates model performance with real-world KPIs."
               }
             }
           ]
@@ -76,432 +76,94 @@
           "category": "Large-Scale Data Analysis and Insight Extraction",
           "criteria": [
             {
-              "name": "Handling of Large-Scale Datasets",
-              "description": "Demonstrated experience in analyzing and processing large-scale datasets using distributed computing tools.",
+              "name": "Pattern Recognition in Complex Datasets",
+              "description": "Ability to identify meaningful patterns, anomalies, and trends in large-scale, multi-dimensional datasets.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Unable to work with large datasets; limited to small-scale or simulated data.",
-                "Level 1": "Can process moderate datasets with basic tools (e.g., Pandas) but not at scale.",
-                "Level 2": "Uses Spark or similar for basic data processing; limited to ETL workflows.",
-                "Level 3": "Efficiently processes terabyte-scale data with optimization techniques (e.g., partitioning, caching).",
-                "Level 4": "Scales analysis across distributed systems with performance tuning and fault tolerance.",
-                "Level 5": "Designs and implements scalable data pipelines for real-time or batch analytics with low latency."
+                "Level 0": "Fails to detect patterns; relies on manual inspection; no automated analysis tools used.",
+                "Level 1": "Can identify simple trends in small datasets; uses basic visualization tools (e.g., histograms, scatter plots).",
+                "Level 2": "Detects and visualizes complex patterns using statistical methods and data exploration tools (e.g., PCA, clustering).",
+                "Level 3": "Applies domain-specific techniques (e.g., time-series analysis, segmentation) to extract actionable insights.",
+                "Level 4": "Uses advanced analytics (e.g., dimensionality reduction, feature engineering) to uncover hidden relationships.",
+                "Level 5": "Develops automated data exploration pipelines that surface insights without human intervention."
               }
             },
             {
-              "name": "Translation of Data into Actionable Insights",
-              "description": "Ability to identify patterns and translate data findings into business-relevant recommendations.",
-              "weight": 30,
+              "name": "Statistical Analysis and A/B Testing",
+              "description": "Demonstrated ability to apply statistical methods and conduct A/B testing to validate product or model effectiveness.",
+              "weight": 35,
               "scoring_levels": {
-                "Level 0": "Provides no insight beyond data summary; no connection to business outcomes.",
-                "Level 1": "Summarizes data trends but lacks context or stakeholder alignment.",
-                "Level 2": "Can identify trends and explain them in simple terms; limited to internal reporting.",
-                "Level 3": "Connects data patterns to business questions and proposes actionable hypotheses.",
-                "Level 4": "Generates insights with clear business impact and supports data-driven decisions.",
-                "Level 5": "Proactively identifies hidden patterns and recommends strategic changes with measurable impact."
+                "Level 0": "Does not apply statistical methods; no understanding of hypothesis testing or confidence intervals.",
+                "Level 1": "Conducts basic A/B tests with limited statistical rigor; does not interpret p-values or effect sizes.",
+                "Level 2": "Designs and executes A/B tests with appropriate sample size and controls; interprets results with confidence intervals.",
+                "Level 3": "Applies advanced statistical models (e.g., multivariate testing, power analysis) to assess impact.",
+                "Level 4": "Designs experiments with real-world business impact; accounts for confounding variables and external factors.",
+                "Level 5": "Designs and scales randomized experiments for large user bases; uses Bayesian methods and sequential testing."
               }
             },
             {
-              "name": "Statistical Rigor and A/B Testing",
-              "description": "Demonstrated use of statistical methods and A/B testing to validate product or feature effectiveness.",
-              "weight": 40,
+              "name": "Translating Data into Stakeholder Insights",
+              "description": "Ability to present complex data findings in clear, actionable, and non-technical language to stakeholders.",
+              "weight": 35,
               "scoring_levels": {
-                "Level 0": "No understanding of statistical methods; relies on intuition for decisions.",
-                "Level 1": "Applies basic statistical tests (e.g., t-test) but lacks awareness of assumptions or power analysis.",
-                "Level 2": "Conducts A/B tests with basic metrics; can interpret p-values and confidence intervals.",
-                "Level 3": "Designs and executes A/B tests with proper controls, power analysis, and effect size reporting.",
-                "Level 4": "Evaluates multiple variants and uses Bayesian methods or multivariate testing.",
-                "Level 5": "Designs and scales A/B test frameworks with real-time monitoring and statistical significance thresholds."
+                "Level 0": "Fails to communicate findings; reports raw data without interpretation or context.",
+                "Level 1": "Summarizes data in simple terms; lacks visual or narrative support for key insights.",
+                "Level 2": "Uses visualizations and summaries to explain patterns; explains implications to non-technical audiences.",
+                "Level 3": "Tailors insights to different stakeholder needs; connects data to business outcomes.",
+                "Level 4": "Anticipates stakeholder questions and provides data-backed recommendations with risk assessment.",
+                "Level 5": "Designs data storytelling frameworks that drive decision-making and influence strategy."
               }
             }
           ]
         },
         {
-          "category": "Collaboration with Engineering Teams",
+          "category": "Model Production and Integration with Engineering",
           "criteria": [
             {
-              "name": "Effective Communication with Engineering Teams",
-              "description": "Ability to collaborate with engineers to integrate models into production systems and address deployment challenges.",
+              "name": "End-to-End Model Deployment Pipeline",
+              "description": "Ability to design and implement scalable, automated pipelines for model training, validation, and deployment.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "No interaction with engineering; models developed in isolation.",
-                "Level 1": "Can explain model behavior to engineers but lacks integration experience.",
-                "Level 2": "Participates in meetings and can document model requirements; limited hands-on integration.",
-                "Level 3": "Proactively identifies integration bottlenecks and works with engineers to resolve them.",
-                "Level 4": "Owns end-to-end integration process including API design, error handling, and logging.",
-                "Level 5": "Serves as a bridge between data and engineering, resolving complex integration issues and ensuring model reliability."
+                "Level 0": "No pipeline; manual model deployment with no automation or versioning.",
+                "Level 1": "Uses basic scripts for model deployment; no monitoring or rollback mechanisms.",
+                "Level 2": "Implements CI/CD pipeline with basic model versioning (e.g., MLflow); limited monitoring.",
+                "Level 3": "Designs and deploys automated, repeatable pipelines with error handling and logging.",
+                "Level 4": "Integrates model lifecycle with cloud infrastructure (e.g., AWS SageMaker, GCP); supports A/B testing in production.",
+                "Level 5": "Builds self-healing, self-monitoring pipelines with automated alerts and rollback on failure."
               }
             },
             {
-              "name": "Model Versioning and Change Management",
-              "description": "Experience in maintaining model lineage, versioning, and change tracking in production.",
-              "weight": 30,
+              "name": "Scalability and System Design for Production Models",
+              "description": "Understanding of system design principles to support model performance at scale and under load.",
+              "weight": 35,
               "scoring_levels": {
-                "Level 0": "No versioning; models are untracked and undocumented.",
-                "Level 1": "Uses basic versioning (e.g., Git) for code but not for models.",
-                "Level 2": "Implements model versioning with tools like MLflow or DVC; can track changes.",
-                "Level 3": "Maintains model lineage and explains impact of changes across versions.",
-                "Level 4": "Automates versioning and alerts on drift or degradation.",
-                "Level 5": "Designs a centralized model registry with audit trails and rollback capabilities."
+                "Level 0": "No understanding of scalability; models run on single machines with no load handling.",
+                "Level 1": "Can deploy models on a single server; no load balancing or failover.",
+                "Level 2": "Implements basic load balancing and containerization (e.g., Docker); uses Kubernetes for orchestration.",
+                "Level 3": "Designs scalable model serving with batching and caching strategies; handles peak loads.",
+                "Level 4": "Optimizes model latency and throughput using batching, model pruning, or quantization.",
+                "Level 5": "Designs distributed model serving systems with auto-scaling, latency monitoring, and dynamic resource allocation."
               }
             },
             {
-              "name": "Problem Resolution in Production Environments",
-              "description": "Demonstrated ability to troubleshoot and resolve real-world production issues with engineering teams.",
-              "weight": 40,
+              "name": "Model Performance and Drift Monitoring",
+              "description": "Ability to implement and maintain real-time monitoring for model performance and data drift.",
+              "weight": 35,
               "scoring_levels": {
-                "Level 0": "No experience with production issues; unable to respond to outages or failures.",
-                "Level 1": "Can identify issues but requires full engineering support to resolve.",
-                "Level 2": "Participates in incident response; can report issues but not root-cause analysis.",
-                "Level 3": "Identifies and resolves common production issues (e.g., drift, latency) with engineering support.",
-                "Level 4": "Proactively anticipates and resolves edge cases (e.g., data drift, model degradation).",
-                "Level 5": "Owns incident response process, leads post-mortems, and implements preventive measures."
+                "Level 0": "No monitoring; unaware of data drift or performance degradation.",
+                "Level 1": "Uses basic logging; no automated alerts or performance tracking.",
+                "Level 2": "Implements basic drift detection (e.g., statistical tests); alerts on threshold breaches.",
+                "Level 3": "Uses automated tools (e.g., MLflow, Prometheus) to track model performance over time.",
+                "Level 4": "Proactively detects and alerts on concept drift; triggers retraining workflows automatically.",
+                "Level 5": "Builds a proactive drift detection system with anomaly detection and model retraining triggers."
               }
             }
           ]
         }
       ]
     },
-    "id": "2ed12dbea29545048d5c44a56ceb8b68",
-    "scheduled_date": "2025-10-25T21:27:58.975240Z",
-    "status": "scheduled",
-    "overall_score": null,
-    "score_details": null
-  },
-  {
-    "job_title": "Data Scientist - Machine Learning",
-    "candidate_name": "DR. AISHA PATEL",
-    "job_description": "Data Scientist - Machine Learning\n\nWe're looking for a talented Data Scientist to help us leverage data for business insights.\n\nRequirements:\n\u2022 Master's or PhD in Computer Science, Statistics, or related field\n\u2022 3+ years of experience in data science or machine learning\n\u2022 Strong programming skills in Python (NumPy, Pandas, Scikit-learn)\n\u2022 Experience with deep learning frameworks (TensorFlow, PyTorch)\n\u2022 Knowledge of statistical analysis and A/B testing\n\u2022 Experience with SQL and big data technologies\n\nResponsibilities:\n\u2022 Build and deploy machine learning models\n\u2022 Analyze large datasets to extract insights\n\u2022 Collaborate with engineering to productionize models\n\u2022 Present findings to stakeholders\n\u2022 Stay current with ML/AI advancements",
-    "resume": "DR. AISHA PATEL\nData Scientist - Machine Learning Engineer\nEmail: aisha.patel@email.com | GitHub: github.com/aishapatel\n\nEDUCATION\nPh.D. Computer Science (Machine Learning) | MIT | 2020\nM.S. Statistics | University of Michigan | 2016\nB.S. Mathematics & Computer Science | Cornell University | 2014\n\nPROFESSIONAL EXPERIENCE\n\nSenior Data Scientist | AI Innovations Lab | 2021 - Present\n\u2022 Developed recommendation engine increasing user engagement by 45%\n\u2022 Built NLP models for sentiment analysis with 92% accuracy\n\u2022 Led team of 4 data scientists on computer vision project\n\u2022 Published 3 papers in top-tier ML conferences (NeurIPS, ICML)\n\u2022 Technologies: Python, TensorFlow, PyTorch, Kubernetes, MLflow\n\nData Scientist | FinTech Analytics | 2020 - 2021\n\u2022 Created fraud detection model reducing false positives by 30%\n\u2022 Implemented real-time scoring pipeline processing 100K+ transactions/day\n\u2022 Conducted A/B tests and statistical analysis for product features\n\u2022 Technologies: Python, Scikit-learn, Spark, SQL, Airflow\n\nResearch Assistant | MIT CSAIL | 2016 - 2020\n\u2022 Researched deep learning architectures for computer vision\n\u2022 Published dissertation on \"Attention Mechanisms in Visual Recognition\"\n\u2022 Collaborated with industry partners on applied ML projects\n\nTECHNICAL SKILLS\nLanguages: Python, R, SQL, Scala\nML/DL: TensorFlow, PyTorch, Scikit-learn, XGBoost, Keras\nBig Data: Spark, Hadoop, Hive\nCloud: AWS (SageMaker, EC2), GCP\nTools: Docker, Kubernetes, Git, MLflow, Jupyter\n\nPUBLICATIONS\n\u2022 \"Attention Mechanisms in Visual Recognition\" - CVPR 2020\n\u2022 \"Efficient Training of Large-Scale Models\" - NeurIPS 2019\n\u2022 \"Transfer Learning for Few-Shot Classification\" - ICML 2019",
-    "competencies": [
-      {
-        "id": "ml_model_development",
-        "name": "Machine Learning Model Development",
-        "interview_style": "technical",
-        "rationale": "Given the requirement for building and deploying machine learning models, a technical interview style is most appropriate to assess hands-on proficiency with deep learning frameworks like TensorFlow and PyTorch, as well as model training, validation, and optimization techniques."
-      },
-      {
-        "id": "data_analysis_and_insights",
-        "name": "Large-Scale Data Analysis and Insight Extraction",
-        "interview_style": "behavioral",
-        "rationale": "This competency focuses on the ability to analyze large datasets and extract actionable business insights. A behavioral interview style allows candidates to demonstrate past experiences in data analysis, problem framing, and stakeholder communication, which are critical for real-world data science impact."
-      },
-      {
-        "id": "cross_functional_collaboration",
-        "name": "Collaboration with Engineering Teams",
-        "interview_style": "situational",
-        "rationale": "Effective model production and deployment require close collaboration with engineering teams. A situational interview assesses how candidates handle real-world cross-functional challenges, such as model integration, versioning, and deployment issues in a production environment."
-      }
-    ],
-    "rubric": {
-      "candidate_name": "DR. AISHA PATEL",
-      "position": "Data Scientist - Machine Learning",
-      "evaluation_criteria": [
-        {
-          "category": "Machine Learning Model Development",
-          "criteria": [
-            {
-              "name": "Proficiency with Deep Learning Frameworks",
-              "description": "Demonstrated ability to implement and tune deep learning models using TensorFlow and PyTorch.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Unable to implement or configure deep learning frameworks; requires significant guidance.",
-                "Level 1": "Can set up basic frameworks but lacks experience in tuning or debugging models.",
-                "Level 2": "Can implement and configure frameworks with minimal supervision; limited optimization experience.",
-                "Level 3": "Proficient in implementing and tuning models across multiple frameworks; can compare performance.",
-                "Level 4": "Exhibits advanced use of frameworks including custom layers, distributed training, and model pruning.",
-                "Level 5": "Demonstrates mastery in framework selection, optimization, and integration with production systems."
-              }
-            },
-            {
-              "name": "Model Validation and Evaluation",
-              "description": "Ability to design and execute rigorous model validation strategies including cross-validation and bias detection.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Does not apply validation techniques; models are deployed without evaluation.",
-                "Level 1": "Applies basic validation (e.g., train/test split) but lacks awareness of overfitting or data leakage.",
-                "Level 2": "Uses cross-validation and basic metrics; can identify overfitting in simple models.",
-                "Level 3": "Applies multiple validation strategies (e.g., time-series, stratified) and interprets results effectively.",
-                "Level 4": "Designs robust validation pipelines with metrics for business impact (e.g., A/B test alignment).",
-                "Level 5": "Proactively identifies and mitigates data leakage, selection bias, and distribution shifts."
-              }
-            },
-            {
-              "name": "Model Productionization and Deployment",
-              "description": "Experience in deploying ML models into production environments with monitoring and versioning.",
-              "weight": 40,
-              "scoring_levels": {
-                "Level 0": "No experience with deployment; models remain in research or prototype stage.",
-                "Level 1": "Can deploy models with basic tools (e.g., Flask) but lacks monitoring or rollback capabilities.",
-                "Level 2": "Can deploy and document models; uses basic versioning (e.g., MLflow).",
-                "Level 3": "Uses CI/CD pipelines and model registry for deployment; monitors performance baseline.",
-                "Level 4": "Implements automated retraining, alerting, and A/B testing in production.",
-                "Level 5": "Owns end-to-end deployment lifecycle including rollback, canary releases, and A/B testing in live environments."
-              }
-            }
-          ]
-        },
-        {
-          "category": "Large-Scale Data Analysis and Insight Extraction",
-          "criteria": [
-            {
-              "name": "Handling of Large-Scale Datasets",
-              "description": "Demonstrated experience in analyzing and processing large-scale datasets using distributed computing tools.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Unable to work with large datasets; limited to small-scale or simulated data.",
-                "Level 1": "Can process moderate datasets with basic tools (e.g., Pandas) but not at scale.",
-                "Level 2": "Uses Spark or similar for basic data processing; limited to ETL workflows.",
-                "Level 3": "Efficiently processes terabyte-scale data with optimization techniques (e.g., partitioning, caching).",
-                "Level 4": "Scales analysis across distributed systems with performance tuning and fault tolerance.",
-                "Level 5": "Designs and implements scalable data pipelines for real-time or batch analytics with low latency."
-              }
-            },
-            {
-              "name": "Translation of Data into Actionable Insights",
-              "description": "Ability to identify patterns and translate data findings into business-relevant recommendations.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Provides no insight beyond data summary; no connection to business outcomes.",
-                "Level 1": "Summarizes data trends but lacks context or stakeholder alignment.",
-                "Level 2": "Can identify trends and explain them in simple terms; limited to internal reporting.",
-                "Level 3": "Connects data patterns to business questions and proposes actionable hypotheses.",
-                "Level 4": "Generates insights with clear business impact and supports data-driven decisions.",
-                "Level 5": "Proactively identifies hidden patterns and recommends strategic changes with measurable impact."
-              }
-            },
-            {
-              "name": "Statistical Rigor and A/B Testing",
-              "description": "Demonstrated use of statistical methods and A/B testing to validate product or feature effectiveness.",
-              "weight": 40,
-              "scoring_levels": {
-                "Level 0": "No understanding of statistical methods; relies on intuition for decisions.",
-                "Level 1": "Applies basic statistical tests (e.g., t-test) but lacks awareness of assumptions or power analysis.",
-                "Level 2": "Conducts A/B tests with basic metrics; can interpret p-values and confidence intervals.",
-                "Level 3": "Designs and executes A/B tests with proper controls, power analysis, and effect size reporting.",
-                "Level 4": "Evaluates multiple variants and uses Bayesian methods or multivariate testing.",
-                "Level 5": "Designs and scales A/B test frameworks with real-time monitoring and statistical significance thresholds."
-              }
-            }
-          ]
-        },
-        {
-          "category": "Collaboration with Engineering Teams",
-          "criteria": [
-            {
-              "name": "Effective Communication with Engineering Teams",
-              "description": "Ability to collaborate with engineers to integrate models into production systems and address deployment challenges.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "No interaction with engineering; models developed in isolation.",
-                "Level 1": "Can explain model behavior to engineers but lacks integration experience.",
-                "Level 2": "Participates in meetings and can document model requirements; limited hands-on integration.",
-                "Level 3": "Proactively identifies integration bottlenecks and works with engineers to resolve them.",
-                "Level 4": "Owns end-to-end integration process including API design, error handling, and logging.",
-                "Level 5": "Serves as a bridge between data and engineering, resolving complex integration issues and ensuring model reliability."
-              }
-            },
-            {
-              "name": "Model Versioning and Change Management",
-              "description": "Experience in maintaining model lineage, versioning, and change tracking in production.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "No versioning; models are untracked and undocumented.",
-                "Level 1": "Uses basic versioning (e.g., Git) for code but not for models.",
-                "Level 2": "Implements model versioning with tools like MLflow or DVC; can track changes.",
-                "Level 3": "Maintains model lineage and explains impact of changes across versions.",
-                "Level 4": "Automates versioning and alerts on drift or degradation.",
-                "Level 5": "Designs a centralized model registry with audit trails and rollback capabilities."
-              }
-            },
-            {
-              "name": "Problem Resolution in Production Environments",
-              "description": "Demonstrated ability to troubleshoot and resolve real-world production issues with engineering teams.",
-              "weight": 40,
-              "scoring_levels": {
-                "Level 0": "No experience with production issues; unable to respond to outages or failures.",
-                "Level 1": "Can identify issues but requires full engineering support to resolve.",
-                "Level 2": "Participates in incident response; can report issues but not root-cause analysis.",
-                "Level 3": "Identifies and resolves common production issues (e.g., drift, latency) with engineering support.",
-                "Level 4": "Proactively anticipates and resolves edge cases (e.g., data drift, model degradation).",
-                "Level 5": "Owns incident response process, leads post-mortems, and implements preventive measures."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    "id": "a046ee36c0554054ab885570b947d8eb",
-    "scheduled_date": "2025-10-25T21:32:50.327426Z",
-    "status": "scheduled",
-    "overall_score": null,
-    "score_details": null
-  },
-  {
-    "job_title": "Data Scientist - Machine Learning",
-    "candidate_name": "DR. AISHA PATEL",
-    "job_description": "Data Scientist - Machine Learning\n\nWe're looking for a talented Data Scientist to help us leverage data for business insights.\n\nRequirements:\n\u2022 Master's or PhD in Computer Science, Statistics, or related field\n\u2022 3+ years of experience in data science or machine learning\n\u2022 Strong programming skills in Python (NumPy, Pandas, Scikit-learn)\n\u2022 Experience with deep learning frameworks (TensorFlow, PyTorch)\n\u2022 Knowledge of statistical analysis and A/B testing\n\u2022 Experience with SQL and big data technologies\n\nResponsibilities:\n\u2022 Build and deploy machine learning models\n\u2022 Analyze large datasets to extract insights\n\u2022 Collaborate with engineering to productionize models\n\u2022 Present findings to stakeholders\n\u2022 Stay current with ML/AI advancements",
-    "resume": "DR. AISHA PATEL\nData Scientist - Machine Learning Engineer\nEmail: aisha.patel@email.com | GitHub: github.com/aishapatel\n\nEDUCATION\nPh.D. Computer Science (Machine Learning) | MIT | 2020\nM.S. Statistics | University of Michigan | 2016\nB.S. Mathematics & Computer Science | Cornell University | 2014\n\nPROFESSIONAL EXPERIENCE\n\nSenior Data Scientist | AI Innovations Lab | 2021 - Present\n\u2022 Developed recommendation engine increasing user engagement by 45%\n\u2022 Built NLP models for sentiment analysis with 92% accuracy\n\u2022 Led team of 4 data scientists on computer vision project\n\u2022 Published 3 papers in top-tier ML conferences (NeurIPS, ICML)\n\u2022 Technologies: Python, TensorFlow, PyTorch, Kubernetes, MLflow\n\nData Scientist | FinTech Analytics | 2020 - 2021\n\u2022 Created fraud detection model reducing false positives by 30%\n\u2022 Implemented real-time scoring pipeline processing 100K+ transactions/day\n\u2022 Conducted A/B tests and statistical analysis for product features\n\u2022 Technologies: Python, Scikit-learn, Spark, SQL, Airflow\n\nResearch Assistant | MIT CSAIL | 2016 - 2020\n\u2022 Researched deep learning architectures for computer vision\n\u2022 Published dissertation on \"Attention Mechanisms in Visual Recognition\"\n\u2022 Collaborated with industry partners on applied ML projects\n\nTECHNICAL SKILLS\nLanguages: Python, R, SQL, Scala\nML/DL: TensorFlow, PyTorch, Scikit-learn, XGBoost, Keras\nBig Data: Spark, Hadoop, Hive\nCloud: AWS (SageMaker, EC2), GCP\nTools: Docker, Kubernetes, Git, MLflow, Jupyter\n\nPUBLICATIONS\n\u2022 \"Attention Mechanisms in Visual Recognition\" - CVPR 2020\n\u2022 \"Efficient Training of Large-Scale Models\" - NeurIPS 2019\n\u2022 \"Transfer Learning for Few-Shot Classification\" - ICML 2019",
-    "competencies": [
-      {
-        "id": "ml_model_development",
-        "name": "Machine Learning Model Development",
-        "interview_style": "technical",
-        "rationale": "Given the requirement for building and deploying machine learning models, a technical interview style is most appropriate to assess hands-on proficiency with deep learning frameworks like TensorFlow and PyTorch, as well as model training, validation, and optimization techniques."
-      },
-      {
-        "id": "data_analysis_and_insights",
-        "name": "Large-Scale Data Analysis and Insight Extraction",
-        "interview_style": "behavioral",
-        "rationale": "This competency focuses on the ability to analyze large datasets and extract actionable business insights. A behavioral interview style allows candidates to demonstrate past experiences in data analysis, problem framing, and stakeholder communication, which are critical for real-world data science impact."
-      },
-      {
-        "id": "cross_functional_collaboration",
-        "name": "Collaboration with Engineering Teams",
-        "interview_style": "situational",
-        "rationale": "Effective model production and deployment require close collaboration with engineering teams. A situational interview assesses how candidates handle real-world cross-functional challenges, such as model integration, versioning, and deployment issues in a production environment."
-      }
-    ],
-    "rubric": {
-      "candidate_name": "DR. AISHA PATEL",
-      "position": "Data Scientist - Machine Learning",
-      "evaluation_criteria": [
-        {
-          "category": "Machine Learning Model Development",
-          "criteria": [
-            {
-              "name": "Proficiency with Deep Learning Frameworks",
-              "description": "Demonstrated ability to implement and tune deep learning models using TensorFlow and PyTorch.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Unable to implement or configure deep learning frameworks; requires significant guidance.",
-                "Level 1": "Can set up basic frameworks but lacks experience in tuning or debugging models.",
-                "Level 2": "Can implement and configure frameworks with minimal supervision; limited optimization experience.",
-                "Level 3": "Proficient in implementing and tuning models across multiple frameworks; can compare performance.",
-                "Level 4": "Exhibits advanced use of frameworks including custom layers, distributed training, and model pruning.",
-                "Level 5": "Demonstrates mastery in framework selection, optimization, and integration with production systems."
-              }
-            },
-            {
-              "name": "Model Validation and Evaluation",
-              "description": "Ability to design and execute rigorous model validation strategies including cross-validation and bias detection.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Does not apply validation techniques; models are deployed without evaluation.",
-                "Level 1": "Applies basic validation (e.g., train/test split) but lacks awareness of overfitting or data leakage.",
-                "Level 2": "Uses cross-validation and basic metrics; can identify overfitting in simple models.",
-                "Level 3": "Applies multiple validation strategies (e.g., time-series, stratified) and interprets results effectively.",
-                "Level 4": "Designs robust validation pipelines with metrics for business impact (e.g., A/B test alignment).",
-                "Level 5": "Proactively identifies and mitigates data leakage, selection bias, and distribution shifts."
-              }
-            },
-            {
-              "name": "Model Productionization and Deployment",
-              "description": "Experience in deploying ML models into production environments with monitoring and versioning.",
-              "weight": 40,
-              "scoring_levels": {
-                "Level 0": "No experience with deployment; models remain in research or prototype stage.",
-                "Level 1": "Can deploy models with basic tools (e.g., Flask) but lacks monitoring or rollback capabilities.",
-                "Level 2": "Can deploy and document models; uses basic versioning (e.g., MLflow).",
-                "Level 3": "Uses CI/CD pipelines and model registry for deployment; monitors performance baseline.",
-                "Level 4": "Implements automated retraining, alerting, and A/B testing in production.",
-                "Level 5": "Owns end-to-end deployment lifecycle including rollback, canary releases, and A/B testing in live environments."
-              }
-            }
-          ]
-        },
-        {
-          "category": "Large-Scale Data Analysis and Insight Extraction",
-          "criteria": [
-            {
-              "name": "Handling of Large-Scale Datasets",
-              "description": "Demonstrated experience in analyzing and processing large-scale datasets using distributed computing tools.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Unable to work with large datasets; limited to small-scale or simulated data.",
-                "Level 1": "Can process moderate datasets with basic tools (e.g., Pandas) but not at scale.",
-                "Level 2": "Uses Spark or similar for basic data processing; limited to ETL workflows.",
-                "Level 3": "Efficiently processes terabyte-scale data with optimization techniques (e.g., partitioning, caching).",
-                "Level 4": "Scales analysis across distributed systems with performance tuning and fault tolerance.",
-                "Level 5": "Designs and implements scalable data pipelines for real-time or batch analytics with low latency."
-              }
-            },
-            {
-              "name": "Translation of Data into Actionable Insights",
-              "description": "Ability to identify patterns and translate data findings into business-relevant recommendations.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Provides no insight beyond data summary; no connection to business outcomes.",
-                "Level 1": "Summarizes data trends but lacks context or stakeholder alignment.",
-                "Level 2": "Can identify trends and explain them in simple terms; limited to internal reporting.",
-                "Level 3": "Connects data patterns to business questions and proposes actionable hypotheses.",
-                "Level 4": "Generates insights with clear business impact and supports data-driven decisions.",
-                "Level 5": "Proactively identifies hidden patterns and recommends strategic changes with measurable impact."
-              }
-            },
-            {
-              "name": "Statistical Rigor and A/B Testing",
-              "description": "Demonstrated use of statistical methods and A/B testing to validate product or feature effectiveness.",
-              "weight": 40,
-              "scoring_levels": {
-                "Level 0": "No understanding of statistical methods; relies on intuition for decisions.",
-                "Level 1": "Applies basic statistical tests (e.g., t-test) but lacks awareness of assumptions or power analysis.",
-                "Level 2": "Conducts A/B tests with basic metrics; can interpret p-values and confidence intervals.",
-                "Level 3": "Designs and executes A/B tests with proper controls, power analysis, and effect size reporting.",
-                "Level 4": "Evaluates multiple variants and uses Bayesian methods or multivariate testing.",
-                "Level 5": "Designs and scales A/B test frameworks with real-time monitoring and statistical significance thresholds."
-              }
-            }
-          ]
-        },
-        {
-          "category": "Collaboration with Engineering Teams",
-          "criteria": [
-            {
-              "name": "Effective Communication with Engineering Teams",
-              "description": "Ability to collaborate with engineers to integrate models into production systems and address deployment challenges.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "No interaction with engineering; models developed in isolation.",
-                "Level 1": "Can explain model behavior to engineers but lacks integration experience.",
-                "Level 2": "Participates in meetings and can document model requirements; limited hands-on integration.",
-                "Level 3": "Proactively identifies integration bottlenecks and works with engineers to resolve them.",
-                "Level 4": "Owns end-to-end integration process including API design, error handling, and logging.",
-                "Level 5": "Serves as a bridge between data and engineering, resolving complex integration issues and ensuring model reliability."
-              }
-            },
-            {
-              "name": "Model Versioning and Change Management",
-              "description": "Experience in maintaining model lineage, versioning, and change tracking in production.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "No versioning; models are untracked and undocumented.",
-                "Level 1": "Uses basic versioning (e.g., Git) for code but not for models.",
-                "Level 2": "Implements model versioning with tools like MLflow or DVC; can track changes.",
-                "Level 3": "Maintains model lineage and explains impact of changes across versions.",
-                "Level 4": "Automates versioning and alerts on drift or degradation.",
-                "Level 5": "Designs a centralized model registry with audit trails and rollback capabilities."
-              }
-            },
-            {
-              "name": "Problem Resolution in Production Environments",
-              "description": "Demonstrated ability to troubleshoot and resolve real-world production issues with engineering teams.",
-              "weight": 40,
-              "scoring_levels": {
-                "Level 0": "No experience with production issues; unable to respond to outages or failures.",
-                "Level 1": "Can identify issues but requires full engineering support to resolve.",
-                "Level 2": "Participates in incident response; can report issues but not root-cause analysis.",
-                "Level 3": "Identifies and resolves common production issues (e.g., drift, latency) with engineering support.",
-                "Level 4": "Proactively anticipates and resolves edge cases (e.g., data drift, model degradation).",
-                "Level 5": "Owns incident response process, leads post-mortems, and implements preventive measures."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    "id": "667dbf41bc60447eb343389ce0fcb92c",
-    "scheduled_date": "2025-10-25T21:40:12.060941Z",
+    "id": "f4925ace87cb49dd80aa26ebd8caa75d",
+    "scheduled_date": "2025-10-27T20:02:02.329851Z",
     "status": "scheduled",
     "overall_score": null,
     "score_details": null

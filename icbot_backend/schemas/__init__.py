@@ -1,4 +1,5 @@
 from .competency import CompetencyItem, CompetencyPlan, CompetencyRequest  # Re-exports competency schemas.
+from .competency_stage import CompetencyStageRequest  # Re-exports competency stage schema.
 from .evaluation import EvaluationEvidence, EvaluationVerdict  # Re-exports evaluation schemas.
 from .config import UiConfigModel  # Re-exports config schemas.
 from .interview import (  # Re-exports interview scheduling schemas.
@@ -24,6 +25,7 @@ from ..styles.schemas import (  # Re-exports style schemas.
     DirectiveSchema,
     StagePlan,
     StyleDirectiveRequest,
+    StyleSummary,
     StyleState,
     TranscriptTurn,
 )
@@ -32,6 +34,7 @@ __all__ = [
     "CompetencyItem",
     "CompetencyPlan",
     "CompetencyRequest",
+    "CompetencyStageRequest",
     "UiConfigModel",
     "EvaluationEvidence",
     "EvaluationVerdict",
@@ -57,6 +60,7 @@ __all__ = [
     "DirectiveSchema",
     "StagePlan",
     "StyleDirectiveRequest",
+    "StyleSummary",
     "StyleState",
     "TranscriptTurn",
 ]  # Exposes schema exports for convenience.

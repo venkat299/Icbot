@@ -6,6 +6,7 @@ from ..llm_gateway import runnable  # Provides JSON-enforced runnable.
 from ..prompts import COMPETENCY_SYSTEM_PROMPT, COMPETENCY_USER_TEMPLATE  # Supplies prompt templates.
 from ..registry import resolve_binding  # Resolves LLM route and schema bindings.
 from ..schemas.competency import CompetencyPlan, CompetencyRequest  # Imports request/response models.
+from ..styles.toolkit import style_catalog_choices  # Summarizes available styles.
 
 
 class CompetencyAgent:  # Produces competency plans using the configured LLM route.
@@ -19,6 +20,7 @@ class CompetencyAgent:  # Produces competency plans using the configured LLM rou
         )  # Builds LangChain chat prompt.
         self._chain = prompt | runnable(route, schema)  # Composes prompt with gateway runnable.
         self._blueprint: FlowBlueprint | None = None
+        self._style_choices = style_catalog_choices()
 
     async def plan(self, request: CompetencyRequest) -> CompetencyPlan:
         flow_config = load_app_config().flow
@@ -28,6 +30,7 @@ class CompetencyAgent:  # Produces competency plans using the configured LLM rou
             "target_roles": ", ".join(request.target_roles) if request.target_roles else "unspecified",
             "min_competencies": flow_config.competency.min,
             "max_competencies": flow_config.competency.max,
+            "style_choices": self._style_choices,
         }  # Normalizes inputs and communicates flow constraints.
         plan = await self._chain.ainvoke(payload)  # Executes the runnable asynchronously.
 

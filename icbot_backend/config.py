@@ -3,11 +3,12 @@ from __future__ import annotations
 import json
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Final, Literal
+from typing import TYPE_CHECKING, Any, Final, Literal
 
 from pydantic import BaseModel, Field, HttpUrl, PositiveFloat, PositiveInt  # Defines configuration schema models.
 
-from .styles.base import StyleSpec  # Imports style specs for config binding.
+if TYPE_CHECKING:  # Provides style type for static analysis.
+    from .styles.base import StyleSpec
 
 PROJECT_ROOT: Final[Path] = Path(__file__).resolve().parents[1]  # Points to project root directory.
 DEFAULT_ENV_PATH: Final[Path] = PROJECT_ROOT / "config.json"  # Default environment config path.
@@ -85,7 +86,7 @@ class UiConfig(BaseModel):  # Exposes UI-facing defaults.
 
 
 class StylesConfig(BaseModel):  # Holds all style catalog entries.
-    catalog: dict[str, StyleSpec] = Field(default_factory=dict)
+    catalog: dict[str, "StyleSpec"] = Field(default_factory=dict)
 
 
 class AppConfig(BaseModel):  # Top-level application configuration model.
@@ -99,6 +100,12 @@ class AppConfig(BaseModel):  # Top-level application configuration model.
 def _load_json(path: Path) -> dict[str, Any]:  # Reads and parses JSON payloads from disk.
     with path.open("r", encoding="utf-8") as handle:
         return json.load(handle)
+
+@lru_cache(maxsize=1)
+def _ensure_styles_config_ready() -> None:  # Resolves deferred style references.
+    from .styles.base import StyleSpec
+
+    StylesConfig.model_rebuild(_types_namespace={"StyleSpec": StyleSpec})
 
 
 @lru_cache(maxsize=1)
@@ -119,4 +126,5 @@ def load_app_config(path: Path | None = None) -> AppConfig:  # Returns cached ap
 def load_styles_config(path: Path | None = None) -> StylesConfig:  # Returns cached styles configuration.
     config_path = path or DEFAULT_STYLES_PATH
     payload = _load_json(config_path)
+    _ensure_styles_config_ready()
     return StylesConfig.model_validate(payload)

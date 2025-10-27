@@ -6,6 +6,7 @@ from .base import (
     StyleDirectiveRequest,
     StyleSpec,
     StyleStageControls,
+    StyleSummary,
     StyleState,
     TranscriptTurn,
 )
@@ -18,6 +19,7 @@ __all__ = [
     "StyleDirectiveRequest",
     "StyleSpec",
     "StyleStageControls",
+    "StyleSummary",
     "StyleState",
     "TranscriptTurn",
     "StylesRegistry",

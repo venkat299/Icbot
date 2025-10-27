@@ -53,6 +53,12 @@ class StyleSpec(BaseModel):  # Aggregates metadata for a single style entry.
     stages: list[StyleStageTemplate] = Field(default_factory=list)
 
 
+class StyleSummary(BaseModel):  # Provides lightweight metadata for style selection.
+    style_id: str = Field(..., min_length=1)
+    label: str = Field(..., min_length=1)
+    summary: str = Field(..., min_length=1)
+
+
 class StyleState(BaseModel):  # Tracks progress across stages and tasks.
     stage_index: int = 0
     task_cursor: int = 0

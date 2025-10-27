@@ -228,6 +228,23 @@ export default function App() {
     setCurrentView('scheduled');
   };
 
+  const handleDeleteInterview = async (interviewId: string) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/interviews/${interviewId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok && response.status !== 404) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+      setScheduledInterviews((prev) => prev.filter((interview) => interview.id !== interviewId));
+      if (currentInterviewId === interviewId) {
+        setCurrentInterviewId(null);
+      }
+    } catch (error) {
+      console.error('Failed to delete interview', error);
+    }
+  };
+
   const activeInterview = currentInterviewId
     ? scheduledInterviews.find((interview) => interview.id === currentInterviewId) ?? null
     : null;
@@ -258,6 +275,7 @@ export default function App() {
         onRetry={() => {
           void fetchScheduledInterviews();
         }}
+        onDeleteInterview={handleDeleteInterview}
       />
     );
   }

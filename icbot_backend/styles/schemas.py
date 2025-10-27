@@ -5,6 +5,7 @@ from .base import (
     StagePlan,
     StyleDirectiveRequest,
     StyleStageControls,
+    StyleSummary,
     StyleState,
     TranscriptTurn,
 )
@@ -14,6 +15,7 @@ __all__ = [
     "StagePlan",
     "StyleDirectiveRequest",
     "StyleStageControls",
+    "StyleSummary",
     "StyleState",
     "TranscriptTurn",
 ]  # Keeps import paths consistent for schema references.

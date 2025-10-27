@@ -17,6 +17,17 @@
 8. Warm-up follow-ups are generated on demand from the backend using the candidate's reply instead of static placeholders.
 9. Removed the legacy hardcoded warm-up fallback so UI surfaces a transient availability notice when the backend call fails.
 10. Added an opt-in candidate auto-reply pipeline that pulls feature flags, calls the dedicated microservice, and falls back to demo copy when disabled or unavailable.
+11. Competency stages now auto-kick off after warm-up, pulling style directives from the backend and surfacing them in the chat timeline.
+12. Stabilized the chat auto-reply loop by reordering callbacks so post-reply sequencing no longer references functions before they initialize.
+13. Prevented repeated warm-up fetch loops by memoizing the competency focus helper.
+14. Stopped the competency auto-retry loop by keeping the kickoff flag latched after a failed fetch.
+15. Surfaced backend error details for competency directives to simplify debugging.
+16. Guarded competency launches against missing styles to prevent invalid API calls.
+17. Added console telemetry for interview stage transitions and directive flow.
+18. Chatbot now drives the flow through new session endpoints, removing client-side stage orchestration and demo controls.
+19. Sidebar metrics derive from session directives with safe fallbacks, preventing undefined criteria errors.
+20. Setup style selector now hydrates from the backend style catalog so dropdown options always reflect `styles_config.json`.
+21. Scheduled interviews list now exposes a delete action per card tied to the backend endpoint.
 
 ## Detailed Notes
 
@@ -30,6 +41,8 @@
 - Scoring-level headers and entries now reuse the standard `text-xs` styling to eliminate the mismatched font sizing called out in design QA.
 - Schedule button now emits normalized rubric via `mapRubricForInterview`, ensuring downstream components receive the latest structured rubric.
 - Adds async scheduling handler with spinner/error messaging so failures don't clear state prematurely.
+- Fetches interview styles from `/api/styles`, sorts them for display, and disables selection when none are available so the dropdown stays in sync with backend configuration.
+- Adds per-interview delete control that calls the new backend route and visually nests it with score badges.
 
 ### src/App.tsx
 - Imports shared API config and introduces DTO adapters for interview persistence.
@@ -61,6 +74,25 @@
 - Tags interviewer prompts with `expectCandidateReply`, mirrors conversation roles through a shared mapper, and introduces an auto-reply loop that watches the latest AI prompt, pulls persona/context, and submits a generated candidate response via `fetchCandidateReply` without synthesizing placeholder dialog.
 - Removes the canned fallback utterances so every bot reply either comes from `/api/candidate/reply` or emits a clear availability notice when the service/feature is disabled.
 - Routes auto-generated answers through the same warm-up follow-up pipeline as real candidate replies so the backend receives proper `candidate_response` submissions before issuing the next prompt.
+- Detects warm-up completion, streams competency style directives via the new `/api/competency/stage` endpoint, and loops directives across competencies using shared style state snapshots.
+- Reordered the post-reply callback definitions so the competency advance helper is initialized before dependency arrays consume it, eliminating the runtime ReferenceError.
+- Memoized the competency focus selector so the warm-up bootstrap effect runs just once per interview instead of re-firing on every render.
+- Removed the failure-side reset of the competency-start flag so the bootstrap effect no longer hammers `/api/competency/stage` when the first fetch returns 400.
+- Included backend error details in the competency directive client so console logs show the precise failure reason when the service rejects a request.
+- Added a client-side guard that skips stage requests for competencies lacking an interview style, emitting a directive message prompting the scheduler to assign one.
+- Rebuilt the component to consume the backend-managed interview session API, trimming local warm-up/competency orchestration, demo question controls, and competency state tracking.
+- Derives sidebar snapshots from returned directives and falls back to schedule metadata so interviewer view stays stable when flow data is sparse.
+
+### src/components/InterviewerSidebar.tsx
+- Accepts optional props with sensible defaults so empty criteria snapshots no longer raise runtime errors.
+
+### src/services/interviewSession.ts
+- Adds typed session client helpers and centralized error handling for the new flow endpoints.
+- Exposes `extractSidebarSnapshot` so the UI can derive sidebar metrics from backend directives with safe fallbacks.
+
+### src/types/interviewSession.ts
+- Defines sidebar snapshot contracts consumed by the chat experience.
+- Instrumented the chat experience with `console.info` hooks so warm-up completion, stage launches, directive responses, and manual progressions are traceable during debugging.
 
 ### src/services/candidateAutoReply.ts
 - Focuses solely on candidate reply submissions while UI config duties move into a dedicated helper.

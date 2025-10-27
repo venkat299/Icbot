@@ -2,8 +2,6 @@ import { motion } from 'motion/react';
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
 import { AlertCircle, TrendingUp } from 'lucide-react';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './ui/resizable';
-
 interface CriteriaItem {
   name: string;
   level: string;
@@ -11,21 +9,21 @@ interface CriteriaItem {
 }
 
 interface InterviewerSidebarProps {
-  overallScore: number;
-  currentCompetency: string;
-  interviewStyle: string;
-  criteria: CriteriaItem[];
-  scoreNotes: string;
-  redFlags: string[];
+  overallScore?: number;
+  currentCompetency?: string;
+  interviewStyle?: string;
+  criteria?: CriteriaItem[];
+  scoreNotes?: string;
+  redFlags?: string[];
 }
 
 export function InterviewerSidebar({
-  overallScore,
-  currentCompetency,
-  interviewStyle,
-  criteria,
-  scoreNotes,
-  redFlags
+  overallScore = 0,
+  currentCompetency = 'Competency',
+  interviewStyle = 'Style',
+  criteria = [],
+  scoreNotes = 'No evaluation notes yet.',
+  redFlags = [],
 }: InterviewerSidebarProps) {
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-gray-900';
@@ -34,7 +32,8 @@ export function InterviewerSidebar({
   };
 
   const getLevelColor = (level: string) => {
-    const num = parseInt(level);
+    const num = Number.parseInt(level, 10);
+    if (Number.isNaN(num)) return 'bg-gray-50 text-gray-600 border-gray-200';
     if (num >= 4) return 'bg-gray-200 text-gray-800 border-gray-300';
     if (num >= 3) return 'bg-gray-100 text-gray-700 border-gray-200';
     return 'bg-gray-50 text-gray-600 border-gray-200';

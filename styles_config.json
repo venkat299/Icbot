@@ -640,7 +640,7 @@
                     "task_sequence": [
                         "problem_breakdown"
                     ],
-                    "max_directives": 1,
+                    "max_directives": 2,
                     "persona_hint": "Engineer partitioning complex tasks.",
                     "controls": {
                         "mode": "probe",
