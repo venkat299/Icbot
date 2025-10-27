@@ -12,6 +12,7 @@ from .styles.base import StyleSpec  # Imports style specs for config binding.
 PROJECT_ROOT: Final[Path] = Path(__file__).resolve().parents[1]  # Points to project root directory.
 DEFAULT_ENV_PATH: Final[Path] = PROJECT_ROOT / "config.json"  # Default environment config path.
 DEFAULT_APP_PATH: Final[Path] = PROJECT_ROOT / "app_config.json"  # Default application config path.
+DEFAULT_STYLES_PATH: Final[Path] = PROJECT_ROOT / "styles_config.json"  # Default styles config path.
 
 
 class ProviderConfig(BaseModel):  # Captures provider secret lookup metadata.
@@ -93,7 +94,6 @@ class AppConfig(BaseModel):  # Top-level application configuration model.
     rubric: RubricConfig = Field(default_factory=RubricConfig)
     evaluation: EvaluationConfig
     ui: UiConfig = Field(default_factory=UiConfig)
-    styles: StylesConfig = Field(default_factory=StylesConfig)
 
 
 def _load_json(path: Path) -> dict[str, Any]:  # Reads and parses JSON payloads from disk.
@@ -113,3 +113,10 @@ def load_app_config(path: Path | None = None) -> AppConfig:  # Returns cached ap
     config_path = path or DEFAULT_APP_PATH
     payload = _load_json(config_path)
     return AppConfig.model_validate(payload)
+
+
+@lru_cache(maxsize=1)
+def load_styles_config(path: Path | None = None) -> StylesConfig:  # Returns cached styles configuration.
+    config_path = path or DEFAULT_STYLES_PATH
+    payload = _load_json(config_path)
+    return StylesConfig.model_validate(payload)

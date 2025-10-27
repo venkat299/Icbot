@@ -1,590 +1,79 @@
 {
-    "llm": {
-        "routes": {
-            "qwen3-4b-local": {
-                "provider": "openai",
-                "model": "qwen/qwen3-4b-2507",
-                "base_url": "http://192.168.0.175:1234/v1",
-                "endpoint": "/v1/chat/completions",
-                "timeout_seconds": 60,
-                "max_retries": 2,
-                "api_key_env": "LLM_API_KEY",
-                "requires_api_key": false,
-                "enforce_json": false
-            }
-        },
-        "registry": {
-            "rubric.generate": {
-                "route": "qwen3-4b-local",
-                "schema_path": "icbot_backend.schemas.rubric.RubricModel"
-            },
-            "competency.generate": {
-                "route": "qwen3-4b-local",
-                "schema_path": "icbot_backend.schemas.competency.CompetencyPlan"
-            },
-            "warmup.opening": {
-                "route": "qwen3-4b-local",
-                "schema_path": "icbot_backend.schemas.warmup.WarmupTurn"
-            },
-            "candidate.reply": {
-                "route": "qwen3-4b-local",
-                "schema_path": "candidate_service.schemas.CandidateReply"
-            },
-            "evaluation.score": {
-                "route": "qwen3-4b-local",
-                "schema_path": "icbot_backend.schemas.evaluation.EvaluationVerdict"
-            },
-            "styles.directive": {
-                "route": "qwen3-4b-local",
-                "schema_path": "icbot_backend.styles.base.DirectiveSchema"
-            }
-        }
+  "llm": {
+    "routes": {
+      "qwen3-4b-local": {
+        "provider": "openai",
+        "model": "qwen/qwen3-4b-2507",
+        "base_url": "http://192.168.0.175:1234/v1",
+        "endpoint": "/v1/chat/completions",
+        "timeout_seconds": 60,
+        "max_retries": 2,
+        "api_key_env": "LLM_API_KEY",
+        "requires_api_key": false,
+        "enforce_json": false
+      }
     },
-    "flow": {
-        "stages": [
-            "warmup",
-            "competency",
-            "wrapup"
-        ],
-        "competency": {
-            "min": 3,
-            "max": 3
-        },
-        "warmup": {
-            "max_turns": 3,
-            "ready_threshold": 0.75
-        }
-    },
-    "rubric": {
-        "max_criteria_per_competency": 3
-    },
-    "evaluation": {
-        "routes": {
-            "scoring": "qwen3-4b-local"
-        },
-        "schema_registry": {
-            "final_report": "icbot_backend.schemas.evaluation.EvaluationVerdict"
-        },
-        "weights": {
-            "competency-1": 0.34,
-            "competency-2": 0.33,
-            "competency-3": 0.33
-        }
-    },
-    "ui": {
-        "default_view_mode": "interviewer",
-        "tts_enabled": false,
-        "auto_candidate_reply": true
-    },
-    "styles": {
-        "catalog": {
-            "behavioral_foundation": {
-                "style_id": "behavioral_foundation",
-                "label": "Behavioral Foundation",
-                "summary": "Emphasizes teamwork, ownership, and thoughtful retrospection.",
-                "persona": "Empathetic hiring manager who guides candidates toward reflective STAR stories.",
-                "task_catalog": {
-                    "knowledge_basic": {
-                        "task_id": "knowledge_basic",
-                        "objective": "Capture a STAR narrative that highlights collaboration, ownership, and lessons learned.",
-                        "rubric_focus": [
-                            "teamwork",
-                            "ownership",
-                            "reflection"
-                        ],
-                        "evidence_tags": [
-                            "STAR",
-                            "impact",
-                            "learning"
-                        ],
-                        "interviewer_actions": [
-                            "Ask for the candidate's specific role",
-                            "Request the outcome metric or concrete result"
-                        ],
-                        "response_shape": "Candidate outlines situation, task, actions, results, plus a takeaway."
-                    },
-                    "tradeoff_reasoning": {
-                        "task_id": "tradeoff_reasoning",
-                        "objective": "Verify how the candidate balanced conflicting priorities and socialized decisions.",
-                        "rubric_focus": [
-                            "judgment",
-                            "stakeholder_management"
-                        ],
-                        "evidence_tags": [
-                            "tradeoff",
-                            "communication"
-                        ],
-                        "interviewer_actions": [
-                            "Pose a constraint change",
-                            "Ask who pushed back and how it was handled"
-                        ],
-                        "response_shape": "Candidate explains options considered, decision rationale, and post-mortem reflection."
-                    }
-                },
-                "stages": [
-                    {
-                        "stage_id": "probe_past_events",
-                        "prompt_id": "directive",
-                        "registry_key": "styles.directive",
-                        "goal": "Elicit rich STAR stories covering teamwork and ownership moments.",
-                        "tone": "Supportive and curious",
-                        "task_sequence": [
-                            "knowledge_basic"
-                        ],
-                        "max_directives": 1,
-                        "persona_hint": "Mentor-like interviewer who nudges toward vivid details.",
-                        "controls": {
-                            "mode": "probe",
-                            "probe_min": 5,
-                            "concept_min": 3,
-                            "task_catalog": [
-                                "knowledge_basic"
-                            ]
-                        }
-                    },
-                    {
-                        "stage_id": "reflective_verification",
-                        "prompt_id": "directive",
-                        "registry_key": "styles.directive",
-                        "goal": "Validate decision quality and retrospection depth with targeted follow-ups.",
-                        "tone": "Calm and analytical",
-                        "task_sequence": [
-                            "tradeoff_reasoning"
-                        ],
-                        "max_directives": 1,
-                        "persona_hint": "Coach who asks for tradeoffs and learning moments.",
-                        "controls": {
-                            "tasks": 1,
-                            "followups": 1,
-                            "task_catalog": [
-                                "knowledge_basic",
-                                "tradeoff_reasoning"
-                            ]
-                        }
-                    }
-                ]
-            },
-            "coding_precision": {
-                "style_id": "coding_precision",
-                "label": "Coding Precision",
-                "summary": "Targets implementation depth, layered probing, and code quality.",
-                "persona": "Direct staff engineer focused on crisp reasoning and readable code.",
-                "task_catalog": {
-                    "code_micro": {
-                        "task_id": "code_micro",
-                        "objective": "Inspect a small algorithm or utility to understand reasoning, structure, and tradeoffs.",
-                        "rubric_focus": [
-                            "code_quality",
-                            "reasoning"
-                        ],
-                        "evidence_tags": [
-                            "complexity",
-                            "readability"
-                        ],
-                        "interviewer_actions": [
-                            "Ask the candidate to narrate thought process",
-                            "Request improvements or test coverage"
-                        ],
-                        "response_shape": "Candidate sketches or verbalizes code, discussing structure and tradeoffs."
-                    },
-                    "debug_one_liner": {
-                        "task_id": "debug_one_liner",
-                        "objective": "Diagnose a concise snippet or API misuse and outline the fix.",
-                        "rubric_focus": [
-                            "debugging",
-                            "execution"
-                        ],
-                        "evidence_tags": [
-                            "bug_hunt",
-                            "root_cause"
-                        ],
-                        "interviewer_actions": [
-                            "Provide a failing condition",
-                            "Ask for validation steps after the fix"
-                        ],
-                        "response_shape": "Candidate states hypothesis, validation, and final adjustment."
-                    }
-                },
-                "stages": [
-                    {
-                        "stage_id": "layered_probe",
-                        "prompt_id": "directive",
-                        "registry_key": "styles.directive",
-                        "goal": "Layer probing to expose depth of coding knowledge and reasoning.",
-                        "tone": "Focused and time-boxed",
-                        "task_sequence": [
-                            "code_micro"
-                        ],
-                        "max_directives": 1,
-                        "persona_hint": "Engineer who iterates through increasingly specific prompts.",
-                        "controls": {
-                            "mode": "probe",
-                            "probe_min": 8,
-                            "cycle": [
-                                1,
-                                2,
-                                3
-                            ],
-                            "task_catalog": [
-                                "code_micro"
-                            ]
-                        }
-                    },
-                    {
-                        "stage_id": "micro_implementation",
-                        "prompt_id": "directive",
-                        "registry_key": "styles.directive",
-                        "goal": "Drive implementation detail and request concrete fixes.",
-                        "tone": "Direct and precise",
-                        "task_sequence": [
-                            "code_micro",
-                            "debug_one_liner"
-                        ],
-                        "max_directives": 2,
-                        "persona_hint": "Pragmatic reviewer asking for runnable solutions.",
-                        "controls": {
-                            "tasks": 2,
-                            "task_catalog": [
-                                "code_micro",
-                                "debug_one_liner"
-                            ]
-                        }
-                    },
-                    {
-                        "stage_id": "refactor_followup",
-                        "prompt_id": "directive",
-                        "registry_key": "styles.directive",
-                        "goal": "Explore refactoring or quality improvements after implementation.",
-                        "tone": "Inquisitive and constructive",
-                        "task_sequence": [
-                            "code_micro"
-                        ],
-                        "max_directives": 1,
-                        "persona_hint": "Reviewer who emphasizes maintainability.",
-                        "controls": {
-                            "optional": true,
-                            "task_catalog": [
-                                "code_micro"
-                            ]
-                        }
-                    }
-                ]
-            },
-            "system_design_scaling": {
-                "style_id": "system_design_scaling",
-                "label": "System Design Scaling",
-                "summary": "Fits backend or platform interviews focused on scenario walkthroughs and architecture verification.",
-                "persona": "Calm architect who asks for pragmatic scaling choices.",
-                "task_catalog": {
-                    "tradeoff_reasoning": {
-                        "task_id": "tradeoff_reasoning",
-                        "objective": "Assess architectural tradeoffs and risk mitigation.",
-                        "rubric_focus": [
-                            "system_design",
-                            "risk_management"
-                        ],
-                        "evidence_tags": [
-                            "throughput",
-                            "latency",
-                            "resilience"
-                        ],
-                        "interviewer_actions": [
-                            "Press on a constraint",
-                            "Seek alternatives and their costs"
-                        ],
-                        "response_shape": "Candidate details the tradeoff, metrics, and risk plan."
-                    },
-                    "knowledge_basic": {
-                        "task_id": "knowledge_basic",
-                        "objective": "Ensure foundational primitives and APIs are well understood for the scenario.",
-                        "rubric_focus": [
-                            "architecture_fundamentals",
-                            "communication"
-                        ],
-                        "evidence_tags": [
-                            "components",
-                            "contracts"
-                        ],
-                        "interviewer_actions": [
-                            "Ask for component responsibilities",
-                            "Probe integration or failure domains"
-                        ],
-                        "response_shape": "Candidate names key components, responsibilities, and interactions."
-                    }
-                },
-                "stages": [
-                    {
-                        "stage_id": "scenario_walkthrough",
-                        "prompt_id": "directive",
-                        "registry_key": "styles.directive",
-                        "goal": "Guide the candidate through an end-to-end scenario with explicit constraints.",
-                        "tone": "Structured and calm",
-                        "task_sequence": [
-                            "tradeoff_reasoning",
-                            "knowledge_basic"
-                        ],
-                        "max_directives": 2,
-                        "persona_hint": "Architect drawing out context, constraints, tradeoffs, and risk scans.",
-                        "controls": {
-                            "mode": "scenario",
-                            "scenario_structure": [
-                                "context_setup",
-                                "constraint_probe",
-                                "tradeoff_choice",
-                                "risk_scan"
-                            ]
-                        }
-                    },
-                    {
-                        "stage_id": "architecture_verification",
-                        "prompt_id": "directive",
-                        "registry_key": "styles.directive",
-                        "goal": "Stress-test architecture reasoning with targeted follow-ups.",
-                        "tone": "Analytical and grounded",
-                        "task_sequence": [
-                            "tradeoff_reasoning",
-                            "knowledge_basic"
-                        ],
-                        "max_directives": 2,
-                        "persona_hint": "Principal engineer verifying metrics and risks.",
-                        "controls": {
-                            "tasks": 2,
-                            "followups": 2,
-                            "task_catalog": [
-                                "tradeoff_reasoning",
-                                "knowledge_basic"
-                            ]
-                        }
-                    }
-                ]
-            },
-            "data_insight": {
-                "style_id": "data_insight",
-                "label": "Data Insight",
-                "summary": "Suits analytics or ML roles that emphasize metrics fluency and experiment reasoning.",
-                "persona": "Curious analytics lead who links metrics to business impact.",
-                "task_catalog": {
-                    "formula_term": {
-                        "task_id": "formula_term",
-                        "objective": "Define or derive a key metric/formula and describe when it applies.",
-                        "rubric_focus": [
-                            "quantitative_reasoning",
-                            "business_acumen"
-                        ],
-                        "evidence_tags": [
-                            "formula",
-                            "metric_context"
-                        ],
-                        "interviewer_actions": [
-                            "Ask for numerator/denominator",
-                            "Request an example scenario"
-                        ],
-                        "response_shape": "Candidate states the formula, variables, and interpretation."
-                    },
-                    "knowledge_basic": {
-                        "task_id": "knowledge_basic",
-                        "objective": "Gather contextual understanding of experiment setup or data workflow.",
-                        "rubric_focus": [
-                            "communication",
-                            "data_storytelling"
-                        ],
-                        "evidence_tags": [
-                            "context",
-                            "audience"
-                        ],
-                        "interviewer_actions": [
-                            "Ask for actors and tools",
-                            "Probe data limitations"
-                        ],
-                        "response_shape": "Candidate explains stakeholders, data sources, and constraints."
-                    },
-                    "tradeoff_reasoning": {
-                        "task_id": "tradeoff_reasoning",
-                        "objective": "Force prioritization choices between metrics, latency, or signal quality.",
-                        "rubric_focus": [
-                            "decision_making",
-                            "rigor"
-                        ],
-                        "evidence_tags": [
-                            "tradeoff",
-                            "risk"
-                        ],
-                        "interviewer_actions": [
-                            "Challenge with noise or bias",
-                            "Ask for guardrail metrics"
-                        ],
-                        "response_shape": "Candidate explains tradeoff, mitigation, and monitoring plan."
-                    }
-                },
-                "stages": [
-                    {
-                        "stage_id": "metric_probe",
-                        "prompt_id": "directive",
-                        "registry_key": "styles.directive",
-                        "goal": "Probe metric literacy and ability to connect measures to impact.",
-                        "tone": "Exploratory and upbeat",
-                        "task_sequence": [
-                            "formula_term",
-                            "knowledge_basic"
-                        ],
-                        "max_directives": 2,
-                        "persona_hint": "Analytics lead unpacking metric definitions and context.",
-                        "controls": {
-                            "mode": "probe",
-                            "probe_min": 6,
-                            "concept_min": 4,
-                            "task_catalog": [
-                                "formula_term",
-                                "knowledge_basic"
-                            ]
-                        }
-                    },
-                    {
-                        "stage_id": "analysis_verification",
-                        "prompt_id": "directive",
-                        "registry_key": "styles.directive",
-                        "goal": "Validate analysis rigor and prioritization choices.",
-                        "tone": "Socratic and precise",
-                        "task_sequence": [
-                            "formula_term",
-                            "tradeoff_reasoning"
-                        ],
-                        "max_directives": 2,
-                        "persona_hint": "Reviewer scrutinizing statistical judgment.",
-                        "controls": {
-                            "tasks": 2,
-                            "task_catalog": [
-                                "formula_term",
-                                "tradeoff_reasoning"
-                            ]
-                        }
-                    },
-                    {
-                        "stage_id": "experimentation_followup",
-                        "prompt_id": "directive",
-                        "registry_key": "styles.directive",
-                        "goal": "Explore experiment design and next steps.",
-                        "tone": "Curious and collaborative",
-                        "task_sequence": [
-                            "formula_term"
-                        ],
-                        "max_directives": 1,
-                        "persona_hint": "Partner challenging the roadmap impact.",
-                        "controls": {
-                            "optional": true,
-                            "task_catalog": [
-                                "formula_term"
-                            ]
-                        }
-                    }
-                ]
-            },
-            "diagnostic_debug": {
-                "style_id": "diagnostic_debug",
-                "label": "Diagnostic Debug",
-                "summary": "Covers troubleshooting and reliability checks with structured triage.",
-                "persona": "Incident commander who pushes for crisp diagnosis and mitigation.",
-                "task_catalog": {
-                    "debug_one_liner": {
-                        "task_id": "debug_one_liner",
-                        "objective": "Triage a targeted bug or incident clue quickly.",
-                        "rubric_focus": [
-                            "triage",
-                            "execution"
-                        ],
-                        "evidence_tags": [
-                            "signal",
-                            "precision"
-                        ],
-                        "interviewer_actions": [
-                            "Escalate severity",
-                            "Ask for rollback or mitigation paths"
-                        ],
-                        "response_shape": "Candidate lists hypotheses, validation, and immediate mitigation."
-                    },
-                    "code_micro": {
-                        "task_id": "code_micro",
-                        "objective": "Inspect a small code block to isolate the faulty line and fix.",
-                        "rubric_focus": [
-                            "code_quality",
-                            "debugging"
-                        ],
-                        "evidence_tags": [
-                            "instrumentation",
-                            "guardrails"
-                        ],
-                        "interviewer_actions": [
-                            "Request logging or tracing",
-                            "Ask for regression safeguards"
-                        ],
-                        "response_shape": "Candidate pinpoints the issue, shows fix, and explains prevention."
-                    }
-                },
-                "stages": [
-                    {
-                        "stage_id": "triage_probe",
-                        "prompt_id": "directive",
-                        "registry_key": "styles.directive",
-                        "goal": "Gauge triage thinking across incident severity levels.",
-                        "tone": "Urgent yet calm",
-                        "task_sequence": [
-                            "debug_one_liner"
-                        ],
-                        "max_directives": 1,
-                        "persona_hint": "Incident commander establishing signal from noise.",
-                        "controls": {
-                            "triage_levels": [
-                                1,
-                                2,
-                                3
-                            ],
-                            "task_catalog": [
-                                "debug_one_liner"
-                            ]
-                        }
-                    },
-                    {
-                        "stage_id": "fault_isolation",
-                        "prompt_id": "directive",
-                        "registry_key": "styles.directive",
-                        "goal": "Force detailed debugging and mitigation planning.",
-                        "tone": "Direct and pragmatic",
-                        "task_sequence": [
-                            "debug_one_liner",
-                            "code_micro"
-                        ],
-                        "max_directives": 2,
-                        "persona_hint": "Staff SWE narrowing the blast radius.",
-                        "controls": {
-                            "tasks": 2,
-                            "followups": 2,
-                            "task_catalog": [
-                                "debug_one_liner",
-                                "code_micro"
-                            ]
-                        }
-                    },
-                    {
-                        "stage_id": "stability_wrap",
-                        "prompt_id": "directive",
-                        "registry_key": "styles.directive",
-                        "goal": "Confirm long-term safeguards and reliability thinking.",
-                        "tone": "Confident and reassuring",
-                        "task_sequence": [
-                            "code_micro"
-                        ],
-                        "max_directives": 1,
-                        "persona_hint": "SRE partnering on resilience.",
-                        "controls": {
-                            "optional": true,
-                            "task_catalog": [
-                                "debug_one_liner",
-                                "code_micro"
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
+    "registry": {
+      "rubric.generate": {
+        "route": "qwen3-4b-local",
+        "schema_path": "icbot_backend.schemas.rubric.RubricModel"
+      },
+      "competency.generate": {
+        "route": "qwen3-4b-local",
+        "schema_path": "icbot_backend.schemas.competency.CompetencyPlan"
+      },
+      "warmup.opening": {
+        "route": "qwen3-4b-local",
+        "schema_path": "icbot_backend.schemas.warmup.WarmupTurn"
+      },
+      "candidate.reply": {
+        "route": "qwen3-4b-local",
+        "schema_path": "candidate_service.schemas.CandidateReply"
+      },
+      "evaluation.score": {
+        "route": "qwen3-4b-local",
+        "schema_path": "icbot_backend.schemas.evaluation.EvaluationVerdict"
+      },
+      "styles.directive": {
+        "route": "qwen3-4b-local",
+        "schema_path": "icbot_backend.styles.base.DirectiveSchema"
+      }
     }
+  },
+  "flow": {
+    "stages": [
+      "warmup",
+      "competency",
+      "wrapup"
+    ],
+    "competency": {
+      "min": 3,
+      "max": 3
+    },
+    "warmup": {
+      "max_turns": 3,
+      "ready_threshold": 0.75
+    }
+  },
+  "rubric": {
+    "max_criteria_per_competency": 3
+  },
+  "evaluation": {
+    "routes": {
+      "scoring": "qwen3-4b-local"
+    },
+    "schema_registry": {
+      "final_report": "icbot_backend.schemas.evaluation.EvaluationVerdict"
+    },
+    "weights": {
+      "competency-1": 0.34,
+      "competency-2": 0.33,
+      "competency-3": 0.33
+    }
+  },
+  "ui": {
+    "default_view_mode": "interviewer",
+    "tts_enabled": false,
+    "auto_candidate_reply": true
+  }
 }
