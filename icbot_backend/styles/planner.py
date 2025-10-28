@@ -100,27 +100,40 @@ def _stage_node(
     spec: StyleSpec,
     stage: StyleStageTemplate,
     chain: Callable[[dict], Awaitable[DirectiveSchema]],
-) -> Callable[[
-    _StyleGraphState
-], Awaitable[_StyleGraphState]]:  # LangGraph node that executes a single stage directive call.
+) -> Callable[[_StyleGraphState], Awaitable[_StyleGraphState]]:  # LangGraph node that executes a single stage directive call.
     sequence = stage.task_sequence or list(spec.task_catalog.keys())
     if not sequence:
         raise ValueError(f"Stage '{stage.stage_id}' in style '{spec.style_id}' has no task sequence defined")
     limit = min(len(sequence), stage.max_directives)
     task_lookup = spec.task_catalog
+    stage_position = spec.stages.index(stage)
 
     async def _node(payload: _StyleGraphState) -> _StyleGraphState:
-        task_id = payload.get("task_id")
-        if not task_id:
+        state = payload["state"]
+        cursor = state.task_cursor if state.stage_index == stage_position else 0
+        if cursor >= limit:
             payload["plan"] = None
-            payload["state"] = payload["state"].model_copy(update={"done": True})
+            payload["state"] = state
             return payload
+        task_id = sequence[cursor]
         task = task_lookup.get(task_id)
         if not task:
             raise KeyError(f"Unknown task '{task_id}' for style '{spec.style_id}'")
         request = payload["request"]
         variables = _compose_prompt_vars(spec, stage, task, request)
-        directive: DirectiveSchema = await chain.ainvoke(variables)
+        directive = await chain.ainvoke(variables)
+        if not isinstance(directive, DirectiveSchema):
+            payload["state"] = payload["state"].model_copy(update={"done": True})
+            payload["plan"] = None
+            logger = logging.getLogger(__name__)
+            logger.error(
+                "Directive missing schema fields | style=%s task=%s payload=%s",
+                spec.style_id,
+                task_id,
+                directive,
+            )
+            return payload
+        directive = directive
         next_state = _advance_state(payload["state"], stage, spec, limit, task_id)
         plan = StagePlan(
             style_id=spec.style_id,

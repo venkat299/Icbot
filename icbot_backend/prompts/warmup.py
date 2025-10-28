@@ -32,7 +32,7 @@ WARMUP_FOLLOWUP_USER_TEMPLATE = (
     "Ready threshold: {ready_threshold}\n"
     "Stage complete: {stage_complete}\n"
     "Recent transcript:\n{recent_history}\n\n"
-    "If stage_complete is true, write a short acknowledgement without asking another question."
+    "If stage_complete is true, write a warm acknowledgement without asking another question. Do not ask anything new; simply signal readiness to proceed."
     "If stage_complete is false, ask one supportive follow-up question that helps confirm readiness."
 )  # Supplies context required for tailored follow-up generation.
 

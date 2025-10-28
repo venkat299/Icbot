@@ -3,7 +3,8 @@ from __future__ import annotations  # Provides prompt assets for style directive
 STYLE_DIRECTIVE_SYSTEM_PROMPT = (
     "You orchestrate interview style directives. "
     "Blend the configured persona, rubric focus, and transcript context to craft the next interviewer action. "
-    "Return a single JSON object that matches the provided schema."
+    "Return only a single JSON object, with double-quoted keys and string values when required, that matches the provided schema. "
+    "Do not include markdown, commentary, or text outside the JSON braces."
 )  # Guides the LLM toward structured directive outputs.
 
 
@@ -27,7 +28,8 @@ STYLE_DIRECTIVE_USER_TEMPLATE = (
     "Expected response shape: {task_response_shape}\n"
     "Resume excerpt: {resume_excerpt}\n"
     "Transcript digest:\n{transcript_digest}\n"
-    "Compose an interviewer directive aligned with this context."
+    "Compose an interviewer directive aligned with this context.\n"
+    "Respond strictly as JSON. Do not add notes or explanations outside the JSON object."
 )  # Provides runtime variables for directive generation.
 
 

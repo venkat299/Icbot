@@ -337,7 +337,7 @@ export function Chatbot({
         setStatus('waiting for answer');
         return;
       }
-      const prompt = [...messagesRef.current].reverse().find(message => !message.isUser && message.expectCandidateReply);
+      const prompt = [...messagesRef.current].reverse().find(message => message.expectCandidateReply);
       if (!prompt) {
         setStatus('waiting for answer');
         return;
@@ -384,7 +384,7 @@ export function Chatbot({
     if (!autoReplyEnabled || !sessionId) {
       return;
     }
-    const prompt = [...messages].reverse().find(message => !message.isUser && message.expectCandidateReply);
+    const prompt = [...messages].reverse().find(message => message.expectCandidateReply);
     if (!prompt) {
       return;
     }

@@ -2,14 +2,23 @@ from __future__ import annotations  # Provides shared helpers for style runtimes
 
 from typing import Iterable
 
-from langchain_core.messages import BaseMessage, ChatMessage
+from langchain_core.messages import AIMessage, BaseMessage, ChatMessage, HumanMessage
 
 from .base import StyleSummary, TranscriptTurn
 from .registry import StylesRegistry, get_registry
 
 
 def transcript_to_messages(turns: Iterable[TranscriptTurn]) -> list[BaseMessage]:  # Converts transcript turns to LangChain messages.
-    return [ChatMessage(role=turn.role, content=turn.text) for turn in turns]
+    messages: list[BaseMessage] = []
+    for turn in turns:
+        content = f"{turn.role.capitalize()}: {turn.text}"
+        if turn.role == "interviewer":
+            messages.append(HumanMessage(content=content))
+        elif turn.role == "candidate":
+            messages.append(AIMessage(content=content))
+        else:
+            messages.append(ChatMessage(role="user", content=content))
+    return messages
 
 
 def summarize_transcript(turns: list[TranscriptTurn], limit: int = 6) -> str:  # Builds a compact transcript digest.

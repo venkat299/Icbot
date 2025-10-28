@@ -1,169 +1,169 @@
 [
   {
-    "job_title": "Data Scientist - Machine Learning",
-    "candidate_name": "DR. AISHA PATEL",
-    "job_description": "Data Scientist - Machine Learning\n\nWe're looking for a talented Data Scientist to help us leverage data for business insights.\n\nRequirements:\n\u2022 Master's or PhD in Computer Science, Statistics, or related field\n\u2022 3+ years of experience in data science or machine learning\n\u2022 Strong programming skills in Python (NumPy, Pandas, Scikit-learn)\n\u2022 Experience with deep learning frameworks (TensorFlow, PyTorch)\n\u2022 Knowledge of statistical analysis and A/B testing\n\u2022 Experience with SQL and big data technologies\n\nResponsibilities:\n\u2022 Build and deploy machine learning models\n\u2022 Analyze large datasets to extract insights\n\u2022 Collaborate with engineering to productionize models\n\u2022 Present findings to stakeholders\n\u2022 Stay current with ML/AI advancements",
-    "resume": "DR. AISHA PATEL\nData Scientist - Machine Learning Engineer\nEmail: aisha.patel@email.com | GitHub: github.com/aishapatel\n\nEDUCATION\nPh.D. Computer Science (Machine Learning) | MIT | 2020\nM.S. Statistics | University of Michigan | 2016\nB.S. Mathematics & Computer Science | Cornell University | 2014\n\nPROFESSIONAL EXPERIENCE\n\nSenior Data Scientist | AI Innovations Lab | 2021 - Present\n\u2022 Developed recommendation engine increasing user engagement by 45%\n\u2022 Built NLP models for sentiment analysis with 92% accuracy\n\u2022 Led team of 4 data scientists on computer vision project\n\u2022 Published 3 papers in top-tier ML conferences (NeurIPS, ICML)\n\u2022 Technologies: Python, TensorFlow, PyTorch, Kubernetes, MLflow\n\nData Scientist | FinTech Analytics | 2020 - 2021\n\u2022 Created fraud detection model reducing false positives by 30%\n\u2022 Implemented real-time scoring pipeline processing 100K+ transactions/day\n\u2022 Conducted A/B tests and statistical analysis for product features\n\u2022 Technologies: Python, Scikit-learn, Spark, SQL, Airflow\n\nResearch Assistant | MIT CSAIL | 2016 - 2020\n\u2022 Researched deep learning architectures for computer vision\n\u2022 Published dissertation on \"Attention Mechanisms in Visual Recognition\"\n\u2022 Collaborated with industry partners on applied ML projects\n\nTECHNICAL SKILLS\nLanguages: Python, R, SQL, Scala\nML/DL: TensorFlow, PyTorch, Scikit-learn, XGBoost, Keras\nBig Data: Spark, Hadoop, Hive\nCloud: AWS (SageMaker, EC2), GCP\nTools: Docker, Kubernetes, Git, MLflow, Jupyter\n\nPUBLICATIONS\n\u2022 \"Attention Mechanisms in Visual Recognition\" - CVPR 2020\n\u2022 \"Efficient Training of Large-Scale Models\" - NeurIPS 2019\n\u2022 \"Transfer Learning for Few-Shot Classification\" - ICML 2019",
+    "job_title": "Software Engineer - Full Stack",
+    "candidate_name": "SARAH CHEN",
+    "job_description": "Software Engineer - Full Stack\n\nWe are seeking an experienced Senior Software Engineer to join our dynamic team. The ideal candidate will have:\n\nRequirements:\n\u2022 1 years of experience in software development\n\u2022 Strong proficiency in JavaScript/TypeScript, React, Node.js\n\u2022 Experience with cloud platforms (AWS, Azure, or GCP)\n\u2022 Solid understanding of microservices architecture\n\u2022 Experience with CI/CD pipelines and DevOps practices\n\u2022 Strong problem-solving and analytical skills\n\u2022 Excellent communication and teamwork abilities\n\nResponsibilities:\n\u2022 Design and implement scalable web applications\n\u2022 Lead technical discussions and code reviews\n\u2022 Collaborate with product and design teams\n\u2022 Contribute to architectural decisions",
+    "resume": "SARAH CHEN\nSenior Software Engineer\nEmail: sarah.chen@email.com | LinkedIn: linkedin.com/in/sarahchen\n\nPROFESSIONAL SUMMARY\nResults-driven Senior Software Engineer with 6+ years of experience building scalable web applications. Expertise in full-stack development, cloud architecture, and leading technical initiatives.\n\nEXPERIENCE\n\nSenior Software Engineer | TechCorp Inc. | 2021 - Present\n\u2022 Led development of microservices architecture serving 2M+ users\n\u2022 Reduced API response time by 40% through optimization and caching strategies\n\u2022 Mentored 5 junior engineers and conducted technical interviews\n\u2022 Technologies: React, Node.js, TypeScript, AWS, Docker, Kubernetes\n\nSoftware Engineer | StartupXYZ | 2018 - 2021\n\u2022 Built real-time collaboration features using WebSocket and Redis\n\u2022 Implemented CI/CD pipeline reducing deployment time by 60%\n\u2022 Developed RESTful APIs and integrated third-party services\n\u2022 Technologies: Vue.js, Python, PostgreSQL, MongoDB\n\nEDUCATION\nB.S. Computer Science | Stanford University | 2018\n\nSKILLS\nLanguages: JavaScript, TypeScript, Python, Java\nFrontend: React, Vue.js, Next.js, Redux\nBackend: Node.js, Express, Django, GraphQL\nCloud: AWS (EC2, S3, Lambda), Docker, Kubernetes\nDatabases: PostgreSQL, MongoDB, Redis",
     "competencies": [
       {
-        "id": "ml_model_development",
-        "name": "Machine Learning Model Development",
-        "interview_style": "debugging",
-        "rationale": "Given the responsibility to build and deploy machine learning models, a deep understanding of debugging is essential to identify and resolve issues in model performance, data pipelines, and training processes. This ensures robust and reliable model development cycles."
+        "id": "fs-react-js",
+        "name": "React and JavaScript Fundamentals",
+        "interview_style": "concept_primer",
+        "rationale": "Given the job requires strong proficiency in React and JavaScript/TypeScript, a behavioral foundation interview style is appropriate to assess the candidate's real-world experience with component architecture, state management, and debugging in React applications. This style evaluates how they've applied these skills in past projects, revealing practical depth and problem-solving under real-time constraints."
       },
       {
-        "id": "data_analysis_insight",
-        "name": "Large-Scale Data Analysis and Insight Extraction",
-        "interview_style": "data_insight",
-        "rationale": "The role involves analyzing large datasets to extract actionable business insights. The data insight style enables candidates to demonstrate their ability to interpret complex data patterns, perform statistical analysis, and communicate findings effectively to stakeholders."
-      },
-      {
-        "id": "model_productionization",
-        "name": "Model Production and Integration with Engineering",
+        "id": "cloud_microservices",
+        "name": "Cloud and Microservices Architecture",
         "interview_style": "system_design_scaling",
-        "rationale": "Collaboration with engineering to productionize models requires understanding of system design and scalability. The system design scaling style ensures candidates can discuss how models are integrated into production systems, monitored, and maintained at scale."
+        "rationale": "The role emphasizes experience with cloud platforms (AWS, Azure, GCP) and microservices architecture. A system design scaling interview allows candidates to demonstrate their understanding of service decomposition, communication patterns (e.g., APIs, messaging), and scalability trade-offs in distributed systems\u2014critical for a full-stack engineer in a scalable environment."
+      },
+      {
+        "id": "ci_cd_devops",
+        "name": "CI/CD and DevOps Practices",
+        "interview_style": "data_insight",
+        "rationale": "This competency focuses on experience with CI/CD pipelines and DevOps practices. A data insight interview enables the evaluation of how candidates have implemented and optimized automated workflows, monitored deployment health, and responded to pipeline failures\u2014providing insight into their operational thinking and data-driven decision-making in deployment processes."
       }
     ],
     "rubric": {
-      "candidate_name": "DR. AISHA PATEL",
-      "position": "Data Scientist - Machine Learning",
+      "candidate_name": "SARAH CHEN",
+      "position": "Software Engineer - Full Stack",
       "evaluation_criteria": [
         {
-          "category": "Machine Learning Model Development",
+          "category": "React and JavaScript Fundamentals",
           "criteria": [
             {
-              "name": "Debugging Model Performance and Data Pipelines",
-              "description": "Ability to identify and resolve issues in model training, data preprocessing, and feature engineering that impact performance and reliability.",
+              "name": "Defines core React concepts in accessible language",
+              "description": "Can clearly explain React component lifecycle, state management, and hooks using everyday analogies or real-world examples.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Fails to identify or resolve errors; model performance degrades without intervention; no logs or error tracking.",
-                "Level 1": "Can identify basic errors in code or data; uses logging and basic debugging tools; limited impact on model output.",
-                "Level 2": "Systematically debugs model performance issues; uses profiling and error tracing; identifies data drift or pipeline bugs.",
-                "Level 3": "Proactively identifies and resolves complex model failures; uses A/B testing and model monitoring tools to validate fixes.",
-                "Level 4": "Diagnoses and resolves edge-case failures in distributed or large-scale environments; implements automated error detection and alerting.",
-                "Level 5": "Anticipates and prevents model failures through proactive monitoring, anomaly detection, and robust error handling in production."
+                "Level 0": "Cannot define core concepts; provides vague or incorrect explanations.",
+                "Level 1": "Provides basic definitions but lacks clarity or context; misses key components like hooks or lifecycle.",
+                "Level 2": "Defines core concepts with basic accuracy but lacks practical application or examples.",
+                "Level 3": "Clearly explains concepts with relevant examples and links them to real-world use cases.",
+                "Level 4": "Explains concepts with depth, including edge cases (e.g., performance implications of useEffect).",
+                "Level 5": "Demonstrates deep understanding with nuanced comparisons (e.g., React vs. Vue, useEffect vs. useState)."
               }
             },
             {
-              "name": "Proficiency with Deep Learning Frameworks",
-              "description": "Demonstrated ability to implement and tune deep learning models using TensorFlow, PyTorch, or equivalent frameworks.",
+              "name": "Applies React concepts to a real-world project scenario",
+              "description": "Can describe how they used React components, state, or hooks to solve a specific problem in a past project.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Does not use deep learning frameworks; relies on basic statistical methods only; no implementation of neural networks.",
-                "Level 1": "Can implement simple neural networks with basic layers; limited customization and no optimization.",
-                "Level 2": "Implements and trains standard architectures (e.g., CNN, RNN); tunes hyperparameters with basic optimization techniques.",
-                "Level 3": "Builds and optimizes complex models (e.g., attention-based, transformer models); uses gradient clipping, batch normalization.",
-                "Level 4": "Designs and deploys custom architectures for domain-specific tasks; integrates with distributed training frameworks.",
-                "Level 5": "Innovates model architecture to improve performance; applies advanced techniques like mixed precision, quantization, and pruning."
+                "Level 0": "No specific project example; response is generic or non-technical.",
+                "Level 1": "Mentions a project but fails to link React features to actual implementation details.",
+                "Level 2": "Provides a basic project example with limited technical depth.",
+                "Level 3": "Describes a project with clear use of React features (e.g., hooks, state) and problem context.",
+                "Level 4": "Details a complex feature (e.g., form validation, dynamic rendering) with React-specific patterns.",
+                "Level 5": "Demonstrates advanced pattern usage (e.g., memoization, error boundaries) and debugging in production."
               }
             },
             {
-              "name": "Model Evaluation and Validation",
-              "description": "Ability to select, apply, and interpret appropriate evaluation metrics (e.g., precision, recall, F1, AUC) in context of business goals.",
+              "name": "Troubleshoots React issues under time pressure",
+              "description": "Can identify and resolve a common React debugging issue (e.g., state mutation, rendering bugs) in a simulated or real scenario.",
               "weight": 40,
               "scoring_levels": {
-                "Level 0": "Uses only basic metrics without context; fails to interpret or report results meaningfully.",
-                "Level 1": "Applies common metrics but does not interpret them in business context; lacks validation strategy.",
-                "Level 2": "Selects and applies relevant metrics; validates results with cross-validation and baseline comparisons.",
-                "Level 3": "Critically evaluates model performance across domains; considers bias, fairness, and data drift.",
-                "Level 4": "Uses multi-metric evaluation and interprets results for stakeholders; justifies model selection based on business impact.",
-                "Level 5": "Designs custom evaluation frameworks for novel use cases; integrates model performance with real-world KPIs."
+                "Level 0": "Fails to identify or resolve issues; provides no debugging process.",
+                "Level 1": "Attempts to debug but lacks systematic approach; misses key tools (e.g., React DevTools).",
+                "Level 2": "Uses basic debugging tools but misses root cause; provides incomplete solution.",
+                "Level 3": "Applies systematic debugging (e.g., inspecting props, useEffects) and identifies a fix.",
+                "Level 4": "Diagnoses and resolves a complex issue (e.g., race condition, memory leak) with clear reasoning.",
+                "Level 5": "Anticipates edge cases and prevents future bugs through proactive debugging practices."
               }
             }
           ]
         },
         {
-          "category": "Large-Scale Data Analysis and Insight Extraction",
+          "category": "Cloud and Microservices Architecture",
           "criteria": [
             {
-              "name": "Pattern Recognition in Complex Datasets",
-              "description": "Ability to identify meaningful patterns, anomalies, and trends in large-scale, multi-dimensional datasets.",
+              "name": "Designs scalable microservice communication patterns",
+              "description": "Can describe how services communicate (APIs, messaging) and how they scale under load.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Fails to detect patterns; relies on manual inspection; no automated analysis tools used.",
-                "Level 1": "Can identify simple trends in small datasets; uses basic visualization tools (e.g., histograms, scatter plots).",
-                "Level 2": "Detects and visualizes complex patterns using statistical methods and data exploration tools (e.g., PCA, clustering).",
-                "Level 3": "Applies domain-specific techniques (e.g., time-series analysis, segmentation) to extract actionable insights.",
-                "Level 4": "Uses advanced analytics (e.g., dimensionality reduction, feature engineering) to uncover hidden relationships.",
-                "Level 5": "Develops automated data exploration pipelines that surface insights without human intervention."
+                "Level 0": "No understanding of communication patterns; suggests monolithic design.",
+                "Level 1": "Lists communication types but does not explain trade-offs or failure modes.",
+                "Level 2": "Describes basic patterns (e.g., REST, gRPC) with limited context on scalability.",
+                "Level 3": "Explains trade-offs (latency vs. reliability) and applies patterns to a real system.",
+                "Level 4": "Proposes a service decomposition with observability and load balancing in mind.",
+                "Level 5": "Designs a resilient, fault-tolerant architecture with circuit breakers, retries, and fallbacks."
               }
             },
             {
-              "name": "Statistical Analysis and A/B Testing",
-              "description": "Demonstrated ability to apply statistical methods and conduct A/B testing to validate product or model effectiveness.",
+              "name": "Identifies and resolves scaling bottlenecks in a system",
+              "description": "Can analyze a system and pinpoint a performance or scalability issue and propose a mitigation strategy.",
               "weight": 35,
               "scoring_levels": {
-                "Level 0": "Does not apply statistical methods; no understanding of hypothesis testing or confidence intervals.",
-                "Level 1": "Conducts basic A/B tests with limited statistical rigor; does not interpret p-values or effect sizes.",
-                "Level 2": "Designs and executes A/B tests with appropriate sample size and controls; interprets results with confidence intervals.",
-                "Level 3": "Applies advanced statistical models (e.g., multivariate testing, power analysis) to assess impact.",
-                "Level 4": "Designs experiments with real-world business impact; accounts for confounding variables and external factors.",
-                "Level 5": "Designs and scales randomized experiments for large user bases; uses Bayesian methods and sequential testing."
+                "Level 0": "Fails to identify bottlenecks; offers no actionable solution.",
+                "Level 1": "Mentions a potential issue but lacks depth or technical justification.",
+                "Level 2": "Identifies a bottleneck (e.g., database query) and suggests a simple fix (e.g., index).",
+                "Level 3": "Analyzes a bottleneck with data (e.g., latency logs) and proposes a scalable fix (e.g., caching).",
+                "Level 4": "Proposes a distributed solution (e.g., offload to a service) with clear trade-offs.",
+                "Level 5": "Anticipates cascading failures and includes observability (metrics, logging) in the solution."
               }
             },
             {
-              "name": "Translating Data into Stakeholder Insights",
-              "description": "Ability to present complex data findings in clear, actionable, and non-technical language to stakeholders.",
+              "name": "Conducts a risk assessment for system failure modes",
+              "description": "Can identify failure points (e.g., network partition, data loss) and propose mitigation strategies.",
               "weight": 35,
               "scoring_levels": {
-                "Level 0": "Fails to communicate findings; reports raw data without interpretation or context.",
-                "Level 1": "Summarizes data in simple terms; lacks visual or narrative support for key insights.",
-                "Level 2": "Uses visualizations and summaries to explain patterns; explains implications to non-technical audiences.",
-                "Level 3": "Tailors insights to different stakeholder needs; connects data to business outcomes.",
-                "Level 4": "Anticipates stakeholder questions and provides data-backed recommendations with risk assessment.",
-                "Level 5": "Designs data storytelling frameworks that drive decision-making and influence strategy."
+                "Level 0": "No awareness of failure modes; ignores system resilience.",
+                "Level 1": "Lists a few failure types without context or mitigation.",
+                "Level 2": "Identifies one failure mode and suggests a basic recovery step.",
+                "Level 3": "Discusses multiple failure modes (e.g., network, data) and suggests monitoring or backup.",
+                "Level 4": "Proposes automated recovery (e.g., auto-restart, health checks) and alerting strategies.",
+                "Level 5": "Designs a comprehensive resilience plan with rollback, failover, and disaster recovery."
               }
             }
           ]
         },
         {
-          "category": "Model Production and Integration with Engineering",
+          "category": "CI/CD and DevOps Practices",
           "criteria": [
             {
-              "name": "End-to-End Model Deployment Pipeline",
-              "description": "Ability to design and implement scalable, automated pipelines for model training, validation, and deployment.",
+              "name": "Defines a key CI/CD metric and its business impact",
+              "description": "Can articulate a key metric (e.g., deployment frequency, lead time) and explain how it affects product delivery or customer experience.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "No pipeline; manual model deployment with no automation or versioning.",
-                "Level 1": "Uses basic scripts for model deployment; no monitoring or rollback mechanisms.",
-                "Level 2": "Implements CI/CD pipeline with basic model versioning (e.g., MLflow); limited monitoring.",
-                "Level 3": "Designs and deploys automated, repeatable pipelines with error handling and logging.",
-                "Level 4": "Integrates model lifecycle with cloud infrastructure (e.g., AWS SageMaker, GCP); supports A/B testing in production.",
-                "Level 5": "Builds self-healing, self-monitoring pipelines with automated alerts and rollback on failure."
+                "Level 0": "Cannot define a metric; response is vague or irrelevant.",
+                "Level 1": "Names a metric but does not link it to business outcomes.",
+                "Level 2": "Defines a metric and mentions a basic business impact (e.g., faster releases).",
+                "Level 3": "Clearly defines a metric and explains how it improves user experience or reduces risk.",
+                "Level 4": "Links metric to customer outcomes (e.g., reduced downtime) and business KPIs.",
+                "Level 5": "Justifies metric selection with data and tradeoff analysis (e.g., noise vs. signal)."
               }
             },
             {
-              "name": "Scalability and System Design for Production Models",
-              "description": "Understanding of system design principles to support model performance at scale and under load.",
+              "name": "Walks through a CI/CD experiment and its guardrails",
+              "description": "Can describe a real-world CI/CD experiment, including setup, success criteria, and failure recovery steps.",
               "weight": 35,
               "scoring_levels": {
-                "Level 0": "No understanding of scalability; models run on single machines with no load handling.",
-                "Level 1": "Can deploy models on a single server; no load balancing or failover.",
-                "Level 2": "Implements basic load balancing and containerization (e.g., Docker); uses Kubernetes for orchestration.",
-                "Level 3": "Designs scalable model serving with batching and caching strategies; handles peak loads.",
-                "Level 4": "Optimizes model latency and throughput using batching, model pruning, or quantization.",
-                "Level 5": "Designs distributed model serving systems with auto-scaling, latency monitoring, and dynamic resource allocation."
+                "Level 0": "No experiment described; no guardrails or recovery plan.",
+                "Level 1": "Mentions a pipeline but lacks detail on experiment or failure handling.",
+                "Level 2": "Describes a pipeline with basic success criteria and one failure step.",
+                "Level 3": "Details a pipeline with defined success/failure conditions and rollback logic.",
+                "Level 4": "Describes a complex experiment (e.g., canary deployment) with rollback and monitoring.",
+                "Level 5": "Documents a data-driven experiment with A/B testing, baselines, and bias mitigation."
               }
             },
             {
-              "name": "Model Performance and Drift Monitoring",
-              "description": "Ability to implement and maintain real-time monitoring for model performance and data drift.",
+              "name": "Justifies tradeoffs in pipeline configuration",
+              "description": "Can explain how they balanced speed, reliability, and cost in a CI/CD pipeline design.",
               "weight": 35,
               "scoring_levels": {
-                "Level 0": "No monitoring; unaware of data drift or performance degradation.",
-                "Level 1": "Uses basic logging; no automated alerts or performance tracking.",
-                "Level 2": "Implements basic drift detection (e.g., statistical tests); alerts on threshold breaches.",
-                "Level 3": "Uses automated tools (e.g., MLflow, Prometheus) to track model performance over time.",
-                "Level 4": "Proactively detects and alerts on concept drift; triggers retraining workflows automatically.",
-                "Level 5": "Builds a proactive drift detection system with anomaly detection and model retraining triggers."
+                "Level 0": "No tradeoff analysis; presents a one-sided pipeline design.",
+                "Level 1": "Mentions tradeoffs but lacks depth or justification.",
+                "Level 2": "Lists a few tradeoffs (e.g., speed vs. testing) with minimal reasoning.",
+                "Level 3": "Clearly explains a tradeoff (e.g., faster builds vs. test coverage) and its impact.",
+                "Level 4": "Analyzes multiple tradeoffs (e.g., cost, time, stability) and justifies decisions with data.",
+                "Level 5": "Anticipates pipeline noise and bias, and proposes mitigation (e.g., test matrix optimization)."
               }
             }
           ]
         }
       ]
     },
-    "id": "f4925ace87cb49dd80aa26ebd8caa75d",
-    "scheduled_date": "2025-10-27T20:02:02.329851Z",
+    "id": "9ec06c85c62f477eaf21f15f1cbc5560",
+    "scheduled_date": "2025-10-28T06:07:24.136463Z",
     "status": "scheduled",
     "overall_score": null,
     "score_details": null

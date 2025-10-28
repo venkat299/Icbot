@@ -3,84 +3,84 @@
         "behavioral_foundation": {
             "style_id": "behavioral_foundation",
             "label": "Behavioral Foundation",
-            "summary": "Emphasizes teamwork, ownership, and thoughtful retrospection.",
-            "persona": "Empathetic hiring manager who guides candidates toward reflective STAR stories.",
+            "summary": "Builds rapport and surfaces STAR stories that highlight teamwork, ownership, and reflection.",
+            "persona": "Supportive interviewer who keeps the conversation warm while guiding candidates through concise STAR arcs.",
             "task_catalog": {
-                "knowledge_basic": {
-                    "task_id": "knowledge_basic",
-                    "objective": "Capture a STAR narrative that highlights collaboration, ownership, and lessons learned.",
+                "rapport_open": {
+                    "task_id": "rapport_open",
+                    "objective": "Invite a brief STAR story that spotlights collaboration and personal contribution.",
                     "rubric_focus": [
                         "teamwork",
-                        "ownership",
-                        "reflection"
+                        "ownership"
                     ],
                     "evidence_tags": [
-                        "STAR",
+                        "context",
                         "impact",
-                        "learning"
+                        "role"
                     ],
                     "interviewer_actions": [
-                        "Ask for the candidate's specific role",
-                        "Request the outcome metric or concrete result"
+                        "Ask for the situation and key partners involved.",
+                        "Request one measurable outcome to anchor the story."
                     ],
-                    "response_shape": "Candidate outlines situation, task, actions, results, plus a takeaway."
+                    "response_shape": "Verbal summary covering situation, role, and result in under two minutes."
                 },
-                "tradeoff_reasoning": {
-                    "task_id": "tradeoff_reasoning",
-                    "objective": "Verify how the candidate balanced conflicting priorities and socialized decisions.",
+                "ownership_probe": {
+                    "task_id": "ownership_probe",
+                    "objective": "Surface a moment where the candidate took initiative or resolved a blocker.",
                     "rubric_focus": [
-                        "judgment",
+                        "accountability",
+                        "decision_making"
+                    ],
+                    "evidence_tags": [
+                        "initiative",
                         "stakeholder_management"
                     ],
+                    "interviewer_actions": [
+                        "Ask what alternative paths were considered and why the candidate chose one.",
+                        "Probe how they communicated decisions to the broader team."
+                    ],
+                    "response_shape": "Spoken reflection that explains decision tradeoffs plus communication steps."
+                },
+                "reflection_close": {
+                    "task_id": "reflection_close",
+                    "objective": "Confirm the candidate can articulate lessons learned and future application.",
+                    "rubric_focus": [
+                        "reflection",
+                        "growth_mindset"
+                    ],
                     "evidence_tags": [
-                        "tradeoff",
-                        "communication"
+                        "lesson",
+                        "future_adjustment"
                     ],
                     "interviewer_actions": [
-                        "Pose a constraint change",
-                        "Ask who pushed back and how it was handled"
+                        "Prompt for one takeaway and how it informs future work.",
+                        "Encourage a concise articulation of impact on teammates or stakeholders."
                     ],
-                    "response_shape": "Candidate explains options considered, decision rationale, and post-mortem reflection."
+                    "response_shape": "Brief spoken answer linking the experience to future behaviors."
                 }
             },
             "stages": [
                 {
-                    "stage_id": "probe_past_events",
+                    "stage_id": "behavioral_conversation",
                     "prompt_id": "directive",
                     "registry_key": "styles.directive",
-                    "goal": "Elicit rich STAR stories covering teamwork and ownership moments.",
-                    "tone": "Supportive and curious",
+                    "goal": "Guide a compact behavioral conversation that validates rapport, ownership, and reflection.",
+                    "tone": "Empathetic and steady",
                     "task_sequence": [
-                        "knowledge_basic"
+                        "rapport_open",
+                        "ownership_probe",
+                        "reflection_close"
                     ],
-                    "max_directives": 1,
-                    "persona_hint": "Mentor-like interviewer who nudges toward vivid details.",
+                    "max_directives": 3,
+                    "persona_hint": "Mentor-like interviewer who keeps candidates grounded and encourages thoughtful narration.",
                     "controls": {
                         "mode": "probe",
-                        "probe_min": 5,
-                        "concept_min": 3,
+                        "probe_min": 4,
+                        "concept_min": 2,
                         "task_catalog": [
-                            "knowledge_basic"
-                        ]
-                    }
-                },
-                {
-                    "stage_id": "reflective_verification",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Validate decision quality and retrospection depth with targeted follow-ups.",
-                    "tone": "Calm and analytical",
-                    "task_sequence": [
-                        "tradeoff_reasoning"
-                    ],
-                    "max_directives": 1,
-                    "persona_hint": "Coach who asks for tradeoffs and learning moments.",
-                    "controls": {
-                        "tasks": 1,
-                        "followups": 1,
-                        "task_catalog": [
-                            "knowledge_basic",
-                            "tradeoff_reasoning"
+                            "rapport_open",
+                            "ownership_probe",
+                            "reflection_close"
                         ]
                     }
                 }
@@ -89,12 +89,12 @@
         "coding_precision": {
             "style_id": "coding_precision",
             "label": "Coding Precision",
-            "summary": "Targets implementation depth, layered probing, and code quality.",
-            "persona": "Direct staff engineer focused on crisp reasoning and readable code.",
+            "summary": "Examines implementation depth, code quality, and debugging under tight, iterative prompts.",
+            "persona": "Direct staff engineer who expects crisp, spoken reasoning and targeted fixes.",
             "task_catalog": {
                 "code_micro": {
                     "task_id": "code_micro",
-                    "objective": "Inspect a small algorithm or utility to understand reasoning, structure, and tradeoffs.",
+                    "objective": "Assess how the candidate reasons about a small algorithm or utility and improves it verbally.",
                     "rubric_focus": [
                         "code_quality",
                         "reasoning"
@@ -104,298 +104,69 @@
                         "readability"
                     ],
                     "interviewer_actions": [
-                        "Ask the candidate to narrate thought process",
-                        "Request improvements or test coverage"
+                        "Ask the candidate to walk line-by-line through intent and edge cases.",
+                        "If a code window tool is available later, cue where edits would land without requiring usage now."
                     ],
-                    "response_shape": "Candidate sketches or verbalizes code, discussing structure and tradeoffs."
+                    "response_shape": "Spoken walkthrough that identifies complexity hotspots and proposes refinements."
                 },
-                "debug_one_liner": {
-                    "task_id": "debug_one_liner",
-                    "objective": "Diagnose a concise snippet or API misuse and outline the fix.",
+                "debug_snapshot": {
+                    "task_id": "debug_snapshot",
+                    "objective": "Confirm the candidate can verbally isolate a bug and outline a fix using a concise snippet.",
                     "rubric_focus": [
                         "debugging",
                         "execution"
                     ],
                     "evidence_tags": [
-                        "bug_hunt",
-                        "root_cause"
+                        "symptom",
+                        "hypothesis",
+                        "validation"
                     ],
                     "interviewer_actions": [
-                        "Provide a failing condition",
-                        "Ask for validation steps after the fix"
+                        "Describe a failing test or runtime symptom and ask for likely root causes.",
+                        "Request the validation steps they would take before committing a fix."
                     ],
-                    "response_shape": "Candidate states hypothesis, validation, and final adjustment."
-                }
-            },
-            "stages": [
-                {
-                    "stage_id": "layered_probe",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Layer probing to expose depth of coding knowledge and reasoning.",
-                    "tone": "Focused and time-boxed",
-                    "task_sequence": [
-                        "code_micro"
-                    ],
-                    "max_directives": 1,
-                    "persona_hint": "Engineer who iterates through increasingly specific prompts.",
-                    "controls": {
-                        "mode": "probe",
-                        "probe_min": 8,
-                        "cycle": [
-                            1,
-                            2,
-                            3
-                        ],
-                        "task_catalog": [
-                            "code_micro"
-                        ]
-                    }
+                    "response_shape": "Narrated diagnosis covering failure, hypothesis, validation, and fix outline."
                 },
-                {
-                    "stage_id": "micro_implementation",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Drive implementation detail and request concrete fixes.",
-                    "tone": "Direct and precise",
-                    "task_sequence": [
-                        "code_micro",
-                        "debug_one_liner"
-                    ],
-                    "max_directives": 2,
-                    "persona_hint": "Pragmatic reviewer asking for runnable solutions.",
-                    "controls": {
-                        "tasks": 2,
-                        "task_catalog": [
-                            "code_micro",
-                            "debug_one_liner"
-                        ]
-                    }
-                },
-                {
-                    "stage_id": "refactor_followup",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Explore refactoring or quality improvements after implementation.",
-                    "tone": "Inquisitive and constructive",
-                    "task_sequence": [
-                        "code_micro"
-                    ],
-                    "max_directives": 1,
-                    "persona_hint": "Reviewer who emphasizes maintainability.",
-                    "controls": {
-                        "optional": true,
-                        "task_catalog": [
-                            "code_micro"
-                        ]
-                    }
-                }
-            ]
-        },
-        "system_design_scaling": {
-            "style_id": "system_design_scaling",
-            "label": "System Design Scaling",
-            "summary": "Fits backend or platform interviews focused on scenario walkthroughs and architecture verification.",
-            "persona": "Calm architect who asks for pragmatic scaling choices.",
-            "task_catalog": {
-                "tradeoff_reasoning": {
-                    "task_id": "tradeoff_reasoning",
-                    "objective": "Assess architectural tradeoffs and risk mitigation.",
+                "refactor_touch": {
+                    "task_id": "refactor_touch",
+                    "objective": "Gauge the candidate's ability to refactor for clarity or extensibility under verbal constraints.",
                     "rubric_focus": [
-                        "system_design",
-                        "risk_management"
-                    ],
-                    "evidence_tags": [
-                        "throughput",
-                        "latency",
-                        "resilience"
-                    ],
-                    "interviewer_actions": [
-                        "Press on a constraint",
-                        "Seek alternatives and their costs"
-                    ],
-                    "response_shape": "Candidate details the tradeoff, metrics, and risk plan."
-                },
-                "knowledge_basic": {
-                    "task_id": "knowledge_basic",
-                    "objective": "Ensure foundational primitives and APIs are well understood for the scenario.",
-                    "rubric_focus": [
-                        "architecture_fundamentals",
+                        "maintainability",
                         "communication"
                     ],
                     "evidence_tags": [
-                        "components",
-                        "contracts"
+                        "naming",
+                        "structure",
+                        "tests"
                     ],
                     "interviewer_actions": [
-                        "Ask for component responsibilities",
-                        "Probe integration or failure domains"
+                        "Ask for one incremental improvement that maintains behavior.",
+                        "Invite the candidate to call out any quick unit test they would add."
                     ],
-                    "response_shape": "Candidate names key components, responsibilities, and interactions."
+                    "response_shape": "Concise verbal refactor plan with optional pointers to future code-tool usage."
                 }
             },
             "stages": [
                 {
-                    "stage_id": "scenario_walkthrough",
+                    "stage_id": "precision_loop",
                     "prompt_id": "directive",
                     "registry_key": "styles.directive",
-                    "goal": "Guide the candidate through an end-to-end scenario with explicit constraints.",
-                    "tone": "Structured and calm",
+                    "goal": "Drive a tight cycle of implementation, debugging, and refactoring questions.",
+                    "tone": "Focused and time-boxed",
                     "task_sequence": [
-                        "tradeoff_reasoning",
-                        "knowledge_basic"
+                        "code_micro",
+                        "debug_snapshot",
+                        "refactor_touch"
                     ],
-                    "max_directives": 2,
-                    "persona_hint": "Architect drawing out context, constraints, tradeoffs, and risk scans.",
-                    "controls": {
-                        "mode": "scenario",
-                        "scenario_structure": [
-                            "context_setup",
-                            "constraint_probe",
-                            "tradeoff_choice",
-                            "risk_scan"
-                        ]
-                    }
-                },
-                {
-                    "stage_id": "architecture_verification",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Stress-test architecture reasoning with targeted follow-ups.",
-                    "tone": "Analytical and grounded",
-                    "task_sequence": [
-                        "tradeoff_reasoning",
-                        "knowledge_basic"
-                    ],
-                    "max_directives": 2,
-                    "persona_hint": "Principal engineer verifying metrics and risks.",
-                    "controls": {
-                        "tasks": 2,
-                        "followups": 2,
-                        "task_catalog": [
-                            "tradeoff_reasoning",
-                            "knowledge_basic"
-                        ]
-                    }
-                }
-            ]
-        },
-        "data_insight": {
-            "style_id": "data_insight",
-            "label": "Data Insight",
-            "summary": "Suits analytics or ML roles that emphasize metrics fluency and experiment reasoning.",
-            "persona": "Curious analytics lead who links metrics to business impact.",
-            "task_catalog": {
-                "formula_term": {
-                    "task_id": "formula_term",
-                    "objective": "Define or derive a key metric/formula and describe when it applies.",
-                    "rubric_focus": [
-                        "quantitative_reasoning",
-                        "business_acumen"
-                    ],
-                    "evidence_tags": [
-                        "formula",
-                        "metric_context"
-                    ],
-                    "interviewer_actions": [
-                        "Ask for numerator/denominator",
-                        "Request an example scenario"
-                    ],
-                    "response_shape": "Candidate states the formula, variables, and interpretation."
-                },
-                "knowledge_basic": {
-                    "task_id": "knowledge_basic",
-                    "objective": "Gather contextual understanding of experiment setup or data workflow.",
-                    "rubric_focus": [
-                        "communication",
-                        "data_storytelling"
-                    ],
-                    "evidence_tags": [
-                        "context",
-                        "audience"
-                    ],
-                    "interviewer_actions": [
-                        "Ask for actors and tools",
-                        "Probe data limitations"
-                    ],
-                    "response_shape": "Candidate explains stakeholders, data sources, and constraints."
-                },
-                "tradeoff_reasoning": {
-                    "task_id": "tradeoff_reasoning",
-                    "objective": "Force prioritization choices between metrics, latency, or signal quality.",
-                    "rubric_focus": [
-                        "decision_making",
-                        "rigor"
-                    ],
-                    "evidence_tags": [
-                        "tradeoff",
-                        "risk"
-                    ],
-                    "interviewer_actions": [
-                        "Challenge with noise or bias",
-                        "Ask for guardrail metrics"
-                    ],
-                    "response_shape": "Candidate explains tradeoff, mitigation, and monitoring plan."
-                }
-            },
-            "stages": [
-                {
-                    "stage_id": "metric_probe",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Probe metric literacy and ability to connect measures to impact.",
-                    "tone": "Exploratory and upbeat",
-                    "task_sequence": [
-                        "formula_term",
-                        "knowledge_basic"
-                    ],
-                    "max_directives": 2,
-                    "persona_hint": "Analytics lead unpacking metric definitions and context.",
+                    "max_directives": 3,
+                    "persona_hint": "Hands-on engineer keeping each exchange short and technical, with optional code window callouts.",
                     "controls": {
                         "mode": "probe",
                         "probe_min": 6,
-                        "concept_min": 4,
                         "task_catalog": [
-                            "formula_term",
-                            "knowledge_basic"
-                        ]
-                    }
-                },
-                {
-                    "stage_id": "analysis_verification",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Validate analysis rigor and prioritization choices.",
-                    "tone": "Socratic and precise",
-                    "task_sequence": [
-                        "formula_term",
-                        "tradeoff_reasoning"
-                    ],
-                    "max_directives": 2,
-                    "persona_hint": "Reviewer scrutinizing statistical judgment.",
-                    "controls": {
-                        "tasks": 2,
-                        "task_catalog": [
-                            "formula_term",
-                            "tradeoff_reasoning"
-                        ]
-                    }
-                },
-                {
-                    "stage_id": "experimentation_followup",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Explore experiment design and next steps.",
-                    "tone": "Curious and collaborative",
-                    "task_sequence": [
-                        "formula_term"
-                    ],
-                    "max_directives": 1,
-                    "persona_hint": "Partner challenging the roadmap impact.",
-                    "controls": {
-                        "optional": true,
-                        "task_catalog": [
-                            "formula_term"
+                            "code_micro",
+                            "debug_snapshot",
+                            "refactor_touch"
                         ]
                     }
                 }
@@ -404,56 +175,78 @@
         "diagnostic_debug": {
             "style_id": "diagnostic_debug",
             "label": "Diagnostic Debug",
-            "summary": "Covers troubleshooting and reliability checks with structured triage.",
-            "persona": "Incident commander who pushes for crisp diagnosis and mitigation.",
+            "summary": "Pushes for fast triage, root-cause reasoning, and mitigation planning during incidents.",
+            "persona": "Calm incident commander pressing for signal, hypothesis discipline, and recovery planning.",
             "task_catalog": {
-                "debug_one_liner": {
-                    "task_id": "debug_one_liner",
-                    "objective": "Triage a targeted bug or incident clue quickly.",
+                "incident_triage": {
+                    "task_id": "incident_triage",
+                    "objective": "Gauge how the candidate triages a live incident with incomplete data.",
                     "rubric_focus": [
                         "triage",
-                        "execution"
+                        "communication"
                     ],
                     "evidence_tags": [
-                        "signal",
-                        "precision"
+                        "severity",
+                        "timing",
+                        "stakeholders"
                     ],
                     "interviewer_actions": [
-                        "Escalate severity",
-                        "Ask for rollback or mitigation paths"
+                        "Ask for first actions within the first five minutes of discovery.",
+                        "Prompt for how status would be communicated to on-call partners."
                     ],
-                    "response_shape": "Candidate lists hypotheses, validation, and immediate mitigation."
+                    "response_shape": "Structured spoken playbook covering observation, immediate steps, and communication."
                 },
-                "code_micro": {
-                    "task_id": "code_micro",
-                    "objective": "Inspect a small code block to isolate the faulty line and fix.",
+                "root_cause_hypothesis": {
+                    "task_id": "root_cause_hypothesis",
+                    "objective": "Confirm the candidate can form and test hypotheses verbally before touching tools.",
                     "rubric_focus": [
-                        "code_quality",
-                        "debugging"
+                        "reasoning",
+                        "signal_quality"
                     ],
                     "evidence_tags": [
-                        "instrumentation",
-                        "guardrails"
+                        "metrics",
+                        "logs",
+                        "experiments"
                     ],
                     "interviewer_actions": [
-                        "Request logging or tracing",
-                        "Ask for regression safeguards"
+                        "Request two plausible causes ordered by likelihood.",
+                        "Probe how they would validate each hypothesis efficiently."
                     ],
-                    "response_shape": "Candidate pinpoints the issue, shows fix, and explains prevention."
+                    "response_shape": "Concise verbal hypothesis tree with validation plan."
+                },
+                "mitigation_plan": {
+                    "task_id": "mitigation_plan",
+                    "objective": "Assess how the candidate stabilizes the system and plans follow-up once the bug is identified.",
+                    "rubric_focus": [
+                        "reliability",
+                        "ownership"
+                    ],
+                    "evidence_tags": [
+                        "rollback",
+                        "alerting",
+                        "postmortem"
+                    ],
+                    "interviewer_actions": [
+                        "Prompt for immediate mitigation steps and triggers for rollback.",
+                        "Ask how they would document and follow up post-incident."
+                    ],
+                    "response_shape": "Summarized spoken playbook including safeguards and communication."
                 }
             },
             "stages": [
                 {
-                    "stage_id": "triage_probe",
+                    "stage_id": "debug_playbook",
                     "prompt_id": "directive",
                     "registry_key": "styles.directive",
-                    "goal": "Gauge triage thinking across incident severity levels.",
-                    "tone": "Urgent yet calm",
+                    "goal": "Walk through triage, hypothesis, and mitigation in a single, escalating narrative.",
+                    "tone": "Urgent yet steady",
                     "task_sequence": [
-                        "debug_one_liner"
+                        "incident_triage",
+                        "root_cause_hypothesis",
+                        "mitigation_plan"
                     ],
-                    "max_directives": 1,
-                    "persona_hint": "Incident commander establishing signal from noise.",
+                    "max_directives": 3,
+                    "persona_hint": "Incident commander keeping the conversation anchored in observable signal and recovery.",
                     "controls": {
                         "triage_levels": [
                             1,
@@ -461,493 +254,253 @@
                             3
                         ],
                         "task_catalog": [
-                            "debug_one_liner"
-                        ]
-                    }
-                },
-                {
-                    "stage_id": "fault_isolation",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Force detailed debugging and mitigation planning.",
-                    "tone": "Direct and pragmatic",
-                    "task_sequence": [
-                        "debug_one_liner",
-                        "code_micro"
-                    ],
-                    "max_directives": 2,
-                    "persona_hint": "Staff SWE narrowing the blast radius.",
-                    "controls": {
-                        "tasks": 2,
-                        "followups": 2,
-                        "task_catalog": [
-                            "debug_one_liner",
-                            "code_micro"
-                        ]
-                    }
-                },
-                {
-                    "stage_id": "stability_wrap",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Confirm long-term safeguards and reliability thinking.",
-                    "tone": "Confident and reassuring",
-                    "task_sequence": [
-                        "code_micro"
-                    ],
-                    "max_directives": 1,
-                    "persona_hint": "SRE partnering on resilience.",
-                    "controls": {
-                        "optional": true,
-                        "task_catalog": [
-                            "debug_one_liner",
-                            "code_micro"
+                            "incident_triage",
+                            "root_cause_hypothesis",
+                            "mitigation_plan"
                         ]
                     }
                 }
             ]
         },
-        "behavioral": {
-            "style_id": "behavioral",
-            "label": "Behavioral Core",
-            "summary": "Explores teamwork, ownership, and reflection at a foundational level.",
-            "persona": "Supportive interviewer surfacing STAR depth while keeping candidates grounded.",
+        "system_design_scaling": {
+            "style_id": "system_design_scaling",
+            "label": "System Design Scaling",
+            "summary": "Explores scaling choices, tradeoffs, and risk mitigation in platform or backend designs.",
+            "persona": "Structured architect who keeps the candidate focused on pragmatic design decisions.",
             "task_catalog": {
-                "behavioral_story": {
-                    "task_id": "behavioral_story",
-                    "objective": "Capture a STAR narrative with explicit role, decision, and quantifiable impact.",
+                "scenario_walkthrough": {
+                    "task_id": "scenario_walkthrough",
+                    "objective": "Establish the baseline scenario, constraints, and success criteria verbally.",
                     "rubric_focus": [
-                        "ownership",
+                        "architecture_fundamentals",
                         "communication"
                     ],
                     "evidence_tags": [
-                        "STAR",
-                        "impact"
+                        "requirements",
+                        "stakeholders"
                     ],
                     "interviewer_actions": [
-                        "Ask for concrete numbers",
-                        "Probe for teammate contributions"
+                        "Ask for key components and data paths using clear spoken diagrams.",
+                        "Encourage enumerating assumptions before diving deeper."
                     ],
-                    "response_shape": "Candidate walks through situation, task, actions, and results."
+                    "response_shape": "Narrated architecture outline with stakeholders, constraints, and happy-path flow."
                 },
-                "reflection_prompt": {
-                    "task_id": "reflection_prompt",
-                    "objective": "Encourage reflection on lessons learned and future adjustments.",
+                "bottleneck_probe": {
+                    "task_id": "bottleneck_probe",
+                    "objective": "Test the candidate's ability to identify and address scaling bottlenecks.",
                     "rubric_focus": [
-                        "growth_mindset"
-                    ],
-                    "evidence_tags": [
-                        "lesson",
-                        "next_time"
-                    ],
-                    "interviewer_actions": [
-                        "Ask what would change",
-                        "Probe for stakeholder feedback"
-                    ],
-                    "response_shape": "Candidate articulates insights, feedback, and behavior adjustments."
-                }
-            },
-            "stages": [
-                {
-                    "stage_id": "rapport_probe",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Surface rich behavioral stories tied to collaboration and ownership.",
-                    "tone": "Curious and encouraging",
-                    "task_sequence": [
-                        "behavioral_story"
-                    ],
-                    "max_directives": 1,
-                    "persona_hint": "Coach nudging for specific examples.",
-                    "controls": {
-                        "mode": "probe",
-                        "probe_min": 5,
-                        "concept_min": 3,
-                        "task_catalog": [
-                            "behavioral_story"
-                        ]
-                    }
-                },
-                {
-                    "stage_id": "depth_alignment",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Verify reflection quality and stakeholder alignment.",
-                    "tone": "Analytical yet supportive",
-                    "task_sequence": [
-                        "reflection_prompt"
-                    ],
-                    "max_directives": 1,
-                    "persona_hint": "Mentor focused on learning outcomes.",
-                    "controls": {
-                        "tasks": 1,
-                        "task_catalog": [
-                            "behavioral_story",
-                            "reflection_prompt"
-                        ]
-                    }
-                }
-            ]
-        },
-        "technical": {
-            "style_id": "technical",
-            "label": "Technical Depth",
-            "summary": "Mixes layered probing with implementation verification for hands-on roles.",
-            "persona": "Direct engineer drilling into correctness, complexity, and scalability.",
-            "task_catalog": {
-                "problem_breakdown": {
-                    "task_id": "problem_breakdown",
-                    "objective": "Deconstruct a technical challenge into components, constraints, and success metrics.",
-                    "rubric_focus": [
-                        "system_thinking",
-                        "communication"
-                    ],
-                    "evidence_tags": [
-                        "constraints",
-                        "assumptions"
-                    ],
-                    "interviewer_actions": [
-                        "Tighten constraints",
-                        "Request complexity bounds"
-                    ],
-                    "response_shape": "Candidate narrates problem framing, interfaces, and metrics."
-                },
-                "solution_validation": {
-                    "task_id": "solution_validation",
-                    "objective": "Inspect reasoning, code, and testability for the proposed solution.",
-                    "rubric_focus": [
-                        "code_quality",
-                        "testing"
-                    ],
-                    "evidence_tags": [
-                        "tests",
+                        "system_design",
                         "tradeoffs"
                     ],
-                    "interviewer_actions": [
-                        "Request pseudocode",
-                        "Ask for edge cases"
+                    "evidence_tags": [
+                        "latency",
+                        "throughput",
+                        "cost"
                     ],
-                    "response_shape": "Candidate details approach, complexity, and validation strategy."
+                    "interviewer_actions": [
+                        "Apply a what-if spike (traffic, data volume, reliability) and ask for mitigation.",
+                        "Request comparison of two design options with spoken pros/cons."
+                    ],
+                    "response_shape": "Verbal evaluation of bottlenecks plus mitigation plan with tradeoff commentary."
+                },
+                "risk_scan": {
+                    "task_id": "risk_scan",
+                    "objective": "Ensure the candidate covers failure modes, observability, and rollout planning.",
+                    "rubric_focus": [
+                        "risk_management",
+                        "operability"
+                    ],
+                    "evidence_tags": [
+                        "monitoring",
+                        "deployment",
+                        "fallback"
+                    ],
+                    "interviewer_actions": [
+                        "Ask for the first alerts they would configure and why.",
+                        "Prompt for rollout/rollback strategy once code paths change."
+                    ],
+                    "response_shape": "Concise spoken risk register covering monitoring, rollout, and contingency."
                 }
             },
             "stages": [
                 {
-                    "stage_id": "problem_breakdown_stage",
+                    "stage_id": "scaling_dialog",
                     "prompt_id": "directive",
                     "registry_key": "styles.directive",
-                    "goal": "Layer probing on requirements, constraints, and tradeoffs.",
-                    "tone": "Focused and time-aware",
+                    "goal": "Guide the candidate through scenario setup, bottleneck analysis, and risk planning.",
+                    "tone": "Structured and analytical",
                     "task_sequence": [
-                        "problem_breakdown"
+                        "scenario_walkthrough",
+                        "bottleneck_probe",
+                        "risk_scan"
                     ],
-                    "max_directives": 2,
-                    "persona_hint": "Engineer partitioning complex tasks.",
-                    "controls": {
-                        "mode": "probe",
-                        "probe_min": 6,
-                        "task_catalog": [
-                            "problem_breakdown"
-                        ]
-                    }
-                },
-                {
-                    "stage_id": "solution_validation_stage",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Validate implementation rigor, complexity, and testing.",
-                    "tone": "Direct and precise",
-                    "task_sequence": [
-                        "solution_validation"
-                    ],
-                    "max_directives": 1,
-                    "persona_hint": "Reviewer expecting runnable answers.",
-                    "controls": {
-                        "tasks": 1,
-                        "task_catalog": [
-                            "problem_breakdown",
-                            "solution_validation"
-                        ]
-                    }
-                }
-            ]
-        },
-        "situational": {
-            "style_id": "situational",
-            "label": "Situational Response",
-            "summary": "Focuses on hypothetical scenarios to assess judgment and adaptability.",
-            "persona": "Calm facilitator presenting nuanced workplace challenges.",
-            "task_catalog": {
-                "scenario_mapping": {
-                    "task_id": "scenario_mapping",
-                    "objective": "Map ambiguous scenarios into clear actions, stakeholders, and success signals.",
-                    "rubric_focus": [
-                        "judgment",
-                        "communication"
-                    ],
-                    "evidence_tags": [
-                        "stakeholders",
-                        "signals"
-                    ],
-                    "interviewer_actions": [
-                        "Add new constraints",
-                        "Shift stakeholder expectations"
-                    ],
-                    "response_shape": "Candidate outlines situation understanding, goals, and planned actions."
-                },
-                "response_drill": {
-                    "task_id": "response_drill",
-                    "objective": "Test follow-up decisions when the scenario evolves.",
-                    "rubric_focus": [
-                        "adaptability",
-                        "stakeholder_management"
-                    ],
-                    "evidence_tags": [
-                        "escalation",
-                        "prioritization"
-                    ],
-                    "interviewer_actions": [
-                        "Inject escalation",
-                        "Request communication plan"
-                    ],
-                    "response_shape": "Candidate details next steps, communication cadence, and risk tradeoffs."
-                }
-            },
-            "stages": [
-                {
-                    "stage_id": "scenario_brief",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Establish shared understanding of the presented scenario.",
-                    "tone": "Neutral and structured",
-                    "task_sequence": [
-                        "scenario_mapping"
-                    ],
-                    "max_directives": 1,
-                    "persona_hint": "Facilitator aligning on the challenge.",
+                    "max_directives": 3,
+                    "persona_hint": "Calm architect who keeps the interview verbal while hinting at architecture whiteboard tools when available.",
                     "controls": {
                         "mode": "scenario",
                         "scenario_structure": [
-                            "context",
-                            "actors",
-                            "tension"
-                        ]
-                    }
-                },
-                {
-                    "stage_id": "response_iteration",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Evaluate adaptability once new twists are introduced.",
-                    "tone": "Challenging but fair",
-                    "task_sequence": [
-                        "response_drill"
-                    ],
-                    "max_directives": 1,
-                    "persona_hint": "Facilitator adding curveballs.",
-                    "controls": {
-                        "tasks": 1,
+                            "context_setup",
+                            "constraint_probe",
+                            "tradeoff_choice",
+                            "risk_scan"
+                        ],
                         "task_catalog": [
-                            "scenario_mapping",
-                            "response_drill"
+                            "scenario_walkthrough",
+                            "bottleneck_probe",
+                            "risk_scan"
                         ]
                     }
                 }
             ]
         },
-        "case-study": {
-            "style_id": "case-study",
-            "label": "Case Study",
-            "summary": "Emphasizes structured business cases, analysis depth, and recommendation clarity.",
-            "persona": "Product partner prompting structured thinking and executive-ready recommendations.",
+        "data_insight": {
+            "style_id": "data_insight",
+            "label": "Data Insight",
+            "summary": "Assesses metric fluency, experiment reasoning, and business context connection.",
+            "persona": "Curious analytics lead who links every metric back to customer or business impact.",
             "task_catalog": {
-                "case_outline": {
-                    "task_id": "case_outline",
-                    "objective": "Frame the case problem, success metrics, and constraints.",
+                "metric_define": {
+                    "task_id": "metric_define",
+                    "objective": "Have the candidate define a key metric, variables, and usage verbally.",
                     "rubric_focus": [
-                        "structured_thinking",
+                        "quantitative_reasoning",
                         "business_acumen"
                     ],
                     "evidence_tags": [
-                        "goal",
-                        "constraint"
+                        "formula",
+                        "inputs",
+                        "interpretation"
                     ],
                     "interviewer_actions": [
-                        "Ask for hypothesis tree",
-                        "Request metric definition"
+                        "Ask for numerator/denominator definitions and any normalization logic.",
+                        "Prompt for a business scenario where the metric either wins or fails."
                     ],
-                    "response_shape": "Candidate articulates objective, levers, and risks."
+                    "response_shape": "Spoken definition plus interpretation with success/failure cues."
                 },
-                "analysis_deepdive": {
-                    "task_id": "analysis_deepdive",
-                    "objective": "Explore data, tradeoffs, and recommendation details.",
+                "experiment_walkthrough": {
+                    "task_id": "experiment_walkthrough",
+                    "objective": "Evaluate the candidate's ability to describe experiment setup and guardrails.",
                     "rubric_focus": [
-                        "analysis",
-                        "execution"
-                    ],
-                    "evidence_tags": [
-                        "data",
-                        "recommendation"
-                    ],
-                    "interviewer_actions": [
-                        "Request sensitivity analysis",
-                        "Ask for rollout plan"
-                    ],
-                    "response_shape": "Candidate shares analysis steps, insights, and plan."
-                },
-                "risk_wrap": {
-                    "task_id": "risk_wrap",
-                    "objective": "Cover risks, mitigations, and stakeholder alignment.",
-                    "rubric_focus": [
-                        "risk_management",
+                        "experiment_design",
                         "communication"
                     ],
                     "evidence_tags": [
-                        "risk",
+                        "population",
+                        "segmentation",
+                        "guardrails"
+                    ],
+                    "interviewer_actions": [
+                        "Request the experiment hypothesis and primary/secondary metrics.",
+                        "Ask how they would explain the results to a non-technical stakeholder."
+                    ],
+                    "response_shape": "Narrated experiment summary covering hypothesis, setup, and communication."
+                },
+                "tradeoff_reasoning": {
+                    "task_id": "tradeoff_reasoning",
+                    "objective": "Ensure the candidate can weigh metric tradeoffs and account for noise or bias.",
+                    "rubric_focus": [
+                        "decision_making",
+                        "rigor"
+                    ],
+                    "evidence_tags": [
+                        "noise",
+                        "bias",
                         "mitigation"
                     ],
                     "interviewer_actions": [
-                        "Add blocker",
-                        "Request fallback"
+                        "Introduce conflicting signals and ask how they'd decide.",
+                        "Prompt for one mitigation or additional analysis before acting."
                     ],
-                    "response_shape": "Candidate proposes mitigation, owners, and monitoring signals."
+                    "response_shape": "Verbal comparison of options plus final recommendation and mitigation."
                 }
             },
             "stages": [
                 {
-                    "stage_id": "case_briefing",
+                    "stage_id": "insight_loop",
                     "prompt_id": "directive",
                     "registry_key": "styles.directive",
-                    "goal": "Establish clarity on goals, guardrails, and stakeholders.",
-                    "tone": "Executive and structured",
+                    "goal": "Probe metric definition, experiment rigor, and tradeoff judgment in a fluid conversation.",
+                    "tone": "Exploratory and upbeat",
                     "task_sequence": [
-                        "case_outline"
+                        "metric_define",
+                        "experiment_walkthrough",
+                        "tradeoff_reasoning"
                     ],
-                    "max_directives": 1,
-                    "persona_hint": "Product partner clarifying objectives.",
+                    "max_directives": 3,
+                    "persona_hint": "Analytics lead who keeps the dialogue verbal-first while noting future dashboard or multi-select tooling.",
                     "controls": {
-                        "mode": "scenario",
-                        "scenario_structure": [
-                            "goal",
-                            "constraint",
-                            "timeline"
-                        ]
-                    }
-                },
-                {
-                    "stage_id": "analysis_iteration",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Dive into analysis paths and recommendation tradeoffs.",
-                    "tone": "Analytical and probing",
-                    "task_sequence": [
-                        "analysis_deepdive"
-                    ],
-                    "max_directives": 1,
-                    "persona_hint": "Partner requesting quantitative backup.",
-                    "controls": {
-                        "tasks": 1,
+                        "mode": "probe",
+                        "probe_min": 6,
+                        "concept_min": 4,
                         "task_catalog": [
-                            "analysis_deepdive"
-                        ]
-                    }
-                },
-                {
-                    "stage_id": "risk_followup",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Close with risk assessment and stakeholder readiness.",
-                    "tone": "Calm and pragmatic",
-                    "task_sequence": [
-                        "risk_wrap"
-                    ],
-                    "max_directives": 1,
-                    "persona_hint": "Executive expecting mitigation clarity.",
-                    "controls": {
-                        "optional": true,
-                        "task_catalog": [
-                            "risk_wrap"
+                            "metric_define",
+                            "experiment_walkthrough",
+                            "tradeoff_reasoning"
                         ]
                     }
                 }
             ]
         },
-        "debugging": {
-            "style_id": "debugging",
-            "label": "Debugging Essentials",
-            "summary": "Provides concise troubleshooting coverage for coding interviews.",
-            "persona": "Hands-on engineer isolating failures quickly.",
+        "concept_primer": {
+            "style_id": "concept_primer",
+            "label": "Concept Primer",
+            "summary": "Validates shared vocabulary and mental models before advanced technical deep dives.",
+            "persona": "Curious staff engineer ensuring the basics are clear before introducing complex scenarios.",
             "task_catalog": {
-                "debug_snapshot": {
-                    "task_id": "debug_snapshot",
-                    "objective": "Review a failing snippet and hypothesize root cause.",
+                "concept_definition": {
+                    "task_id": "concept_definition",
+                    "objective": "Ask the candidate to define a core concept in accessible language.",
                     "rubric_focus": [
-                        "diagnostics",
-                        "clarity"
+                        "clarity",
+                        "communication"
                     ],
                     "evidence_tags": [
-                        "signal",
-                        "hypothesis"
+                        "analogy",
+                        "plain_language"
                     ],
                     "interviewer_actions": [
-                        "Provide stack trace",
-                        "Ask for instrumentation"
+                        "Invite a definition suitable for a new teammate or stakeholder.",
+                        "Probe for a quick contrast with a common misconception."
                     ],
-                    "response_shape": "Candidate states hypothesis, proof, and fix."
+                    "response_shape": "Plain-language spoken definition with one analogy or contrast."
                 },
-                "stability_review": {
-                    "task_id": "stability_review",
-                    "objective": "Ensure long-term safeguards after a fix.",
+                "concept_application": {
+                    "task_id": "concept_application",
+                    "objective": "Confirm the candidate can link the concept to a practical example or edge case.",
                     "rubric_focus": [
-                        "reliability",
-                        "ownership"
+                        "application",
+                        "critical_thinking"
                     ],
                     "evidence_tags": [
-                        "slo",
-                        "guardrail"
+                        "example",
+                        "edge_case"
                     ],
                     "interviewer_actions": [
-                        "Ask for monitoring plan",
-                        "Request rollback readiness"
+                        "Ask for a succinct story where the concept mattered to a project outcome.",
+                        "Prompt for one edge case or limitation and how they handled it."
                     ],
-                    "response_shape": "Candidate proposes guardrails, alerts, and handoff notes."
+                    "response_shape": "Brief spoken example tying the concept to a real or hypothetical scenario."
                 }
             },
             "stages": [
                 {
-                    "stage_id": "debug_probe",
+                    "stage_id": "primer_flow",
                     "prompt_id": "directive",
                     "registry_key": "styles.directive",
-                    "goal": "Quickly triage and isolate the failure.",
-                    "tone": "Urgent but constructive",
+                    "goal": "Establish shared vocabulary by defining and applying foundational concepts.",
+                    "tone": "Curious and direct",
                     "task_sequence": [
-                        "debug_snapshot"
+                        "concept_definition",
+                        "concept_application"
                     ],
-                    "max_directives": 1,
-                    "persona_hint": "Peer engineer reproducing issues side-by-side.",
+                    "max_directives": 2,
+                    "persona_hint": "Staff engineer who double-checks mental models verbally before escalating complexity.",
                     "controls": {
                         "mode": "probe",
-                        "probe_min": 4,
+                        "probe_min": 3,
                         "task_catalog": [
-                            "debug_snapshot"
-                        ]
-                    }
-                },
-                {
-                    "stage_id": "stability_followup",
-                    "prompt_id": "directive",
-                    "registry_key": "styles.directive",
-                    "goal": "Confirm mitigation and long-term reliability mindset.",
-                    "tone": "Practical and steady",
-                    "task_sequence": [
-                        "stability_review"
-                    ],
-                    "max_directives": 1,
-                    "persona_hint": "SRE partner verifying guardrails.",
-                    "controls": {
-                        "tasks": 1,
-                        "task_catalog": [
-                            "debug_snapshot",
-                            "stability_review"
+                            "concept_definition",
+                            "concept_application"
                         ]
                     }
                 }

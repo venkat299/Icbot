@@ -28,6 +28,7 @@
 19. Sidebar metrics derive from session directives with safe fallbacks, preventing undefined criteria errors.
 20. Setup style selector now hydrates from the backend style catalog so dropdown options always reflect `styles_config.json`.
 21. Scheduled interviews list now exposes a delete action per card tied to the backend endpoint.
+22. Auto candidate reply watcher now keys solely on reply expectation so competency directives trigger auto responses even when rendered as interviewer turns.
 
 ## Detailed Notes
 

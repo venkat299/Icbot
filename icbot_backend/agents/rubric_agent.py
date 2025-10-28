@@ -1,6 +1,6 @@
 from langchain_core.prompts import ChatPromptTemplate  # Builds prompt pipelines for LangChain.
 
-from ..config import load_app_config  # Accesses rubric configuration.
+from ..config import load_app_config, load_styles_config  # Accesses rubric and style configuration.
 from ..llm_gateway import runnable  # Provides JSON-enforced runnable.
 from ..prompts import RUBRIC_SYSTEM_PROMPT, RUBRIC_USER_TEMPLATE  # Supplies prompt templates.
 from ..registry import resolve_binding  # Resolves LLM route and schema bindings.
@@ -25,14 +25,12 @@ class RubricAgent:  # Produces interview rubrics with LLM support.
         app_config = load_app_config()
         max_criteria = app_config.rubric.max_criteria_per_competency
 
+        styles_catalog = load_styles_config().catalog
+
         competency_overview = "\n".join(
-            f"- {item.title} | id: {item.competency_id} | style: {item.style_id}" + (
-                f" | rationale: {item.rationale}"
-                if item.rationale
-                else ""
-            )
+            _summarize_competency(item.title, item.competency_id, item.style_id, item.rationale, styles_catalog)
             for item in request.competencies
-        )  # Summarizes competency plan for the LLM.
+        )  # Summarizes competency plan with style context for the LLM.
 
         payload = {
             "job_description": request.job_description,
@@ -67,3 +65,30 @@ class RubricAgent:  # Produces interview rubrics with LLM support.
             limited_categories.append(category.model_copy(update={"criteria": normalized}))
 
         return model.model_copy(update={"categories": limited_categories})
+
+
+def _summarize_competency(
+    title: str,
+    competency_id: str,
+    style_id: str,
+    rationale: str | None,
+    styles_catalog,
+) -> str:  # Builds a style-aware competency summary for rubric generation.
+    style = styles_catalog.get(style_id)
+    if not style:
+        base = f"- {title} | id: {competency_id} | style: {style_id}"
+        return f"{base}{' | rationale: ' + rationale if rationale else ''}"
+    stage = style.stages[0] if style.stages else None
+    tasks = []
+    for task_key in stage.task_sequence if stage else []:
+        task = style.task_catalog.get(task_key)
+        if task:
+            tasks.append(f"{task.task_id}: {task.objective}")
+    task_summary = "; ".join(tasks) if tasks else "Tasks unavailable"
+    base = (
+        f"- {title} | id: {competency_id} | style: {style.label} ({style_id}) | persona: {style.persona}"
+        f" | stage_goal: {stage.goal if stage else 'N/A'} | task_focus: {task_summary}"
+    )
+    if rationale:
+        base += f" | rationale: {rationale}"
+    return base
