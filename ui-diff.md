@@ -28,6 +28,12 @@
 19. Sidebar metrics derive from session directives with safe fallbacks, preventing undefined criteria errors.
 20. Setup style selector now hydrates from the backend style catalog so dropdown options always reflect `styles_config.json`.
 21. Scheduled interviews list now exposes a delete action per card tied to the backend endpoint.
+22. Scheduled interview cards include a Criterion Directives dialog that previews concept-primer prompts derived from each rubric criterion.
+23. Completed interview cards expose transcript and evaluation buttons (with current placeholder messaging) so reviewers know where archived data will appear once scoring persistence lands.
+24. Added a Resume dialog to scheduled interview cards so reviewers can read the candidate’s resume without leaving the dashboard.
+25. “End Interview” now finalizes the session server-side, persisting transcripts, criterion scores, and wrap-up summaries so the scheduled interview cards can surface the latest evaluation data.
+26. Aligned transcript/evaluation dialogs with redo/start/delete actions so all completion controls sit together beside the score details button.
+27. Moved start/redo/delete controls into the score cluster and stripped duplicate action markup so the scheduled card header presents a single, well-formed control group.
 22. Auto candidate reply watcher now keys solely on reply expectation so competency directives trigger auto responses even when rendered as interviewer turns.
 
 ## Detailed Notes
@@ -56,6 +62,7 @@
 - Adds spinner-driven loading state plus retry button aligned with backend fetch.
 - Extends competency display to carry optional rationales for parity with setup view.
 - Rubric modal now mirrors the setup view including rounded weights, scoring-level guidance, and the reminder note for consistent QA styling.
+- Consolidated card action cluster by tucking start/redo/delete next to the score tile and removing the duplicated button block that previously broke JSX compilation.
 
 ### app_config.json
 - Consolidates UI behavior under the `ui` block (TTS default off per request) and removes the redundant `features` object so there is a single source of truth for auto-reply toggles.

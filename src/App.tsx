@@ -32,6 +32,28 @@ interface ApiScoreDetail {
   feedback: string;
 }
 
+interface ApiTranscriptEntry {
+  role: 'interviewer' | 'candidate';
+  text: string;
+}
+
+interface ApiCriterionResult {
+  competency_id: string;
+  competency_name: string;
+  criterion_id: string;
+  criterion_name: string;
+  level?: number | null;
+  confidence?: number | null;
+  notes?: string | null;
+}
+
+interface ApiWrapupSummary {
+  closing_statement: string;
+  key_strengths?: string[] | null;
+  risk_flags?: string[] | null;
+  next_steps?: string[] | null;
+}
+
 interface ApiScheduledInterview {
   id: string;
   job_title: string;
@@ -48,6 +70,9 @@ interface ApiScheduledInterview {
   status: 'scheduled' | 'completed';
   overall_score?: number | null;
   score_details?: ApiScoreDetail[] | null;
+  transcript?: ApiTranscriptEntry[] | null;
+  criterion_results?: ApiCriterionResult[] | null;
+  wrapup_summary?: ApiWrapupSummary | null;
 }
 
 export default function App() {
@@ -92,6 +117,27 @@ export default function App() {
       score: detail.score,
       feedback: detail.feedback,
     })),
+    transcript: payload.transcript?.map((entry) => ({
+      role: entry.role,
+      text: entry.text,
+    })) ?? [],
+    criterionResults: payload.criterion_results?.map((result) => ({
+      competencyId: result.competency_id,
+      competencyName: result.competency_name,
+      criterionId: result.criterion_id,
+      criterionName: result.criterion_name,
+      level: result.level ?? undefined,
+      confidence: result.confidence ?? undefined,
+      notes: result.notes ?? undefined,
+    })) ?? [],
+    wrapupSummary: payload.wrapup_summary
+      ? {
+          closingStatement: payload.wrapup_summary.closing_statement,
+          keyStrengths: payload.wrapup_summary.key_strengths ?? [],
+          riskFlags: payload.wrapup_summary.risk_flags ?? [],
+          nextSteps: payload.wrapup_summary.next_steps ?? [],
+        }
+      : undefined,
   }), []);
 
   const fetchScheduledInterviews = useCallback(async () => {
@@ -192,7 +238,15 @@ export default function App() {
     // Update the interview status back to scheduled and clear the score
     setScheduledInterviews(scheduledInterviews.map(interview => 
       interview.id === interviewId 
-        ? { ...interview, status: 'scheduled', overallScore: undefined, scoreDetails: undefined }
+        ? {
+            ...interview,
+            status: 'scheduled',
+            overallScore: undefined,
+            scoreDetails: undefined,
+            transcript: [],
+            criterionResults: [],
+            wrapupSummary: undefined,
+          }
         : interview
     ));
   };
@@ -205,28 +259,11 @@ export default function App() {
     setCurrentView('scheduled');
   };
 
-  const handleBackToScheduled = () => {
-    // Mark the current interview as completed with mock score
-    if (currentInterviewId) {
-      setScheduledInterviews(scheduledInterviews.map(interview =>
-        interview.id === currentInterviewId
-          ? { 
-              ...interview, 
-              status: 'completed',
-              overallScore: 78,
-              scoreDetails: [
-                { criteria: 'Technical Problem Solving', score: 85, feedback: 'Strong analytical skills demonstrated with clear problem breakdown.' },
-                { criteria: 'Communication Skills', score: 72, feedback: 'Good articulation but could improve clarity in complex explanations.' },
-                { criteria: 'Leadership & Team Management', score: 80, feedback: 'Excellent examples of team collaboration and conflict resolution.' },
-                { criteria: 'Domain Expertise', score: 75, feedback: 'Solid understanding of core concepts with room for deeper knowledge.' }
-              ]
-            }
-          : interview
-      ));
-    }
+  const handleBackToScheduled = useCallback(() => {
     setCurrentInterviewId(null);
     setCurrentView('scheduled');
-  };
+    void fetchScheduledInterviews();
+  }, [fetchScheduledInterviews]);
 
   const handleDeleteInterview = async (interviewId: string) => {
     try {

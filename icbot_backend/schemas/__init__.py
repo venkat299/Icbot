@@ -1,5 +1,18 @@
 from .competency import CompetencyItem, CompetencyPlan, CompetencyRequest  # Re-exports competency schemas.
 from .competency_stage import CompetencyStageRequest  # Re-exports competency stage schema.
+from .criterion import (  # Re-exports criterion runtime schemas.
+    CriterionAttempt,
+    CriterionDirective,
+    CriterionState,
+    EvaluationRequest,
+    EvaluationResult,
+)
+from .wrapup_summary import (  # Re-exports wrap-up schemas.
+    WrapupRequest,
+    WrapupSummary,
+    WrapupCompetencySummary,
+    WrapupCriterionSummary,
+)
 from .evaluation import EvaluationEvidence, EvaluationVerdict  # Re-exports evaluation schemas.
 from .config import UiConfigModel  # Re-exports config schemas.
 from .interview import (  # Re-exports interview scheduling schemas.
@@ -36,6 +49,15 @@ __all__ = [
     "CompetencyRequest",
     "CompetencyStageRequest",
     "UiConfigModel",
+    "CriterionDirective",
+    "CriterionState",
+    "CriterionAttempt",
+    "EvaluationRequest",
+    "EvaluationResult",
+    "WrapupRequest",
+    "WrapupSummary",
+    "WrapupCompetencySummary",
+    "WrapupCriterionSummary",
     "EvaluationEvidence",
     "EvaluationVerdict",
     "ScheduleInterviewRequest",

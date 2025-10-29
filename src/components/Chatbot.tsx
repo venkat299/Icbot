@@ -11,7 +11,7 @@ import {
   CandidatePersonaPayload,
   fetchCandidateReply,
 } from '../services/candidateAutoReply';
-import { startInterviewSession, advanceInterviewSession, extractSidebarSnapshot } from '../services/interviewSession';
+import { startInterviewSession, advanceInterviewSession, completeInterviewSession, extractSidebarSnapshot } from '../services/interviewSession';
 import type { SessionMessage, InterviewSessionResponse, SidebarSnapshot } from '../types/interviewSession';
 import type { ScheduledInterview } from './ScheduledInterviews';
 
@@ -65,6 +65,7 @@ export function Chatbot({
   const [sidebarSnapshot, setSidebarSnapshot] = useState<SidebarSnapshot | null>(null); // Stores sidebar data derived from session.
   const [sessionError, setSessionError] = useState<string | null>(null); // Stores session bootstrap/advance errors.
   const [isLoadingSession, setIsLoadingSession] = useState(false); // Indicates session bootstrap.
+  const [isEnding, setIsEnding] = useState(false); // Tracks manual end processing state.
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<Message[]>([]);
   const autoReplyInFlightRef = useRef(false);
@@ -227,6 +228,26 @@ export function Chatbot({
   useEffect(() => {
     bootstrapSession();
   }, [bootstrapSession]);
+
+  const handleEndInterviewClick = useCallback(async () => {
+    if (isEnding) {
+      return;
+    }
+    setIsEnding(true);
+    try {
+      if (sessionId) {
+        await completeInterviewSession(sessionId);
+      }
+      resetSession();
+      onEndInterview?.();
+      setStatus('thinking');
+    } catch (error) {
+      console.error('Failed to complete interview session', error);
+      setSessionError('Unable to complete the interview. Please try again.');
+    } finally {
+      setIsEnding(false);
+    }
+  }, [isEnding, sessionId, onEndInterview, resetSession, setStatus]);
 
   const buildCandidatePersona = useCallback(() => {
     if (!interview) {
@@ -491,7 +512,7 @@ export function Chatbot({
                   </motion.button>
                   {onEndInterview && (
                     <motion.button
-                      onClick={onEndInterview}
+                      onClick={handleEndInterviewClick}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className="
@@ -502,8 +523,9 @@ export function Chatbot({
                         transition-all duration-200
                       "
                       title="End Interview"
+                      disabled={isEnding}
                     >
-                      End Interview
+                      {isEnding ? 'Ending…' : 'End Interview'}
                     </motion.button>
                   )}
                 </div>

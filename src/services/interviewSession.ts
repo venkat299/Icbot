@@ -78,6 +78,19 @@ export async function advanceInterviewSession(sessionId: string, request: Sessio
   return mapSessionResponse(payload);
 } // Applies an event to the active interview session.
 
+export async function completeInterviewSession(sessionId: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/api/interview_sessions/${sessionId}/complete`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (response.status === 404) {
+    return;
+  }
+  if (!response.ok) {
+    await handleError(response, 'Failed to complete interview session');
+  }
+} // Finalizes the interview session and persists results.
+
 export const extractSidebarSnapshot = (session: InterviewSessionResponse): SidebarSnapshot | null => {
   if (session.stage !== 'competency') {
     return null;

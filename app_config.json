@@ -4,7 +4,7 @@
       "qwen3-4b-local": {
         "provider": "openai",
         "model": "qwen/qwen3-4b-2507",
-        "base_url": "http://192.168.0.175:1234/v1",
+        "base_url": "http://192.168.0.168:1234/v1",
         "endpoint": "/v1/chat/completions",
         "timeout_seconds": 60,
         "max_retries": 2,
@@ -33,6 +33,14 @@
       "evaluation.score": {
         "route": "qwen3-4b-local",
         "schema_path": "icbot_backend.schemas.evaluation.EvaluationVerdict"
+      },
+      "evaluation.criterion": {
+        "route": "qwen3-4b-local",
+        "schema_path": "icbot_backend.schemas.criterion.EvaluationResult"
+      },
+      "wrapup.summary": {
+        "route": "qwen3-4b-local",
+        "schema_path": "icbot_backend.schemas.wrapup_summary.WrapupSummary"
       },
       "styles.directive": {
         "route": "qwen3-4b-local",

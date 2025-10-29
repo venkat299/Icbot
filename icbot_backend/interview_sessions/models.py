@@ -6,9 +6,10 @@ from uuid import uuid4
 
 from pydantic import BaseModel, Field  # Defines session payload contracts.
 
-from ..schemas.interview import ScheduledInterviewModel, ScheduledCompetency  # Interview data schemas.
+from ..schemas.interview import ScheduledInterviewModel  # Interview data schemas.
 from ..schemas.warmup import WarmupState, WarmupTurn  # Warm-up state payloads.
-from ..styles import StyleState, TranscriptTurn  # Style runtime models.
+from ..styles import TranscriptTurn  # Style runtime models.
+from ..schemas.criterion import CriterionState  # Criterion runtime models.
 
 
 class SessionEventType(str, Enum):  # Enumerates events that mutate a session.
@@ -52,19 +53,17 @@ class InterviewSessionState(BaseModel):  # Persists session runtime data.
     stage: Literal["warmup", "competency", "wrapup", "completed"] = "warmup"
     warmup_plan: WarmupTurn | None = None
     warmup_state: WarmupState | None = None
-    competency_index: int = 0
-    style_states: dict[str, StyleState] = Field(default_factory=dict)
-    competency_finished: dict[str, bool] = Field(default_factory=dict)
     transcript: list[TranscriptEntry] = Field(default_factory=list)
+    criteria: list[CriterionState] = Field(default_factory=list)
+    criterion_index: int = 0
 
     @property
-    def active_competency(self) -> ScheduledCompetency | None:  # Returns the current competency entry.
-        if self.competency_index < 0:
+    def active_criterion(self) -> CriterionState | None:  # Returns the criterion currently in focus.
+        if self.criterion_index < 0:
             return None
-        competencies = self.interview.competencies
-        if self.competency_index >= len(competencies):
+        if self.criterion_index >= len(self.criteria):
             return None
-        return competencies[self.competency_index]
+        return self.criteria[self.criterion_index]
 
     def transcript_turns(self) -> list[TranscriptTurn]:  # Converts transcript entries to style turns.
         return [entry.as_turn() for entry in self.transcript]

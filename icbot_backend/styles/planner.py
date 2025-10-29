@@ -1,5 +1,6 @@
 from __future__ import annotations  # Builds LangGraph planners for interview styles.
 
+import logging
 from dataclasses import dataclass
 from typing import Awaitable, Callable, TypedDict
 
@@ -19,6 +20,9 @@ from .base import (
     StyleTaskTemplate,
 )
 from .toolkit import clamp_excerpt, format_inline, render_lines, summarize_transcript, transcript_to_messages
+
+
+logger = logging.getLogger(__name__)
 
 
 class _StyleGraphState(TypedDict):  # Payload exchanged inside the LangGraph runtime.
@@ -125,7 +129,6 @@ def _stage_node(
         if not isinstance(directive, DirectiveSchema):
             payload["state"] = payload["state"].model_copy(update={"done": True})
             payload["plan"] = None
-            logger = logging.getLogger(__name__)
             logger.error(
                 "Directive missing schema fields | style=%s task=%s payload=%s",
                 spec.style_id,

@@ -1,6 +1,8 @@
 import logging
 
-from fastapi import FastAPI, HTTPException  # Provides HTTP API surface.
+from fastapi import FastAPI, HTTPException, Request  # Provides HTTP API surface.
+from fastapi.exception_handlers import request_validation_exception_handler  # Reuses default validation response.
+from fastapi.exceptions import RequestValidationError  # Signals request body validation errors.
 from fastapi.middleware.cors import CORSMiddleware  # Enables CORS for local dev.
 
 from ..agents import CompetencyAgent, CompetencyStageAgent, RubricAgent, WarmupAgent  # Imports LLM-driven agents.
@@ -38,6 +40,17 @@ _rubric_agent = RubricAgent()  # Initializes rubric agent once per process.
 _warmup_agent = WarmupAgent()  # Initializes warm-up agent once per process.
 _session_manager = InterviewSessionManager()  # Coordinates interview runtime sessions.
 logger = logging.getLogger(__name__)
+
+@app.exception_handler(RequestValidationError)
+async def log_request_validation_error(request: Request, exc: RequestValidationError):  # Logs inbound request validation issues before returning response.
+    logger.warning(
+        "Request validation failed: method=%s | path=%s | errors=%s | body=%s",
+        request.method,
+        request.url.path,
+        exc.errors(),
+        exc.body,
+    )
+    return await request_validation_exception_handler(request, exc)
 
 
 def _get_interview_or_404(interview_id: str) -> ScheduledInterviewModel:  # Retrieves a scheduled interview or raises 404.
@@ -123,6 +136,20 @@ async def advance_interview_session(session_id: str, payload: InterviewSessionEv
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
         logger.exception("Failed to advance interview session")
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.post(
+    "/api/interview_sessions/{session_id}/complete",
+    response_model=ScheduledInterviewModel,
+)
+async def complete_interview_session(session_id: str) -> ScheduledInterviewModel:  # Finalizes an interview session and persists results.
+    try:
+        return await _session_manager.end_session(session_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Failed to complete interview session")
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 

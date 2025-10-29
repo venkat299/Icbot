@@ -7,7 +7,14 @@ from uuid import uuid4
 from pydantic import TypeAdapter  # Validates persisted payloads.
 
 from .config import PROJECT_ROOT  # Leverages shared project paths.
-from .schemas.interview import ScheduleInterviewRequest, ScheduledInterviewModel  # Uses scheduling schemas.
+from .schemas.interview import (
+    ScheduleInterviewRequest,
+    ScheduledInterviewModel,
+    ScheduledTranscriptEntry,
+    ScheduledCriterionResult,
+    ScoreDetail,
+)
+from .schemas.wrapup_summary import WrapupSummary
 
 _STORE_PATH = PROJECT_ROOT / "scheduled_interviews.json"  # Points to persisted interview JSON.
 _ADAPTER = TypeAdapter(list[ScheduledInterviewModel])  # Parses stored interview arrays.
@@ -59,3 +66,33 @@ def delete_interview(interview_id: str) -> None:  # Removes a scheduled intervie
         raise KeyError(f"Interview '{interview_id}' not found")
     interviews.pop(index)
     _write_store(interviews)
+
+
+def complete_interview(
+    interview_id: str,
+    *,
+    transcript: list[ScheduledTranscriptEntry],
+    criterion_results: list[ScheduledCriterionResult],
+    wrapup_summary: WrapupSummary | None,
+    score_details: list[ScoreDetail] | None = None,
+    overall_score: int | None = None,
+) -> ScheduledInterviewModel:  # Persists completion artifacts for an interview.
+    interviews = _read_store()
+    index = next((idx for idx, item in enumerate(interviews) if item.id == interview_id), None)
+    if index is None:
+        raise KeyError(f"Interview '{interview_id}' not found")
+
+    interview = interviews[index]
+    updated = interview.model_copy(
+        update={
+            "status": "completed",
+            "transcript": transcript,
+            "criterion_results": criterion_results,
+            "wrapup_summary": wrapup_summary,
+            "score_details": score_details,
+            "overall_score": overall_score,
+        }
+    )
+    interviews[index] = updated
+    _write_store(interviews)
+    return updated
