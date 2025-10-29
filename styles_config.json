@@ -8,7 +8,7 @@
             "task_catalog": {
                 "criterion_probe": {
                     "task_id": "criterion_probe",
-                    "objective": "Prompt the candidate to address this criterion with a crisp definition and applied example.",
+                    "objective": "Produce a concise interviewer question that directly asks the candidate to define this criterion and share a practical example with measurable impact.",
                     "rubric_focus": [],
                     "evidence_tags": [
                         "definition",
@@ -16,9 +16,9 @@
                         "impact"
                     ],
                     "interviewer_actions": [
-                        "Invite the candidate to define the core idea in accessible language.",
-                        "Request a quick example or story that demonstrates real value.",
-                        "Encourage mention of measurable outcomes or safeguards when relevant."
+                        "Ask the question verbatim, addressing the candidate directly.",
+                        "Encourage a concrete example tied to measurable impact or safeguards.",
+                        "Probe for trade-offs or constraints if the first answer omits them."
                     ],
                     "response_shape": "Spoken response linking definition, example, and measurable impact in under two minutes."
                 }

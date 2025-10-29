@@ -408,5 +408,582 @@
         "Perform bias audits across demographic and clinical subgroups to ensure equitable model performance"
       ]
     }
+  },
+  {
+    "job_title": "Senior Software Engineer - Full Stack",
+    "candidate_name": "SARAH CHEN",
+    "job_description": "Senior Software Engineer - Full Stack\n\nWe are seeking an experienced Senior Software Engineer to join our dynamic team. The ideal candidate will have:\n\nRequirements:\n\u2022 5+ years of experience in software development\n\u2022 Strong proficiency in JavaScript/TypeScript, React, Node.js\n\u2022 Experience with cloud platforms (AWS, Azure, or GCP)\n\u2022 Solid understanding of microservices architecture\n\u2022 Experience with CI/CD pipelines and DevOps practices\n\u2022 Strong problem-solving and analytical skills\n\u2022 Excellent communication and teamwork abilities\n\nResponsibilities:\n\u2022 Design and implement scalable web applications\n\u2022 Lead technical discussions and code reviews\n\u2022 Mentor junior developers\n\u2022 Collaborate with product and design teams\n\u2022 Contribute to architectural decisions",
+    "resume": "SARAH CHEN\nSenior Software Engineer\nEmail: sarah.chen@email.com | LinkedIn: linkedin.com/in/sarahchen\n\nPROFESSIONAL SUMMARY\nResults-driven Senior Software Engineer with 6+ years of experience building scalable web applications. Expertise in full-stack development, cloud architecture, and leading technical initiatives.\n\nEXPERIENCE\n\nSenior Software Engineer | TechCorp Inc. | 2021 - Present\n\u2022 Led development of microservices architecture serving 2M+ users\n\u2022 Reduced API response time by 40% through optimization and caching strategies\n\u2022 Mentored 5 junior engineers and conducted technical interviews\n\u2022 Technologies: React, Node.js, TypeScript, AWS, Docker, Kubernetes\n\nSoftware Engineer | StartupXYZ | 2018 - 2021\n\u2022 Built real-time collaboration features using WebSocket and Redis\n\u2022 Implemented CI/CD pipeline reducing deployment time by 60%\n\u2022 Developed RESTful APIs and integrated third-party services\n\u2022 Technologies: Vue.js, Python, PostgreSQL, MongoDB\n\nEDUCATION\nB.S. Computer Science | Stanford University | 2018\n\nSKILLS\nLanguages: JavaScript, TypeScript, Python, Java\nFrontend: React, Vue.js, Next.js, Redux\nBackend: Node.js, Express, Django, GraphQL\nCloud: AWS (EC2, S3, Lambda), Docker, Kubernetes\nDatabases: PostgreSQL, MongoDB, Redis",
+    "competencies": [
+      {
+        "id": "FS-001",
+        "name": "Full-Stack Development with JavaScript/TypeScript and React",
+        "interview_style": "concept_primer",
+        "rationale": "This competency directly addresses the core technical requirements of the role, including proficiency in JavaScript/TypeScript, React, and Node.js. A concept primer style is appropriate because it enables candidates to demonstrate foundational understanding and practical application of full-stack technologies in a structured, foundational way."
+      },
+      {
+        "id": "FS-002",
+        "name": "Microservices and Cloud Architecture (AWS/Azure/GCP)",
+        "interview_style": "concept_primer",
+        "rationale": "Given the requirement for experience with microservices and cloud platforms, a concept primer allows candidates to articulate architectural decisions, service boundaries, and cloud platform selection rationale. This style supports deep technical discussion while maintaining clarity for senior-level candidates."
+      },
+      {
+        "id": "FS-003",
+        "name": "Technical Leadership and Code Review Excellence",
+        "interview_style": "concept_primer",
+        "rationale": "The role emphasizes leading technical discussions and mentoring junior developers. A concept primer enables candidates to demonstrate their approach to code reviews, architectural decision-making, and team collaboration, focusing on clarity, consistency, and impact."
+      }
+    ],
+    "rubric": {
+      "candidate_name": "SARAH CHEN",
+      "position": "Senior Software Engineer - Full Stack",
+      "evaluation_criteria": [
+        {
+          "category": "Full-Stack Development with JavaScript/TypeScript and React",
+          "criteria": [
+            {
+              "name": "Implement responsive and maintainable React components using TypeScript",
+              "description": "Demonstrates proficiency in building scalable, type-safe React UI components using TypeScript for improved code quality and developer experience.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Uses JavaScript without TypeScript typing; components are fragile, lack error handling, and have inconsistent structure.",
+                "Level 1": "Applies basic TypeScript types to components but lacks full type safety in props, state, or event handling.",
+                "Level 2": "Implements fully typed React components with proper TypeScript interfaces and generics; components are reusable and well-documented.",
+                "Level 3": "Designs complex, reusable React components with TypeScript that integrate with state management and context effectively.",
+                "Level 4": "Builds component libraries with TypeScript that support dynamic theming, accessibility, and internationalization.",
+                "Level 5": "Creates a maintainable, testable React component ecosystem with TypeScript that reduces bugs and improves onboarding for new team members."
+              }
+            },
+            {
+              "name": "Build and integrate full-stack applications using Node.js and Express",
+              "description": "Demonstrates ability to develop backend services that securely and efficiently serve frontend React applications.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Uses basic Node.js scripts without error handling or security measures; APIs are unstable and prone to crashes.",
+                "Level 1": "Implements basic Express routes with minimal error handling and authentication; lacks input validation and logging.",
+                "Level 2": "Builds robust Node.js services with proper middleware, authentication, and logging; APIs are stable and documented.",
+                "Level 3": "Designs scalable backend services with rate limiting, input sanitization, and API versioning for production use.",
+                "Level 4": "Implements microservice-style Node.js services with clear separation of concerns and integration with external services.",
+                "Level 5": "Architects and deploys a full-stack application with seamless React-Node.js integration, performance monitoring, and observability."
+              }
+            },
+            {
+              "name": "Leverage modern frontend tooling (e.g., Next.js, Redux) for efficient development",
+              "description": "Shows experience with modern full-stack tooling to improve development velocity and application performance.",
+              "weight": 40,
+              "scoring_levels": {
+                "Level 0": "Uses vanilla React with no build tooling; development is slow and debugging is difficult.",
+                "Level 1": "Uses basic Next.js features (e.g., SSR, static generation) but lacks optimization or performance monitoring.",
+                "Level 2": "Implements Next.js with server-side rendering and API routes; uses Redux for state management with clear action patterns.",
+                "Level 3": "Optimizes Next.js performance with image optimization, caching, and code splitting; implements Redux Toolkit with middleware.",
+                "Level 4": "Uses advanced Next.js features (e.g., ISR, dynamic imports) and Redux with async data fetching and error handling.",
+                "Level 5": "Designs and deploys a high-performance full-stack app using Next.js and Redux that reduces load time by 30%+ and improves user retention."
+              }
+            }
+          ]
+        },
+        {
+          "category": "Microservices and Cloud Architecture (AWS/Azure/GCP)",
+          "criteria": [
+            {
+              "name": "Design and implement scalable microservices with clear service boundaries",
+              "description": "Demonstrates ability to define and enforce service boundaries to ensure maintainability and resilience in distributed systems.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "No clear service boundaries; monolithic architecture with no separation of concerns.",
+                "Level 1": "Attempts to split into services but lacks clear ownership or communication protocols.",
+                "Level 2": "Defines service boundaries with clear responsibilities and communication patterns (e.g., REST, gRPC); uses API gateways.",
+                "Level 3": "Implements service discovery, circuit breakers, and health checks in microservices architecture.",
+                "Level 4": "Designs and deploys a resilient microservices system with observability (logging, metrics) and automated rollback.",
+                "Level 5": "Led a microservices migration that reduced latency by 40% and improved system uptime to 99.9% through service isolation and fault injection testing."
+              }
+            },
+            {
+              "name": "Deploy and manage cloud infrastructure using AWS or GCP",
+              "description": "Demonstrates hands-on experience with cloud platforms for scalable, secure, and cost-effective infrastructure deployment.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Uses cloud services without configuration or automation; manual setup with no monitoring or backup.",
+                "Level 1": "Sets up basic cloud resources (e.g., EC2, S3) with minimal automation; lacks security or cost controls.",
+                "Level 2": "Automates cloud provisioning using Terraform or CloudFormation with IAM policies and VPCs.",
+                "Level 3": "Manages cloud infrastructure with CI/CD integration, auto-scaling, and cost monitoring tools.",
+                "Level 4": "Implements multi-region deployment with disaster recovery and automated failover.",
+                "Level 5": "Owns a production-grade cloud environment with automated security, compliance, and cost optimization."
+              }
+            },
+            {
+              "name": "Optimize cloud performance and cost through infrastructure and data strategies",
+              "description": "Applies cloud-native practices to reduce latency, improve performance, and control operational expenses.",
+              "weight": 40,
+              "scoring_levels": {
+                "Level 0": "No performance or cost optimization; resources are underutilized or overprovisioned.",
+                "Level 1": "Applies basic cloud best practices (e.g., S3 lifecycle) but lacks performance tuning or cost analysis.",
+                "Level 2": "Uses cloud-native tools (e.g., AWS Lambda, spot instances) to reduce compute costs and improve scalability.",
+                "Level 3": "Implements caching, load balancing, and content delivery networks to reduce latency by 30%+.",
+                "Level 4": "Conducts cost-benefit analysis and implements cost-saving strategies (e.g., auto-scaling, reserved instances).",
+                "Level 5": "Reduces cloud spending by 30%+ through proactive optimization and automated cost alerts with measurable impact."
+              }
+            }
+          ]
+        },
+        {
+          "category": "Technical Leadership and Code Review Excellence",
+          "criteria": [
+            {
+              "name": "Lead technical discussions and conduct effective code reviews",
+              "description": "Demonstrates the ability to facilitate constructive, solution-focused technical conversations and provide actionable feedback.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Does not participate in code reviews; leaves feedback as vague or dismissive.",
+                "Level 1": "Reviews code for correctness but lacks depth or constructive suggestions.",
+                "Level 2": "Provides clear, actionable feedback on code quality, performance, and maintainability.",
+                "Level 3": "Challenges design decisions with evidence-based reasoning and proposes alternatives.",
+                "Level 4": "Facilitates peer code review sessions with structured discussion and documented outcomes.",
+                "Level 5": "Mentors junior engineers through code review, improving team code quality by 40%+ over 6 months."
+              }
+            },
+            {
+              "name": "Mentor junior developers and promote team knowledge sharing",
+              "description": "Shows initiative in building team capability through coaching, knowledge transfer, and peer learning.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Does not mentor or support junior developers; no knowledge transfer activities.",
+                "Level 1": "Provides occasional feedback during code review but no structured mentoring.",
+                "Level 2": "Schedules regular 1:1s and provides feedback on code and career growth.",
+                "Level 3": "Designs and runs knowledge-sharing sessions (e.g., tech talks, walkthroughs) for team learning.",
+                "Level 4": "Creates onboarding materials and leads peer review workshops to improve team velocity.",
+                "Level 5": "Built a junior developer onboarding program that reduced ramp-up time by 50% and improved retention."
+              }
+            },
+            {
+              "name": "Collaborate effectively with product and design teams to shape technical direction",
+              "description": "Demonstrates the ability to translate product goals into technical solutions and align with design and business objectives.",
+              "weight": 40,
+              "scoring_levels": {
+                "Level 0": "Does not engage with product or design teams; builds features in isolation.",
+                "Level 1": "Participates in meetings but provides limited input on feature design.",
+                "Level 2": "Contributes to product backlog refinement and technical feasibility assessments.",
+                "Level 3": "Champions technical solutions that align with user needs and business goals; presents trade-offs clearly.",
+                "Level 4": "Influences product decisions through data-driven recommendations and prototype validation.",
+                "Level 5": "Led a cross-functional initiative that improved feature adoption by 30% through better alignment with user research and design."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "id": "b7b2de4e2bf94a5fab2a05fc99ebe28c",
+    "scheduled_date": "2025-10-29T07:04:01.949619Z",
+    "status": "completed",
+    "overall_score": 95,
+    "score_details": [
+      {
+        "criteria": "Full-Stack Development with JavaScript/TypeScript and React \u2013 Implement responsive and maintainable React components using TypeScript",
+        "score": 100,
+        "feedback": "The candidate provides a clear, detailed definition of responsive and maintainable React components with TypeScript, emphasizing type safety's impact on reducing bugs and improving developer experience. They offer a concrete, measurable example involving a complex form with nested validation, using `zod` and `React.FormState<T>` with type guards, resulting in a 70% reduction in form-related bugs and improved onboarding. This demonstrates deep understanding and practical application of TypeScript for maintainability, scalability, and team collaboration\u2014aligning fully with Level 5 criteria of building a maintainable, testable, and collaborative component ecosystem."
+      },
+      {
+        "criteria": "Full-Stack Development with JavaScript/TypeScript and React \u2013 Build and integrate full-stack applications using Node.js and Express",
+        "score": 100,
+        "feedback": "The candidate provides a detailed, real-world example of building and integrating a full-stack application with Node.js and Express, demonstrating secure and efficient backend services that directly impact frontend performance. The response includes measurable outcomes (40% latency reduction, 60% error rate decrease), clear implementation of security measures (JWT, OAuth2, rate limiting, input sanitization), and integration with React via Axios interceptors and Swagger. The explanation highlights scalability, performance optimization, and seamless frontend-backend communication, aligning with Level 5 criteria of full-stack integration, observability, and measurable impact."
+      },
+      {
+        "criteria": "Full-Stack Development with JavaScript/TypeScript and React \u2013 Leverage modern frontend tooling (e.g., Next.js, Redux) for efficient development",
+        "score": 100,
+        "feedback": "The candidate provides a detailed, specific example of leveraging Next.js (App Router, Server Components) and Redux Toolkit with RTK Query to significantly improve development velocity and application performance. Key measurable impacts include a 60% reduction in load time, 75% reduction in duplicate API calls, 40% reduction in debugging time, 30% faster feature delivery, and 20% reduction in frontend bugs. These outcomes align with Level 5 criteria, which requires high-performance optimization and demonstrable impact on velocity and retention. The response is technically sound, specific, and includes clear metrics, supporting a high confidence in the assessment."
+      },
+      {
+        "criteria": "Microservices and Cloud Architecture (AWS/Azure/GCP) \u2013 Design and implement scalable microservices with clear service boundaries",
+        "score": 100,
+        "feedback": "The candidate clearly defines service boundaries with well-defined responsibilities (e.g., Auth, Order, Inventory) and explains how they were enforced through API contracts, data isolation, and independent deployment. They provide a concrete, real-world example with measurable outcomes: 80% reduction in deployment failures and a 4-hour to 30-minute reduction in mean time to recovery. The example demonstrates clear improvements in maintainability and resilience, and the mention of independent databases, deployment pipelines, and API contracts aligns with Level 5 criteria. The response includes specific, quantifiable results and shows deep understanding of service boundary enforcement and its impact on system resilience and agility."
+      },
+      {
+        "criteria": "Microservices and Cloud Architecture (AWS/Azure/GCP) \u2013 Deploy and manage cloud infrastructure using AWS or GCP",
+        "score": 100,
+        "feedback": "The candidate provides a detailed, production-grade description of cloud infrastructure deployment using AWS, including automation (Terraform, CI/CD), security (IAM, WAF, CloudTrail), cost optimization (Cost Explorer, spot instances), scalability (ECS, EKS, auto-scaling), and measurable outcomes (35% cost reduction, 50% faster incident response, twice-daily deployments). The response demonstrates ownership of a production environment with clear, quantified impacts, aligning fully with Level 5 criteria for scalable, secure, and cost-effective cloud operations."
+      },
+      {
+        "criteria": "Microservices and Cloud Architecture (AWS/Azure/GCP) \u2013 Optimize cloud performance and cost through infrastructure and data strategies",
+        "score": 100,
+        "feedback": "The candidate provides a clear, detailed definition of microservices and cloud architecture optimization, directly linking it to reduced latency (response time from 1.8s to 400ms) and cost reduction (40% decrease in AWS spending). The example includes specific technologies (AWS ECS, API Gateway, CloudFront, spot instances), measurable outcomes, and operational benefits (60% reduction in incident response time). The impact is quantified, proactive, and tied to cost control and performance optimization beyond basic best practices, meeting the criteria for Level 5 with high confidence due to specificity, measurability, and alignment with the rubric."
+      },
+      {
+        "criteria": "Technical Leadership and Code Review Excellence \u2013 Lead technical discussions and conduct effective code reviews",
+        "score": 80,
+        "feedback": "The candidate provides a clear, thoughtful definition of leading technical discussions and effective code reviews, emphasizing facilitation, questioning, and shared ownership. They offer a specific, measurable example with quantified outcomes (55% reduction in critical bugs, 50% faster onboarding). The example includes structured review checklists, rotation of review leadership, and demonstrates impact on both code quality and team dynamics. While the outcome (55% bug reduction) is strong, it falls short of the 40%+ improvement over six months required for Level 5, and there is no explicit mention of mentoring junior engineers. Thus, Level 4 is appropriate\u2014demonstrating facilitation and structured review processes with measurable impact, but not meeting the full scope of Level 5."
+      },
+      {
+        "criteria": "Technical Leadership and Code Review Excellence \u2013 Mentor junior developers and promote team knowledge sharing",
+        "score": 80,
+        "feedback": "The candidate provides a clear definition of mentoring beyond syntax, emphasizing confidence-building, pairing, and knowledge sharing through 'tech snacks.' They offer a specific, measurable example: a junior developer reduced bug reports by 40% and led a code review after mentoring, with new hires contributing in their first sprint. This demonstrates structured knowledge transfer and measurable improvement in team performance and confidence. While the impact (40% reduction) is strong, it falls short of a formal onboarding program with a 50% ramp-up time reduction and retention improvement (Level 5). The evidence supports Level 4, where peer review workshops and knowledge sharing are led, with clear outcomes."
+      },
+      {
+        "criteria": "Technical Leadership and Code Review Excellence \u2013 Collaborate effectively with product and design teams to shape technical direction",
+        "score": 100,
+        "feedback": "The candidate provides a clear, detailed definition of effective collaboration with product and design teams, emphasizing empathy, co-creation, and alignment with user needs. They offer a specific, measurable example where their actions directly influenced a tangible outcome: a 40% faster onboarding completion and 30% drop in drop-off rates, along with a systemic change (introduction of a 'tech feasibility check' step) adopted by the product team. The example demonstrates leadership in shaping technical direction through data-driven prototype validation and cross-functional alignment, meeting the highest level of the rubric (Level 5) where a measurable improvement in feature adoption is achieved through better integration with user research and design."
+      }
+    ],
+    "transcript": [
+      {
+        "role": "interviewer",
+        "text": "Can you share a quick example of a full-stack feature you've built that involved both frontend and backend integration?"
+      },
+      {
+        "role": "candidate",
+        "text": "Absolutely! I led the development of a real-time collaboration dashboard for a SaaS product that let teams track project progress across multiple time zones. On the frontend, I built a React app with Zustand for state management and WebSocket integration for live updates\u2014ensuring that any change in task status or deadline was instantly reflected across all team members' devices. On the backend, I designed a Node.js microservice using Express and PostgreSQL, with AWS Lambda for event-triggered notifications. The service handled authentication via JWT, rate limiting, and real-time sync through a Redis-backed message queue. I also implemented automated health checks and monitoring via Datadog to ensure reliability. It\u2019s a great example of how frontend responsiveness and backend robustness must work in tandem\u2014something I\u2019ve championed in several teams I\u2019ve led."
+      },
+      {
+        "role": "interviewer",
+        "text": "Thanks for warming up with me.\n\nWe'll move into competency-focused questions now."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you define what it means to build a responsive and maintainable React component using TypeScript, and give a practical example where type safety led to a measurable improvement in code quality or developer experience?"
+      },
+      {
+        "role": "candidate",
+        "text": "I believe a responsive and maintainable React component with TypeScript means writing code that\u2019s not just functional, but also predictable and self-documenting\u2014where types catch errors early, reduce bugs in production, and make onboarding and on-boarding faster for teammates. For example, at my last role, we were building a complex form for onboarding new users with nested validation rules. Before we adopted strict TypeScript typing for form state, we kept running into issues like mismatched field types and unexpected nulls during submission\u2014leading to 15+ bug reports per sprint. After we introduced explicit `React.FormState<T>` types with `zod`-based schema validation and type guards, we reduced form-related bugs by 70% and cut down on manual debugging time. Developers could now confidently refactor components because the types prevented silent failures. It wasn't just about catching bugs\u2014it gave us confidence in our codebase and made pair programming much more effective. That\u2019s the power of type safety: it\u2019s not just a tool, it\u2019s a foundation for better collaboration and reliability."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you define what it means to build and integrate full-stack applications using Node.js and Express, and give a practical example where your backend securely and efficiently serves a React frontend with measurable impact?"
+      },
+      {
+        "role": "candidate",
+        "text": "Building and integrating full-stack apps with Node.js and Express means creating a scalable, secure, and performant pipeline where the backend acts as a reliable, stateful layer that powers the frontend\u2014ensuring data consistency, authentication, and performance without sacrificing developer velocity. In my last role at a fintech startup, I led the integration of a React-based dashboard that displayed real-time transaction analytics. The backend used Express with JWT and OAuth2 for secure authentication, and we implemented rate limiting, input sanitization, and CORS policies to protect against abuse. We used PostgreSQL with connection pooling and Redis for caching to reduce latency by 40% during peak loads. The key impact? We reduced API response times from 800ms to under 200ms, and decreased error rates in the frontend by 60%\u2014directly improving user experience and reducing support tickets. What made it work was tight integration: React components used Axios with interceptors to handle auth and error states, while the backend provided clear, typed APIs via Swagger. This level of reliability and performance helped us onboard new analysts faster and scale the product without infrastructure overreach."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you define how you leverage modern frontend tooling like Next.js or Redux to improve development velocity or application performance, and give a specific example with measurable impact?"
+      },
+      {
+        "role": "candidate",
+        "text": "I leverage Next.js and Redux to dramatically improve both velocity and performance in full-stack development. At my last role, I led a team building a content management system where we replaced a legacy React + React Router setup with Next.js 14\u2019s App Router and Server Components. This eliminated 300+ redundant client-side renders and reduced initial load time by 60%\u2014cutting page load from 4.2s to under 1.5s. We also used Redux Toolkit with RTK Query for shared state and API calls, which reduced duplicate API calls by 75% and made data flow predictable across components. This not only sped up development (we reduced component debugging time by 40%) but also improved team onboarding\u2014new engineers could understand state flow in minutes instead of days. The result? A 30% faster feature delivery cycle and a 20% reduction in frontend bugs. For me, modern tooling isn't just about convenience\u2014it\u2019s about building clarity, consistency, and confidence into how we build and ship software."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you define what service boundaries mean in a microservices architecture and give a practical example where clear boundaries led to a measurable improvement in maintainability or resilience?"
+      },
+      {
+        "role": "candidate",
+        "text": "In a microservices architecture, service boundaries define clear ownership and responsibility\u2014each service should have a single, well-defined purpose, such as handling user authentication or processing order fulfillment. These boundaries are enforced through API contracts, data isolation, and independent deployment cycles. At my last role, we were managing a legacy monolith that had 12 interconnected services\u2014changes in one part would cascade, causing outages and long debugging cycles. We refactored it into five well-defined services: Auth, Order, Inventory, Payments, and Notifications\u2014each with its own database, deployment pipeline, and API contract (using OpenAPI). After the split, we reduced deployment failures by 80%, and mean time to recovery dropped from 4 hours to under 30 minutes. More importantly, developers could now work on features in isolation\u2014like adding a new shipping rate\u2014without worrying about breaking downstream services. Clear boundaries didn\u2019t just improve resilience; they made our team more agile, predictable, and confident in shipping changes at scale."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you define how you'd deploy and manage cloud infrastructure using AWS or GCP for scalable, secure, and cost-effective operations, and give a specific example where your approach had a measurable impact?"
+      },
+      {
+        "role": "candidate",
+        "text": "I\u2019d deploy and manage cloud infrastructure using AWS with a focus on automation, security, and cost optimization\u2014leveraging services like AWS ECS for containerized apps, AWS Lambda for event-driven workloads, and AWS CloudFormation or Terraform for infrastructure as code. I\u2019d enforce least-privilege IAM roles, enable AWS WAF and CloudTrail for security, and use AWS Cost Explorer and Budgets to proactively manage spending. In a recent project at my previous company, we migrated a monolithic app to AWS ECS with EKS for scalability and deployed it using Terraform with CI/CD via GitHub Actions. We also implemented auto-scaling policies and spot instance usage for non-critical workloads. The result? We reduced infrastructure costs by 35% over six months while improving deployment frequency from once a week to twice a day. Plus, incident response time dropped by 50% because we could isolate and redeploy services independently. For me, cloud operations isn\u2019t just about uptime\u2014it\u2019s about building systems that scale, protect, and save money without sacrificing reliability."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you define microservices and cloud architecture optimization in a way that highlights how it reduces latency and controls costs, and give a practical example with measurable impact?"
+      },
+      {
+        "role": "candidate",
+        "text": "I see microservices and cloud architecture optimization as a strategic balance between autonomy and efficiency\u2014breaking monolithic systems into small, independent services lets us scale only what\u2019s needed, reducing latency by serving requests closer to the user and avoiding over-engineered, slow-wide dependencies. At my last role, we refactored a legacy e-commerce platform into microservices using AWS ECS and API Gateway, with each service (like inventory, cart, and checkout) running in its own VPC and auto-scaled container cluster. By offloading compute to spot instances and using edge caching with CloudFront, we cut average response time from 1.8s to 400ms\u2014especially for checkout flows. On cost, we reduced AWS spending by 40% by eliminating overprovisioning and using spot instances for non-critical workloads. Plus, we cut down on incident response time by 60% because issues were isolated to one service. For me, this isn\u2019t just about performance\u2014it\u2019s about building systems that are faster, cheaper, and easier to evolve."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you define what it means to lead technical discussions and conduct effective code reviews, and give a specific example where your approach led to a measurable improvement in code quality or team outcomes?"
+      },
+      {
+        "role": "candidate",
+        "text": "To me, leading technical discussions means creating a space where teams can surface trade-offs, explore solutions, and build shared understanding\u2014not just decide. I focus on asking the right questions: 'What\u2019s the edge case here?' 'How does this scale?' 'Who\u2019s affected if we change this?' That helps surface risks early and fosters ownership. For code reviews, I treat them as collaborative design sessions: I look for clarity, maintainability, and alignment with our tech debt goals\u2014not just correctness. In one project, we were building a real-time analytics dashboard with a legacy data pipeline. I introduced structured review checklists (including performance, error handling, and observability) and rotated review leadership to build confidence. Over three months, we reduced critical bugs by 55%, and new engineers were able to onboard and contribute to complex features in half the time. What mattered most wasn\u2019t just fewer bugs\u2014it was that the team started *owning* the quality of their work. That\u2019s the kind of culture I believe in: where code is a conversation, not a checklist."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you define what it means to mentor junior developers and promote team knowledge sharing, and give a specific example where your actions led to a measurable improvement in team understanding or performance?"
+      },
+      {
+        "role": "candidate",
+        "text": "To me, mentoring junior developers isn\u2019t just about teaching them syntax\u2014it\u2019s about building confidence and curiosity. I believe in creating safe, open spaces where they can ask questions, make mistakes, and learn from them. I focus on pairing, walking through code, and encouraging them to own small features end-to-end. I also promote knowledge sharing through weekly 'tech snacks'\u2014short, actionable sessions where anyone can present a problem they solved or a tool they found useful. In one team, we had a junior engineer who was struggling with debugging complex React state issues. I started pairing with them and co-mentored a 30-minute session on debugging with React DevTools and Redux. After that, they led a review on a new feature and reduced bug reports by 40% in two weeks. More importantly, the team\u2019s overall confidence in debugging and ownership of code improved\u2014new hires were able to contribute in their first sprint. I saw it as a shift in culture: from 'I need to be told' to 'I can figure this out.' That\u2019s the real win\u2014when knowledge becomes shared, and growth becomes contagious."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you define how you collaborate effectively with product and design teams to shape technical direction, and give a specific example where your actions directly influenced a measurable outcome?"
+      },
+      {
+        "role": "candidate",
+        "text": "I believe effective collaboration with product and design teams starts with empathy\u2014understanding their goals, user needs, and timelines, not just from a technical standpoint. I treat technical direction as a co-creation process: I schedule regular syncs early in the cycle to align on user flows, feasibility, and constraints. I don\u2019t just hand over specs\u2014I ask, 'What\u2019s the user really trying to achieve here?' and 'What would make this feature feel seamless?' In one project, we were building a new onboarding flow for a SaaS product. The design team had a high-fidelity wireframe, but it was overly complex and would require 10+ API calls. I led a cross-functional session to evaluate performance and usability trade-offs, and proposed a simplified flow with just 3 key actions\u2014using a lightweight, stateless API and caching user progress. We built a prototype in React with service boundaries clearly defined, and ran a usability test with 10 users. The result? 40% faster completion time and a 30% drop in drop-off rates. More importantly, the product team adopted this approach for future features\u2014now all new designs include a 'tech feasibility check' step. To me, that\u2019s not just good engineering\u2014it\u2019s building solutions that truly serve people, not just systems."
+      }
+    ],
+    "criterion_results": [
+      {
+        "competency_id": "FS-001",
+        "competency_name": "Full-Stack Development with JavaScript/TypeScript and React",
+        "criterion_id": "2dbd73eba9b509d30d6f70b647ba93356f6b1c89",
+        "criterion_name": "Implement responsive and maintainable React components using TypeScript",
+        "level": 5,
+        "confidence": 0.98,
+        "notes": "The candidate provides a clear, detailed definition of responsive and maintainable React components with TypeScript, emphasizing type safety's impact on reducing bugs and improving developer experience. They offer a concrete, measurable example involving a complex form with nested validation, using `zod` and `React.FormState<T>` with type guards, resulting in a 70% reduction in form-related bugs and improved onboarding. This demonstrates deep understanding and practical application of TypeScript for maintainability, scalability, and team collaboration\u2014aligning fully with Level 5 criteria of building a maintainable, testable, and collaborative component ecosystem."
+      },
+      {
+        "competency_id": "FS-001",
+        "competency_name": "Full-Stack Development with JavaScript/TypeScript and React",
+        "criterion_id": "3adcc1efc327f77d697a1ebc9fc7413c1edf71c7",
+        "criterion_name": "Build and integrate full-stack applications using Node.js and Express",
+        "level": 5,
+        "confidence": 0.98,
+        "notes": "The candidate provides a detailed, real-world example of building and integrating a full-stack application with Node.js and Express, demonstrating secure and efficient backend services that directly impact frontend performance. The response includes measurable outcomes (40% latency reduction, 60% error rate decrease), clear implementation of security measures (JWT, OAuth2, rate limiting, input sanitization), and integration with React via Axios interceptors and Swagger. The explanation highlights scalability, performance optimization, and seamless frontend-backend communication, aligning with Level 5 criteria of full-stack integration, observability, and measurable impact."
+      },
+      {
+        "competency_id": "FS-001",
+        "competency_name": "Full-Stack Development with JavaScript/TypeScript and React",
+        "criterion_id": "1fca7a0c4d4242f955807b457bada174431ddbe9",
+        "criterion_name": "Leverage modern frontend tooling (e.g., Next.js, Redux) for efficient development",
+        "level": 5,
+        "confidence": 0.98,
+        "notes": "The candidate provides a detailed, specific example of leveraging Next.js (App Router, Server Components) and Redux Toolkit with RTK Query to significantly improve development velocity and application performance. Key measurable impacts include a 60% reduction in load time, 75% reduction in duplicate API calls, 40% reduction in debugging time, 30% faster feature delivery, and 20% reduction in frontend bugs. These outcomes align with Level 5 criteria, which requires high-performance optimization and demonstrable impact on velocity and retention. The response is technically sound, specific, and includes clear metrics, supporting a high confidence in the assessment."
+      },
+      {
+        "competency_id": "FS-002",
+        "competency_name": "Microservices and Cloud Architecture (AWS/Azure/GCP)",
+        "criterion_id": "763a2058ac15793b9a4794ea49c2f70577139097",
+        "criterion_name": "Design and implement scalable microservices with clear service boundaries",
+        "level": 5,
+        "confidence": 0.98,
+        "notes": "The candidate clearly defines service boundaries with well-defined responsibilities (e.g., Auth, Order, Inventory) and explains how they were enforced through API contracts, data isolation, and independent deployment. They provide a concrete, real-world example with measurable outcomes: 80% reduction in deployment failures and a 4-hour to 30-minute reduction in mean time to recovery. The example demonstrates clear improvements in maintainability and resilience, and the mention of independent databases, deployment pipelines, and API contracts aligns with Level 5 criteria. The response includes specific, quantifiable results and shows deep understanding of service boundary enforcement and its impact on system resilience and agility."
+      },
+      {
+        "competency_id": "FS-002",
+        "competency_name": "Microservices and Cloud Architecture (AWS/Azure/GCP)",
+        "criterion_id": "91d90589fdfe890c291e0939e00dab21ec6d6adc",
+        "criterion_name": "Deploy and manage cloud infrastructure using AWS or GCP",
+        "level": 5,
+        "confidence": 0.98,
+        "notes": "The candidate provides a detailed, production-grade description of cloud infrastructure deployment using AWS, including automation (Terraform, CI/CD), security (IAM, WAF, CloudTrail), cost optimization (Cost Explorer, spot instances), scalability (ECS, EKS, auto-scaling), and measurable outcomes (35% cost reduction, 50% faster incident response, twice-daily deployments). The response demonstrates ownership of a production environment with clear, quantified impacts, aligning fully with Level 5 criteria for scalable, secure, and cost-effective cloud operations."
+      },
+      {
+        "competency_id": "FS-002",
+        "competency_name": "Microservices and Cloud Architecture (AWS/Azure/GCP)",
+        "criterion_id": "8e7f495f8934b91e860ed9e85893f29bcf432649",
+        "criterion_name": "Optimize cloud performance and cost through infrastructure and data strategies",
+        "level": 5,
+        "confidence": 0.98,
+        "notes": "The candidate provides a clear, detailed definition of microservices and cloud architecture optimization, directly linking it to reduced latency (response time from 1.8s to 400ms) and cost reduction (40% decrease in AWS spending). The example includes specific technologies (AWS ECS, API Gateway, CloudFront, spot instances), measurable outcomes, and operational benefits (60% reduction in incident response time). The impact is quantified, proactive, and tied to cost control and performance optimization beyond basic best practices, meeting the criteria for Level 5 with high confidence due to specificity, measurability, and alignment with the rubric."
+      },
+      {
+        "competency_id": "FS-003",
+        "competency_name": "Technical Leadership and Code Review Excellence",
+        "criterion_id": "63d626dd8ba8d0b125799ce3db9b6dd99ce3b09c",
+        "criterion_name": "Lead technical discussions and conduct effective code reviews",
+        "level": 4,
+        "confidence": 0.98,
+        "notes": "The candidate provides a clear, thoughtful definition of leading technical discussions and effective code reviews, emphasizing facilitation, questioning, and shared ownership. They offer a specific, measurable example with quantified outcomes (55% reduction in critical bugs, 50% faster onboarding). The example includes structured review checklists, rotation of review leadership, and demonstrates impact on both code quality and team dynamics. While the outcome (55% bug reduction) is strong, it falls short of the 40%+ improvement over six months required for Level 5, and there is no explicit mention of mentoring junior engineers. Thus, Level 4 is appropriate\u2014demonstrating facilitation and structured review processes with measurable impact, but not meeting the full scope of Level 5."
+      },
+      {
+        "competency_id": "FS-003",
+        "competency_name": "Technical Leadership and Code Review Excellence",
+        "criterion_id": "dc59057958ff27e4511774b146aa8a96cb9214e9",
+        "criterion_name": "Mentor junior developers and promote team knowledge sharing",
+        "level": 4,
+        "confidence": 0.95,
+        "notes": "The candidate provides a clear definition of mentoring beyond syntax, emphasizing confidence-building, pairing, and knowledge sharing through 'tech snacks.' They offer a specific, measurable example: a junior developer reduced bug reports by 40% and led a code review after mentoring, with new hires contributing in their first sprint. This demonstrates structured knowledge transfer and measurable improvement in team performance and confidence. While the impact (40% reduction) is strong, it falls short of a formal onboarding program with a 50% ramp-up time reduction and retention improvement (Level 5). The evidence supports Level 4, where peer review workshops and knowledge sharing are led, with clear outcomes."
+      },
+      {
+        "competency_id": "FS-003",
+        "competency_name": "Technical Leadership and Code Review Excellence",
+        "criterion_id": "fe75eda956a9996a6f8f7f64a4f46e8316642576",
+        "criterion_name": "Collaborate effectively with product and design teams to shape technical direction",
+        "level": 5,
+        "confidence": 0.98,
+        "notes": "The candidate provides a clear, detailed definition of effective collaboration with product and design teams, emphasizing empathy, co-creation, and alignment with user needs. They offer a specific, measurable example where their actions directly influenced a tangible outcome: a 40% faster onboarding completion and 30% drop in drop-off rates, along with a systemic change (introduction of a 'tech feasibility check' step) adopted by the product team. The example demonstrates leadership in shaping technical direction through data-driven prototype validation and cross-functional alignment, meeting the highest level of the rubric (Level 5) where a measurable improvement in feature adoption is achieved through better integration with user research and design."
+      }
+    ],
+    "wrapup_summary": {
+      "closing_statement": "Sarah Chen demonstrates exceptional full-stack development expertise with a strong command of React, TypeScript, Node.js, and modern cloud architectures. Her work delivers measurable, quantified improvements in performance, reliability, and team velocity across all evaluated domains. While her technical leadership in code reviews and mentoring shows significant impact, it falls slightly short of the highest level due to limited explicit mentoring of junior engineers and absence of a formal onboarding program. Overall, Sarah is a highly capable, results-driven senior software engineer with a proven ability to build scalable, maintainable systems and collaborate effectively across functions.",
+      "key_strengths": [
+        "Demonstrated mastery of responsive and maintainable React components using TypeScript with measurable bug reduction (70%) and improved onboarding.",
+        "Delivered full-stack applications with Node.js/Express, achieving 40% latency reduction and 60% error rate decrease through secure, optimized backend services.",
+        "Significantly improved development velocity and performance using Next.js and Redux Toolkit, reducing load time by 60% and debugging time by 40%.",
+        "Designed and deployed scalable microservices with clear service boundaries, reducing deployment failures by 80% and cutting MTTR from 4 hours to 30 minutes.",
+        "Optimized cloud performance and cost, reducing AWS spending by 40% and response time from 1.8s to 400ms.",
+        "Proven ability to collaborate with product and design teams, resulting in 40% faster onboarding and 30% drop in drop-off rates through data-driven technical decisions."
+      ],
+      "risk_flags": [
+        "Limited explicit evidence of mentoring junior engineers beyond pairing and 'tech snacks', missing key Level 5 expectations for structured onboarding and knowledge transfer.",
+        "Code review leadership shows strong impact (55% reduction in critical bugs), but lacks the scale and depth (e.g., formal mentoring, 50%+ ramp-up time reduction) required for Level 5."
+      ],
+      "next_steps": [
+        "Establish a formal mentoring program with structured onboarding for junior engineers to accelerate ramp-up and improve retention.",
+        "Conduct a retrospective with the team to refine code review processes and expand review checklists to include peer feedback and design alignment.",
+        "Propose a pilot for a standardized 'tech feasibility check' in product sprints to further validate technical decisions and improve cross-functional alignment.",
+        "Explore opportunities to lead a larger-scale refactoring initiative to further enhance code maintainability and reduce long-term technical debt."
+      ]
+    }
+  },
+  {
+    "job_title": "Entry-Level Backend Engineer (Python)",
+    "candidate_name": "AVERY CHEN",
+    "job_description": "Entry-Level Backend Engineer (Python)\n\nWe are hiring a junior Python engineer to support API and data-pipeline delivery for our SaaS analytics platform.\n\nResponsibilities:\n\u2022 Implement REST endpoints with FastAPI or Django.\n\u2022 Maintain PostgreSQL schemas and write optimized SQL queries.\n\u2022 Build background jobs using Celery and Redis queues.\n\u2022 Write unit/integration tests and participate in code reviews.\n\u2022 Document services and deploy through our GitHub Actions pipeline.\n\nRequirements:\n\u2022 B.S. in Computer Science or related field (or equivalent internship experience).\n\u2022 0-1 years of professional software experience with Python.\n\u2022 Familiarity with REST APIs, relational databases, and Git workflows.\n\u2022 Understanding of containerization (Docker) and cloud fundamentals.\n\nNice to have:\n\u2022 Exposure to AWS services (Lambda, RDS, ECS).\n\u2022 Experience with observability tooling (Prometheus, Grafana, Sentry).",
+    "resume": "AVERY CHEN\nPython Backend Engineer\nEmail: avery.chen@example.com | GitHub: github.com/averychen | Boston, MA\n\nSUMMARY\nEntry-level backend engineer with internship experience building REST APIs, automating ETL jobs, and writing tests in FastAPI/Django environments.\n\nEXPERIENCE\nBackend Engineering Intern | Nimbus Analytics | Jan 2024 \u2013 Jun 2024\n\u2022 Built FastAPI endpoints for usage metrics, reducing response time by 25%.\n\u2022 Added Celery task for nightly data reconciliation across PostgreSQL and S3.\n\u2022 Authored pytest suite with >85% coverage integrated into GitHub Actions CI.\n\nPROJECTS\nFleetWatch API \u2013 Containerized microservice exposing telemetry via FastAPI, SQLAlchemy, and Redis caching.\nKnowledge Base Sync \u2013 Automated Confluence to Markdown sync using Python and AWS Lambda.\n\nEDUCATION\nB.S. Computer Science | Northeastern University | 2024\n\nSKILLS\nPython, FastAPI, Django, PostgreSQL, SQLAlchemy, Celery, Redis, Docker, Git, REST, pytest, CI/CD",
+    "competencies": [
+      {
+        "id": "api_design_001",
+        "name": "REST API Design and Implementation",
+        "interview_style": "concept_primer",
+        "rationale": "The candidate has direct experience building FastAPI endpoints and optimizing response times, indicating a need to assess foundational understanding of REST principles, HTTP methods, and endpoint structuring. A concept primer style ensures clarity on design patterns and best practices without overcomplicating the interview."
+      },
+      {
+        "id": "database_optimization_002",
+        "name": "PostgreSQL Schema and Query Optimization",
+        "interview_style": "concept_primer",
+        "rationale": "The candidate has worked with PostgreSQL and written SQL queries in production environments. This competency focuses on schema design, indexing, and query performance\u2014critical for data pipeline reliability. A concept primer allows the interviewer to probe understanding of query execution and database best practices in a structured, non-technical way."
+      },
+      {
+        "id": "background_jobs_003",
+        "name": "Background Task Management with Celery and Redis",
+        "interview_style": "concept_primer",
+        "rationale": "The candidate implemented a Celery task for nightly reconciliation, showing hands-on experience with asynchronous processing. This competency evaluates understanding of task queuing, error handling, and reliability in distributed systems\u2014key for maintaining data consistency in production systems."
+      }
+    ],
+    "rubric": {
+      "candidate_name": "AVERY CHEN",
+      "position": "Entry-Level Backend Engineer (Python)",
+      "evaluation_criteria": [
+        {
+          "category": "REST API Design and Implementation",
+          "criteria": [
+            {
+              "name": "Understands HTTP methods and endpoint structuring",
+              "description": "Can explain when to use GET, POST, PUT, DELETE in context of data operations and structure endpoints for clarity and consistency.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Does not distinguish between HTTP methods; creates endpoints without clear intent or naming conventions.",
+                "Level 1": "Can name basic HTTP methods but does not apply them consistently; endpoints lack clarity or versioning.",
+                "Level 2": "Correctly applies HTTP methods to operations; uses clear, versioned endpoint paths (e.g., /v1/users).",
+                "Level 3": "Applies methods with clear business context; explains rationale for design choices (e.g., why a POST over a GET).",
+                "Level 4": "Designs endpoints with error handling, rate limiting, and versioning in mind; can explain trade-offs in design.",
+                "Level 5": "Proactively designs for scalability, security, and observability; can justify decisions using real-world constraints."
+              }
+            },
+            {
+              "name": "Implements secure and documented REST endpoints",
+              "description": "Demonstrates knowledge of authentication, authorization, and documentation (e.g., OpenAPI) in API design.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "No mention of security or documentation; endpoints are undocumented and lack authentication.",
+                "Level 1": "Includes basic authentication (e.g., Bearer token) but no documentation or error handling.",
+                "Level 2": "Implements authentication and includes OpenAPI or Swagger documentation; explains how to use it.",
+                "Level 3": "Applies authentication and rate limiting; documents error responses and usage patterns.",
+                "Level 4": "Integrates OAuth2 or JWT with clear error handling; documents edge cases and versioning.",
+                "Level 5": "Designs with security and auditability in mind; can explain how to monitor and log API usage."
+              }
+            },
+            {
+              "name": "Optimizes performance and response time through endpoint design",
+              "description": "Applies design patterns (e.g., pagination, caching, batching) to reduce latency and improve scalability.",
+              "weight": 40,
+              "scoring_levels": {
+                "Level 0": "No performance considerations; returns large payloads without pagination or caching.",
+                "Level 1": "Uses basic pagination but does not implement caching; response time is unmeasured.",
+                "Level 2": "Implements pagination and caching (e.g., Redis) with measurable response time reduction (e.g., 25%).",
+                "Level 3": "Designs for efficient data retrieval with batching and query optimization; can explain impact on load.",
+                "Level 4": "Proactively reduces latency by combining related queries or using efficient data structures.",
+                "Level 5": "Anticipates load spikes and designs for horizontal scaling with caching and rate limiting."
+              }
+            }
+          ]
+        },
+        {
+          "category": "PostgreSQL Schema and Query Optimization",
+          "criteria": [
+            {
+              "name": "Designs efficient and normalized PostgreSQL schemas",
+              "description": "Applies normalization and denormalization principles to balance performance and data integrity.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Schemas are ad-hoc; no clear relationships or constraints; leads to data duplication or inconsistency.",
+                "Level 1": "Uses basic tables with primary keys; adds foreign keys but does not enforce referential integrity.",
+                "Level 2": "Applies normalization with clear relationships; uses indexes on frequently queried fields.",
+                "Level 3": "Designs schema with performance and scalability in mind; justifies index placement based on query patterns.",
+                "Level 4": "Balances normalization and denormalization for performance; documents schema decisions.",
+                "Level 5": "Anticipates future data growth and query patterns; designs for read/write efficiency and auditability."
+              }
+            },
+            {
+              "name": "Writes optimized SQL queries for performance and consistency",
+              "description": "Uses indexing, query planning, and execution plans to reduce execution time and avoid bottlenecks.",
+              "weight": 35,
+              "scoring_levels": {
+                "Level 0": "Queries run slowly; no use of indexes; does not analyze execution time or plan.",
+                "Level 1": "Uses basic WHERE clauses; adds indexes but does not analyze performance impact.",
+                "Level 2": "Uses indexes effectively; can explain how query execution time improves with indexing.",
+                "Level 3": "Writes queries with JOINs and subqueries optimized; can explain query plan (e.g., explain analyze).",
+                "Level 4": "Proactively identifies and avoids N+1 queries; uses query caching where appropriate.",
+                "Level 5": "Uses query profiling tools and can explain performance trade-offs in complex joins or aggregations."
+              }
+            },
+            {
+              "name": "Applies indexing and query patterns to improve data pipeline reliability",
+              "description": "Uses schema and query design to ensure data consistency and reduce pipeline failures.",
+              "weight": 35,
+              "scoring_levels": {
+                "Level 0": "No indexing or query optimization; data pipeline fails due to missing or inconsistent data.",
+                "Level 1": "Adds indexes but does not prevent data corruption or race conditions.",
+                "Level 2": "Implements indexes and basic constraints to prevent data anomalies.",
+                "Level 3": "Uses triggers or constraints to maintain data integrity during ETL processes.",
+                "Level 4": "Designs for data consistency across sources (e.g., PostgreSQL to S3); includes error handling in queries.",
+                "Level 5": "Proactively identifies and mitigates data drift or corruption in pipelines with schema versioning."
+              }
+            }
+          ]
+        },
+        {
+          "category": "Background Task Management with Celery and Redis",
+          "criteria": [
+            {
+              "name": "Implements reliable background tasks with error handling",
+              "description": "Configures Celery with retry logic, task monitoring, and failure recovery mechanisms.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "No error handling; tasks fail silently; no retry or logging.",
+                "Level 1": "Uses basic retry logic but no monitoring or logging; no visibility into failures.",
+                "Level 2": "Implements retry with backoff; logs failures and task status in Redis.",
+                "Level 3": "Configures exponential backoff and retry limits; tracks task status in monitoring tools.",
+                "Level 4": "Uses result backpressure and task timeouts; can explain how failures are routed to alerts.",
+                "Level 5": "Designs for fault tolerance with circuit breakers and health checks; integrates with observability tools."
+              }
+            },
+            {
+              "name": "Manages task queues and load balancing effectively",
+              "description": "Scales task processing using Redis queues and Celery with appropriate concurrency and load distribution.",
+              "weight": 35,
+              "scoring_levels": {
+                "Level 0": "Single task runs; no queue management; no load handling.",
+                "Level 1": "Uses Redis as a queue but no load balancing or scaling logic.",
+                "Level 2": "Distributes tasks across multiple workers; uses Redis to manage task flow.",
+                "Level 3": "Configures worker pools and monitors queue depth; can explain load distribution.",
+                "Level 4": "Scales workers based on task volume; uses dynamic worker allocation.",
+                "Level 5": "Designs for peak loads with auto-scaling and task batching to reduce overhead."
+              }
+            },
+            {
+              "name": "Ensures data consistency and idempotency in background jobs",
+              "description": "Designs tasks to be idempotent and ensures data integrity across multiple runs.",
+              "weight": 35,
+              "scoring_levels": {
+                "Level 0": "Tasks can run multiple times and cause data duplication or corruption.",
+                "Level 1": "Tasks are run once; no mechanism to prevent duplicate execution.",
+                "Level 2": "Uses a unique ID or timestamp to prevent duplicates; logs execution history.",
+                "Level 3": "Implements idempotency keys and ensures no data loss on retry; validates output.",
+                "Level 4": "Uses idempotency in production with audit logs and reconciliation checks.",
+                "Level 5": "Designs idempotent tasks with atomic operations and data versioning for auditability."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "id": "f5901ad67a2c47a087c6d2db7eb5284a",
+    "scheduled_date": "2025-10-29T08:04:09.194405Z",
+    "status": "scheduled",
+    "overall_score": null,
+    "score_details": null,
+    "transcript": [],
+    "criterion_results": [],
+    "wrapup_summary": null
   }
 ]

@@ -85,6 +85,77 @@ Responsibilities:
 • Present findings to stakeholders
 • Stay current with ML/AI advancements`,
   },
+  {
+    id: 'entry_python_backend',
+    title: 'Entry-Level Backend Engineer (Python)',
+    description: `Entry-Level Backend Engineer (Python)
+
+We are hiring a junior Python engineer to support API and data-pipeline delivery for our SaaS analytics platform.
+
+Responsibilities:
+• Implement REST endpoints with FastAPI or Django.
+• Maintain PostgreSQL schemas and write optimized SQL queries.
+• Build background jobs using Celery and Redis queues.
+• Write unit/integration tests and participate in code reviews.
+• Document services and deploy through our GitHub Actions pipeline.
+
+Requirements:
+• B.S. in Computer Science or related field (or equivalent internship experience).
+• 0-1 years of professional software experience with Python.
+• Familiarity with REST APIs, relational databases, and Git workflows.
+• Understanding of containerization (Docker) and cloud fundamentals.
+
+Nice to have:
+• Exposure to AWS services (Lambda, RDS, ECS).
+• Experience with observability tooling (Prometheus, Grafana, Sentry).`,
+  },
+  {
+    id: 'entry_data_analyst',
+    title: 'Entry-Level Data Analyst',
+    description: `Entry-Level Data Analyst
+
+Join our business analytics team to turn raw customer-product data into dashboards and action-oriented insights.
+
+Responsibilities:
+• Clean, transform, and validate datasets using SQL and Python (pandas).
+• Build recurring Tableau or Looker dashboards for product and marketing stakeholders.
+• Analyze experiments and cohorts; present findings with clear visuals.
+• Partner with data engineering to improve data quality and documentation.
+
+Requirements:
+• B.S. in Statistics, Economics, Math, or related field.
+• 0-1 years in analytics or internships with SQL-heavy work.
+• Proficiency in SQL plus working knowledge of Python or R.
+• Ability to communicate complex trends to non-technical stakeholders.
+
+Nice to have:
+• Experience with dbt, Snowflake, or BigQuery.
+• Familiarity with A/B testing frameworks and statistical inference.`,
+  },
+  {
+    id: 'entry_data_scientist',
+    title: 'Entry-Level Data Scientist',
+    description: `Entry-Level Data Scientist
+
+We are looking for a junior data scientist to help prototype and productionize ML models that drive personalization and risk mitigation.
+
+Responsibilities:
+• Explore datasets, engineer features, and prototype models (classification/regression) in Python.
+• Evaluate models with appropriate metrics; document trade-offs and limitations.
+• Collaborate with engineering to deploy models via APIs or batch jobs.
+• Monitor model performance, data drift, and retraining pipelines.
+• Present insights and experiment results to cross-functional partners.
+
+Requirements:
+• M.S./B.S. in Computer Science, Data Science, or related quantitative field.
+• 0-1 years of applied ML experience (internships welcome).
+• Strong Python skills (pandas, scikit-learn) and familiarity with TensorFlow or PyTorch.
+• Solid grasp of statistics, experimentation, and version control.
+
+Nice to have:
+• Experience with MLflow, SageMaker, or Kubeflow.
+• Knowledge of cloud services (AWS/GCP/Azure) and containerization.`,
+  },
 ];
 
 export const ResumeOptions = [
@@ -200,5 +271,84 @@ PUBLICATIONS
 • "Attention Mechanisms in Visual Recognition" - CVPR 2020
 • "Efficient Training of Large-Scale Models" - NeurIPS 2019
 • "Transfer Learning for Few-Shot Classification" - ICML 2019`,
+  },
+  {
+    id: 'resume_python_backend',
+    name: 'Sample Resume – Python Backend Engineer',
+    resume: `AVERY CHEN
+Python Backend Engineer
+Email: avery.chen@example.com | GitHub: github.com/averychen | Boston, MA
+
+SUMMARY
+Entry-level backend engineer with internship experience building REST APIs, automating ETL jobs, and writing tests in FastAPI/Django environments.
+
+EXPERIENCE
+Backend Engineering Intern | Nimbus Analytics | Jan 2024 – Jun 2024
+• Built FastAPI endpoints for usage metrics, reducing response time by 25%.
+• Added Celery task for nightly data reconciliation across PostgreSQL and S3.
+• Authored pytest suite with >85% coverage integrated into GitHub Actions CI.
+
+PROJECTS
+FleetWatch API – Containerized microservice exposing telemetry via FastAPI, SQLAlchemy, and Redis caching.
+Knowledge Base Sync – Automated Confluence to Markdown sync using Python and AWS Lambda.
+
+EDUCATION
+B.S. Computer Science | Northeastern University | 2024
+
+SKILLS
+Python, FastAPI, Django, PostgreSQL, SQLAlchemy, Celery, Redis, Docker, Git, REST, pytest, CI/CD`,
+  },
+  {
+    id: 'resume_data_analyst',
+    name: 'Sample Resume – Data Analyst',
+    resume: `JORDAN PATEL
+Data Analyst
+Email: jordan.patel@example.com | Portfolio: datapulse.io/jordan | Austin, TX
+
+SUMMARY
+Entry-level data analyst skilled at translating messy product data into dashboards and statistically sound insights.
+
+EXPERIENCE
+Data Analytics Intern | BrightWave Media | May 2023 – Aug 2023
+• Built SQL pipelines and Tableau dashboards tracking subscription funnel KPIs (+18% visibility).
+• Analyzed marketing A/B tests and recommended targeting adjustments that lifted CTR by 6%.
+• Partnered with product managers to define instrumentation and logging requirements.
+
+PROJECTS
+ChurnSense – Cohort analysis of SaaS churn using Snowflake, dbt, and Tableau.
+RetailSales Insight – Python pandas + Matplotlib project highlighting seasonal trends.
+
+EDUCATION
+B.S. Statistics | University of Texas at Austin | 2024
+
+SKILLS
+SQL, Python (pandas, matplotlib), Tableau, Looker, Excel, dbt, Snowflake, data cleaning, experimentation, stakeholder storytelling`,
+  },
+  {
+    id: 'resume_data_scientist',
+    name: 'Sample Resume – Data Scientist',
+    resume: `NOAH RIVERA
+Data Scientist
+Email: noah.rivera@example.com | LinkedIn: linkedin.com/in/noahrivera | Seattle, WA
+
+SUMMARY
+Entry-level data scientist focused on building and deploying predictive models; experienced with scikit-learn, TensorFlow, and ML Ops fundamentals.
+
+EXPERIENCE
+Data Science Intern | Horizon HealthTech | Jun 2023 – Dec 2023
+• Engineered patient risk features and trained gradient-boosted models (AUC 0.86).
+• Implemented model monitoring dashboards tracking drift and alerting care teams.
+• Collaborated with platform engineers to serve models via Flask and AWS ECS.
+
+PROJECTS
+Delivery ETA Predictor – XGBoost model with MLflow tracking, deployed on AWS Lambda.
+Image Triage CNN – TensorFlow model triaging dermatology cases; documented bias checks.
+
+EDUCATION
+M.S. Data Science | University of Washington | 2024
+B.S. Applied Mathematics | University of Washington | 2022
+
+SKILLS
+Python, pandas, scikit-learn, TensorFlow, PyTorch, SQL, MLflow, AWS, Docker, statistics, experimentation, storytelling`,
   },
 ];

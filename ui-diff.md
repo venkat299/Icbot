@@ -37,6 +37,7 @@
 28. Transcript and evaluation dialogs now lock their headers while the body scrolls using native overflow containers so long content shows a visible scrollbar on all platforms.
 29. Default landing view switched to the scheduled interviews dashboard; setup flow is now reached via the existing “Schedule New Interview” CTA.
 30. Moved back navigation from the scheduled view to the setup header so users return via the create flow instead of the schedule list toolbar.
+31. Added entry-level Python backend, data analyst, and data scientist presets (job descriptions and resumes) to the setup dropdowns for quicker demo scheduling.
 22. Auto candidate reply watcher now keys solely on reply expectation so competency directives trigger auto responses even when rendered as interviewer turns.
 
 ## Detailed Notes
