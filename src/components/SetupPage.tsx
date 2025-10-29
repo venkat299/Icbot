@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { Loader2, CheckCircle2, Sparkles, FileText, Calendar } from 'lucide-react';
+import { Loader2, CheckCircle2, Sparkles, FileText, Calendar, ArrowLeft } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
 import { DummyJD_Placeholder, JobDescriptionOptions, ResumeOptions } from '../test';
@@ -344,6 +344,15 @@ export function SetupPage({ onScheduleInterview, onViewScheduled, hasScheduledIn
           className="mb-6 sm:mb-12"
         >
           <div className="flex items-center justify-between mb-2">
+            <Button
+              onClick={onViewScheduled}
+              variant="ghost"
+              size="icon"
+              className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              title="Back to Scheduled Interviews"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
             <div className="flex items-center gap-3 flex-1 justify-center sm:justify-start">
               <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-gray-600" />
               <h1 className="text-gray-900">AI Interview Setup</h1>

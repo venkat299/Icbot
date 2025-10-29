@@ -4,7 +4,7 @@ import { Badge } from './ui/badge';
 import { Card } from './ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { ScrollArea } from './ui/scroll-area';
-import { Calendar, FileText, FileUser, Play, RotateCcw, Eye, Award, Sparkles, Plus, ArrowLeft, Loader2, AlertTriangle, Trash, MessageSquare } from 'lucide-react';
+import { Calendar, FileText, FileUser, Play, RotateCcw, Eye, Award, Sparkles, Plus, Loader2, AlertTriangle, Trash, MessageSquare } from 'lucide-react';
 
 export interface Competency {
   id: string;
@@ -117,15 +117,6 @@ export function ScheduledInterviews({
         >
           <div className="flex items-center justify-between mb-2 gap-4">
             <div className="flex items-center gap-3">
-              <Button
-                onClick={onScheduleNew}
-                variant="ghost"
-                size="icon"
-                className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                title="Back to Setup"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </Button>
               <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-gray-600" />
               <h1 className="text-gray-900">Scheduled Interviews</h1>
             </div>
@@ -599,36 +590,40 @@ export function ScheduledInterviews({
                                 Transcript
                               </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-3xl max-h-[80vh]">
-                              <DialogHeader>
-                                <DialogTitle>Interview Transcript</DialogTitle>
-                                <DialogDescription>
-                                  Conversation history for {interview.candidateName}
-                                </DialogDescription>
-                              </DialogHeader>
-                              <ScrollArea className="h-[520px] pr-4">
-                                {interview.transcript && interview.transcript.length > 0 ? (
-                                  <div className="space-y-3 text-sm text-gray-800">
-                                    {interview.transcript.map((entry, index) => (
-                                      <div
-                                        key={`${entry.role}-${index}`}
-                                        className="bg-white/80 border border-gray-200/60 rounded-lg p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
-                                      >
-                                        <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">
-                                          {entry.role === 'interviewer' ? 'Interviewer' : 'Candidate'}
-                                        </div>
-                                        <p className="leading-relaxed text-gray-800 whitespace-pre-wrap">
-                                          {entry.text}
-                                        </p>
+                            <DialogContent className="max-w-3xl max-h-[80vh] overflow-hidden p-0">
+                              <div className="flex h-full max-h-[80vh] flex-col">
+                                <DialogHeader className="px-6 pt-6 pb-3">
+                                  <DialogTitle>Interview Transcript</DialogTitle>
+                                  <DialogDescription>
+                                    Conversation history for {interview.candidateName}
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <div className="flex-1 min-h-0 overflow-y-auto px-6 pb-6">
+                                  <div className="pr-4">
+                                    {interview.transcript && interview.transcript.length > 0 ? (
+                                      <div className="space-y-3 text-sm text-gray-800">
+                                        {interview.transcript.map((entry, index) => (
+                                          <div
+                                            key={`${entry.role}-${index}`}
+                                            className="bg-white/80 border border-gray-200/60 rounded-lg p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
+                                          >
+                                            <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">
+                                              {entry.role === 'interviewer' ? 'Interviewer' : 'Candidate'}
+                                            </div>
+                                            <p className="leading-relaxed text-gray-800 whitespace-pre-wrap">
+                                              {entry.text}
+                                            </p>
+                                          </div>
+                                        ))}
                                       </div>
-                                    ))}
+                                    ) : (
+                                      <div className="text-sm text-gray-600">
+                                        Transcript storage is not available yet for this interview.
+                                      </div>
+                                    )}
                                   </div>
-                                ) : (
-                                  <div className="text-sm text-gray-600">
-                                    Transcript storage is not available yet for this interview.
-                                  </div>
-                                )}
-                              </ScrollArea>
+                                </div>
+                              </div>
                             </DialogContent>
                           </Dialog>
 
@@ -648,105 +643,109 @@ export function ScheduledInterviews({
                                 Evaluation
                               </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-3xl max-h-[80vh]">
-                              <DialogHeader>
-                                <DialogTitle>Evaluation Report</DialogTitle>
-                                <DialogDescription>
-                                  Summary reporting for the completed interview.
-                                </DialogDescription>
-                              </DialogHeader>
-                              <ScrollArea className="h-[520px] pr-4">
-                                <div className="text-sm text-gray-800 space-y-4">
-                                  {interview.wrapupSummary ? (
-                                    <div className="bg-white/80 border border-gray-200/60 rounded-lg p-4 shadow-[0_1px_4px_rgba(0,0,0,0.04)] space-y-3">
-                                      <h4 className="text-xs uppercase tracking-wide text-gray-500">Wrap-up Summary</h4>
-                                      <p className="text-gray-800 whitespace-pre-wrap">{interview.wrapupSummary.closingStatement}</p>
-                                      {interview.wrapupSummary.keyStrengths.length > 0 && (
-                                        <div>
-                                          <h5 className="text-xs font-semibold text-gray-600 mb-1">Key Strengths</h5>
-                                          <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
-                                            {interview.wrapupSummary.keyStrengths.map((item, idx) => (
-                                              <li key={`strength-${idx}`}>{item}</li>
-                                            ))}
-                                          </ul>
-                                        </div>
-                                      )}
-                                      {interview.wrapupSummary.riskFlags.length > 0 && (
-                                        <div>
-                                          <h5 className="text-xs font-semibold text-gray-600 mb-1">Risks</h5>
-                                          <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
-                                            {interview.wrapupSummary.riskFlags.map((item, idx) => (
-                                              <li key={`risk-${idx}`}>{item}</li>
-                                            ))}
-                                          </ul>
-                                        </div>
-                                      )}
-                                      {interview.wrapupSummary.nextSteps.length > 0 && (
-                                        <div>
-                                          <h5 className="text-xs font-semibold text-gray-600 mb-1">Suggested Next Steps</h5>
-                                          <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
-                                            {interview.wrapupSummary.nextSteps.map((item, idx) => (
-                                              <li key={`step-${idx}`}>{item}</li>
-                                            ))}
-                                          </ul>
-                                        </div>
-                                      )}
-                                    </div>
-                                  ) : (
-                                    <p className="text-sm text-gray-600">
-                                      Evaluation summaries are not available yet for this interview.
-                                    </p>
-                                  )}
-
-                                  {interview.criterionResults && interview.criterionResults.length > 0 && (
-                                    <div className="space-y-3">
-                                      <h4 className="text-xs uppercase tracking-wide text-gray-500">Criterion Results</h4>
-                                      {interview.criterionResults.map((result, idx) => (
-                                        <div
-                                          key={`${result.criterionId}-${idx}`}
-                                          className="bg-white/80 border border-gray-200/60 rounded-lg p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
-                                        >
-                                          <div className="text-xs text-gray-500 mb-1">
-                                            {result.competencyName}
-                                          </div>
-                                          <div className="text-sm text-gray-800 font-medium">
-                                            {result.criterionName}
-                                          </div>
-                                          <div className="text-xs text-gray-600 mt-1">
-                                            Level: {result.level ?? 'pending'} • Confidence: {result.confidence !== undefined ? result.confidence.toFixed(2) : 'n/a'}
-                                          </div>
-                                          {result.notes && (
-                                            <div className="text-xs text-gray-600 mt-2 whitespace-pre-wrap">
-                                              {result.notes}
+                            <DialogContent className="max-w-3xl max-h-[80vh] overflow-hidden p-0">
+                              <div className="flex h-full max-h-[80vh] flex-col">
+                                <DialogHeader className="px-6 pt-6 pb-3">
+                                  <DialogTitle>Evaluation Report</DialogTitle>
+                                  <DialogDescription>
+                                    Summary reporting for the completed interview.
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <div className="flex-1 min-h-0 overflow-y-auto px-6 pb-6">
+                                  <div className="pr-4">
+                                    <div className="text-sm text-gray-800 space-y-4">
+                                      {interview.wrapupSummary ? (
+                                        <div className="bg-white/80 border border-gray-200/60 rounded-lg p-4 shadow-[0_1px_4px_rgba(0,0,0,0.04)] space-y-3">
+                                          <h4 className="text-xs uppercase tracking-wide text-gray-500">Wrap-up Summary</h4>
+                                          <p className="text-gray-800 whitespace-pre-wrap">{interview.wrapupSummary.closingStatement}</p>
+                                          {interview.wrapupSummary.keyStrengths.length > 0 && (
+                                            <div>
+                                              <h5 className="text-xs font-semibold text-gray-600 mb-1">Key Strengths</h5>
+                                              <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
+                                                {interview.wrapupSummary.keyStrengths.map((item, idx) => (
+                                                  <li key={`strength-${idx}`}>{item}</li>
+                                                ))}
+                                              </ul>
+                                            </div>
+                                          )}
+                                          {interview.wrapupSummary.riskFlags.length > 0 && (
+                                            <div>
+                                              <h5 className="text-xs font-semibold text-gray-600 mb-1">Risks</h5>
+                                              <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
+                                                {interview.wrapupSummary.riskFlags.map((item, idx) => (
+                                                  <li key={`risk-${idx}`}>{item}</li>
+                                                ))}
+                                              </ul>
+                                            </div>
+                                          )}
+                                          {interview.wrapupSummary.nextSteps.length > 0 && (
+                                            <div>
+                                              <h5 className="text-xs font-semibold text-gray-600 mb-1">Suggested Next Steps</h5>
+                                              <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
+                                                {interview.wrapupSummary.nextSteps.map((item, idx) => (
+                                                  <li key={`step-${idx}`}>{item}</li>
+                                                ))}
+                                              </ul>
                                             </div>
                                           )}
                                         </div>
-                                      ))}
-                                    </div>
-                                  )}
+                                      ) : (
+                                        <p className="text-sm text-gray-600">
+                                          Evaluation summaries are not available yet for this interview.
+                                        </p>
+                                      )}
 
-                                  {typeof interview.overallScore === 'number' && (
-                                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
-                                      <h4 className="text-xs uppercase tracking-wide text-gray-500 mb-2">Overall Score</h4>
-                                      <p className="text-sm text-gray-800">{interview.overallScore}</p>
-                                    </div>
-                                  )}
+                                      {interview.criterionResults && interview.criterionResults.length > 0 && (
+                                        <div className="space-y-3">
+                                          <h4 className="text-xs uppercase tracking-wide text-gray-500">Criterion Results</h4>
+                                          {interview.criterionResults.map((result, idx) => (
+                                            <div
+                                              key={`${result.criterionId}-${idx}`}
+                                              className="bg-white/80 border border-gray-200/60 rounded-lg p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
+                                            >
+                                              <div className="text-xs text-gray-500 mb-1">
+                                                {result.competencyName}
+                                              </div>
+                                              <div className="text-sm text-gray-800 font-medium">
+                                                {result.criterionName}
+                                              </div>
+                                              <div className="text-xs text-gray-600 mt-1">
+                                                Level: {result.level ?? 'pending'} • Confidence: {result.confidence !== undefined ? result.confidence.toFixed(2) : 'n/a'}
+                                              </div>
+                                              {result.notes && (
+                                                <div className="text-xs text-gray-600 mt-2 whitespace-pre-wrap">
+                                                  {result.notes}
+                                                </div>
+                                              )}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
 
-                                  {interview.scoreDetails && interview.scoreDetails.length > 0 && (
-                                    <div className="bg-white/80 border border-gray-200/60 rounded-lg p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
-                                      <h4 className="text-xs uppercase tracking-wide text-gray-500 mb-2">Score Details</h4>
-                                      <div className="text-xs text-gray-700 space-y-1">
-                                        {interview.scoreDetails.map(detail => (
-                                          <div key={detail.criteria}>
-                                            <span className="font-medium text-gray-700">{detail.criteria}</span>: {detail.score}
-                                            {detail.feedback ? ` – ${detail.feedback}` : ''}
+                                      {typeof interview.overallScore === 'number' && (
+                                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                                          <h4 className="text-xs uppercase tracking-wide text-gray-500 mb-2">Overall Score</h4>
+                                          <p className="text-sm text-gray-800">{interview.overallScore}</p>
+                                        </div>
+                                      )}
+
+                                      {interview.scoreDetails && interview.scoreDetails.length > 0 && (
+                                        <div className="bg-white/80 border border-gray-200/60 rounded-lg p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+                                          <h4 className="text-xs uppercase tracking-wide text-gray-500 mb-2">Score Details</h4>
+                                          <div className="text-xs text-gray-700 space-y-1">
+                                            {interview.scoreDetails.map(detail => (
+                                              <div key={detail.criteria}>
+                                                <span className="font-medium text-gray-700">{detail.criteria}</span>: {detail.score}
+                                                {detail.feedback ? ` – ${detail.feedback}` : ''}
+                                              </div>
+                                            ))}
                                           </div>
-                                        ))}
-                                      </div>
+                                        </div>
+                                      )}
                                     </div>
-                                  )}
+                                  </div>
                                 </div>
-                              </ScrollArea>
+                              </div>
                             </DialogContent>
                           </Dialog>
                         </div>

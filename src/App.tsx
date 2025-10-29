@@ -76,7 +76,7 @@ interface ApiScheduledInterview {
 }
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<AppView>('setup');
+  const [currentView, setCurrentView] = useState<AppView>('scheduled');
   const [scheduledInterviews, setScheduledInterviews] = useState<ScheduledInterview[]>([]);
   const [currentInterviewId, setCurrentInterviewId] = useState<string | null>(null);
   const [isLoadingInterviews, setIsLoadingInterviews] = useState(true);
