@@ -35,8 +35,17 @@ def render_report_pdf(report: InterviewReport) -> bytes:  # Builds a PDF for the
 
 
 def _sanitize_text(value: str, limit: int = 90) -> str:  # Breaks long tokens to fit PDF width.
+    normalized = (
+        value.replace("•", "-")
+        .replace("–", "-")
+        .replace("—", "-")
+        .replace("’", "'")
+        .replace("“", '"')
+        .replace("”", '"')
+        .encode("ascii", "ignore").decode("ascii")
+    )
     parts: list[str] = []
-    for token in re.split(r"(\s+)", value):
+    for token in re.split(r"(\s+)", normalized):
         if not token or token.isspace():
             parts.append(token)
             continue

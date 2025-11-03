@@ -318,13 +318,29 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
 
     async def _build_wrapup_message(self, state: InterviewSessionState, include_fallback: bool) -> tuple[SessionMessage | None, WrapupSummary | None]:  # Generates the wrap-up summary message and structured data.
         if not state.criteria:
-            if include_fallback:
-                return SessionMessage(
-                    role="system",
-                    text="Interview wrap-up complete. You may proceed to evaluation.",
-                    expect_candidate_reply=False,
-                ), None
-            return None, None
+            request = WrapupRequest(
+                candidate_name=state.interview.candidate_name,
+                job_title=state.interview.job_title,
+                competencies=[],
+            )
+            summary = WrapupSummary(closing_statement="Interview wrap-up", key_strengths=[], risk_flags=[], next_steps=[])
+            try:
+                closing = await self._wrapup_agent.closing(request, summary, "No criterion results recorded.")
+                text = closing.closing_message.strip()
+            except Exception as exc:
+                logger.exception("Failed to generate wrap-up closing without criteria | session_id=%s", state.session_id, exc_info=exc)
+                if include_fallback:
+                    return SessionMessage(
+                        role="system",
+                        text="Thank you for your time today. If you have any feedback for us, we’d love to hear it.",
+                        expect_candidate_reply=False,
+                    ), summary
+                return None, None
+            return SessionMessage(
+                role="system",
+                text=text,
+                expect_candidate_reply=False,
+            ), summary
 
         request, results = self._compose_wrapup_payload(state)
         try:
@@ -339,17 +355,16 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
                 ), None
             return None, None
 
-        parts: list[str] = [summary.closing_statement.strip()]
-        if summary.key_strengths:
-            strengths = "\n".join(f"- {item}" for item in summary.key_strengths)
-            parts.append(f"Key strengths:\n{strengths}")
-        if summary.risk_flags:
-            risks = "\n".join(f"- {item}" for item in summary.risk_flags)
-            parts.append(f"Risks:\n{risks}")
-        if summary.next_steps:
-            steps = "\n".join(f"- {item}" for item in summary.next_steps)
-            parts.append(f"Suggested next steps:\n{steps}")
-        text = "\n\n".join(part for part in parts if part.strip())
+        try:
+            closing = await self._wrapup_agent.closing(request, summary, results)
+            text = closing.closing_message.strip()
+        except Exception as exc:
+            logger.exception("Failed to generate wrap-up closing | session_id=%s", state.session_id, exc_info=exc)
+            text = (
+                "That concludes our interview. Thank you for spending this time with me today. "
+                "If you have any feedback or final thoughts you'd like to share, I'm all ears. "
+                "Thanks again for the great conversation!"
+            )
         metadata = {
             "key_strengths": "|".join(summary.key_strengths),
             "risk_flags": "|".join(summary.risk_flags),
@@ -484,7 +499,7 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
             messages.append(
                 SessionMessage(
                     role="system",
-                    text="Interview wrap-up complete. You may proceed to evaluation.",
+                    text="That concludes our interview. Thank you for spending this time with me today. If you have any feedback or final thoughts you'd like to share, I'm all ears. Thanks again for the great conversation!",
                     expect_candidate_reply=False,
                 )
             )

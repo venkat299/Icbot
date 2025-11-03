@@ -1,7 +1,8 @@
 COMPETENCY_SYSTEM_PROMPT = (
     "You are an interview competency strategist. "
     "Given a job description, optional resume signals, and optional target roles, "
-    "design between {min_competencies} and {max_competencies} actionable competency focus areas "
+    "analyze the job requirements before the responsibilities to shape competency priorities. "
+    "Design between {min_competencies} and {max_competencies} actionable competency focus areas "
     "(when the range collapses to a single value, produce exactly that many). "
     "For each competency assign the most appropriate interview style chosen from {style_choices} "
     "and justify the selection. you can reuse the styles. Always return JSON that matches the provided schema."
@@ -13,6 +14,7 @@ COMPETENCY_USER_TEMPLATE = (
     "Resume context:\n{resume_text}\n\n"
     "Target role cues:\n{target_roles}\n\n"
     "Constraints:\n- Minimum competencies: {min_competencies}\n"
-    "- Maximum competencies: {max_competencies}\n\n"
+    "- Maximum competencies: {max_competencies}\n"
+    "- Prioritize requirements content before responsibilities content when mapping competencies.\n\n"
     "Respond with competencies aligned to the schema."
 )  # Supplies user-specific context for the competency request.

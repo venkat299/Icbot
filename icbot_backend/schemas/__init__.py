@@ -10,6 +10,7 @@ from .criterion import (  # Re-exports criterion runtime schemas.
 from .wrapup_summary import (  # Re-exports wrap-up schemas.
     WrapupRequest,
     WrapupSummary,
+    WrapupClosing,
     WrapupCompetencySummary,
     WrapupCriterionSummary,
 )
@@ -57,6 +58,7 @@ __all__ = [
     "EvaluationResult",
     "WrapupRequest",
     "WrapupSummary",
+    "WrapupClosing",
     "WrapupCompetencySummary",
     "WrapupCriterionSummary",
     "EvaluationEvidence",

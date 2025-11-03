@@ -65,6 +65,10 @@
         "route": "qwen3-4b-local",
         "schema_path": "icbot_backend.schemas.wrapup_summary.WrapupSummary"
       },
+      "wrapup.closing": {
+        "route": "qwen3-4b-local",
+        "schema_path": "icbot_backend.schemas.wrapup_summary.WrapupClosing"
+      },
       "styles.directive": {
         "route": "qwen3-4b-local",
         "schema_path": "icbot_backend.styles.base.DirectiveSchema"

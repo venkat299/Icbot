@@ -21,6 +21,22 @@
                         "Probe for trade-offs or constraints if the first answer omits them."
                     ],
                     "response_shape": "Spoken response linking definition, example, and measurable impact in under two minutes."
+                },
+                "reasoning_probe": {
+                    "task_id": "reasoning_probe",
+                    "objective": "Follow up with a reasoning check that requires the candidate to explain verifiable cause-and-effect, calculations, or decision logic tied to the criterion.",
+                    "rubric_focus": [],
+                    "evidence_tags": [
+                        "reasoning",
+                        "validation",
+                        "logic"
+                    ],
+                    "interviewer_actions": [
+                        "Introduce a lightweight scenario or data point and ask the candidate to reason through the expected outcome.",
+                        "Request the candidate to reference specific metrics, safeguards, or equations that can be checked for accuracy.",
+                        "Ask the candidate to contrast two approaches and justify which is more appropriate under explicit constraints."
+                    ],
+                    "response_shape": "Short, structured reasoning that cites concrete facts, metrics, or decision rules the evaluator can quickly verify."
                 }
             },
             "stages": [
@@ -31,14 +47,16 @@
                     "goal": "Ask a single targeted question per rubric criterion with optional follow-up cues.",
                     "tone": "Direct and encouraging",
                     "task_sequence": [
-                        "criterion_probe"
+                        "criterion_probe",
+                        "reasoning_probe"
                     ],
-                    "max_directives": 1,
+                    "max_directives": 2,
                     "persona_hint": "Staff engineer confirming shared understanding before diving deeper.",
                     "controls": {
                         "mode": "probe",
                         "task_catalog": [
-                            "criterion_probe"
+                            "criterion_probe",
+                            "reasoning_probe"
                         ]
                     }
                 }

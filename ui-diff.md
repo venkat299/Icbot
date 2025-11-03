@@ -49,6 +49,7 @@
 39. Interview report now renders highlights, attachments, and LLM metadata for transparency.
 40. Enabled PDF export for reports with backend streaming endpoint and frontend download controls.
 41. Interviewer sidebar now streams live evaluation status, directive objectives, scoring levels, and manual replies even with auto-reply disabled.
+42. Wrap-up messaging is now LLM-generated, thanking the candidate and inviting feedback, while the flow offers supportive hints when the candidate asks for help.
 
 ## Detailed Notes
 
@@ -80,6 +81,7 @@
 
 ### app_config.json
 - Consolidates UI behavior under the `ui` block (TTS default off per request) and removes the redundant `features` object so there is a single source of truth for auto-reply toggles.
+- Registers `wrapup.closing` so the wrap-up agent can generate LLM-driven farewell messages.
 
 ### icbot_backend/config.py
 - Drops the unused `FeatureFlags` model and surfaces the UI defaults exclusively through `UiConfig`, keeping the runtime schema aligned with `app_config.json`.
@@ -145,6 +147,14 @@
 
 ### icbot_backend/interview_sessions/manager.py
 - Computes sidebar snapshots from live session state and includes them on every response.
+- Detects candidate uncertainty and injects supportive guidance prompts before re-scoring.
+- Uses the wrap-up LLM closing prompt to deliver the thank-you/feedback message instead of a hardcoded string.
+
+### icbot_backend/agents/wrapup_agent.py
+- Adds a closing-message chain that reuses the configured LLM route and produces JSON-formatted farewells.
+
+### icbot_backend/prompts/wrapup.py
+- Adds dedicated closing message prompts that instruct the LLM to thank the candidate and invite feedback.
 
 ### src/components/ScheduledInterviews.tsx
 - Adds a View Report button beside Evaluation, triggering the backend report fetch for the selected interview.

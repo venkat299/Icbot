@@ -29,3 +29,7 @@ class WrapupSummary(BaseModel):  # Structured wrap-up response.
     key_strengths: list[str] = Field(default_factory=list)
     risk_flags: list[str] = Field(default_factory=list)
     next_steps: list[str] = Field(default_factory=list)
+
+
+class WrapupClosing(BaseModel):  # Holds the closing message delivered to the candidate.
+    closing_message: str = Field(..., min_length=1)
