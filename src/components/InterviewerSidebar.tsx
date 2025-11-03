@@ -1,6 +1,8 @@
 import { motion } from 'motion/react';
+import { useCallback } from 'react';
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
+import { Switch } from './ui/switch';
 import { AlertCircle, TrendingUp } from 'lucide-react';
 interface CriteriaItem {
   name: string;
@@ -15,6 +17,8 @@ interface InterviewerSidebarProps {
   criteria?: CriteriaItem[];
   scoreNotes?: string;
   redFlags?: string[];
+  autoReplyEnabled?: boolean;
+  onToggleAutoReply?: (enabled: boolean) => void;
 }
 
 export function InterviewerSidebar({
@@ -24,6 +28,8 @@ export function InterviewerSidebar({
   criteria = [],
   scoreNotes = 'No evaluation notes yet.',
   redFlags = [],
+  autoReplyEnabled = false,
+  onToggleAutoReply,
 }: InterviewerSidebarProps) {
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-gray-900';
@@ -38,6 +44,13 @@ export function InterviewerSidebar({
     if (num >= 3) return 'bg-gray-100 text-gray-700 border-gray-200';
     return 'bg-gray-50 text-gray-600 border-gray-200';
   };
+
+  const handleAutoReplyChange = useCallback(
+    (checked: boolean) => {
+      onToggleAutoReply?.(checked);
+    },
+    [onToggleAutoReply],
+  ); // Bridges toggle events to parent.
 
   return (
     <motion.div
@@ -58,6 +71,22 @@ export function InterviewerSidebar({
       <div className="p-6 border-b border-gray-200/50 shrink-0">
         <h3 className="text-gray-900 mb-1">Interviewer View</h3>
         <p className="text-xs text-gray-500">Live evaluation data</p>
+        {onToggleAutoReply && (
+          <div
+            className="
+              mt-4 flex items-center justify-between rounded-xl
+              bg-white/80 border border-gray-200/60 px-3 py-2
+              shadow-[0_2px_12px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.7)]
+            "
+          >
+            <span className="text-xs text-gray-600">Auto candidate replies</span>
+            <Switch
+              checked={autoReplyEnabled}
+              onCheckedChange={handleAutoReplyChange}
+              className="shadow-[0_1px_4px_rgba(0,0,0,0.1)]"
+            />
+          </div>
+        )}
       </div>
 
       <ScrollArea className="flex-1 h-full">

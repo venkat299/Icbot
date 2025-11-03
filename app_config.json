@@ -4,7 +4,29 @@
       "qwen3-4b-local": {
         "provider": "openai",
         "model": "qwen/qwen3-4b-2507",
-        "base_url": "http://192.168.0.168:1234/v1",
+        "base_url": "http://localhost:1234/v1",
+        "endpoint": "/v1/chat/completions",
+        "timeout_seconds": 60,
+        "max_retries": 2,
+        "api_key_env": "LLM_API_KEY",
+        "requires_api_key": false,
+        "enforce_json": false
+      },
+      "phi-4": {
+        "provider": "openai",
+        "model": "microsoft/phi-4",
+        "base_url": "http://localhost:1234/v1",
+        "endpoint": "/v1/chat/completions",
+        "timeout_seconds": 60,
+        "max_retries": 2,
+        "api_key_env": "LLM_API_KEY",
+        "requires_api_key": false,
+        "enforce_json": false
+      },
+      "qwen3-human": {
+        "provider": "openai",
+        "model": "qwen3-deckard-large-almost-human-6b-iii-150-i1",
+        "base_url": "http://localhost:1234/v1",
         "endpoint": "/v1/chat/completions",
         "timeout_seconds": 60,
         "max_retries": 2,
@@ -13,37 +35,38 @@
         "enforce_json": false
       }
     },
+    
     "registry": {
       "rubric.generate": {
-        "route": "qwen3-4b-local",
+        "route": "phi-4",
         "schema_path": "icbot_backend.schemas.rubric.RubricModel"
       },
       "competency.generate": {
-        "route": "qwen3-4b-local",
+        "route": "phi-4",
         "schema_path": "icbot_backend.schemas.competency.CompetencyPlan"
       },
       "warmup.opening": {
-        "route": "qwen3-4b-local",
+        "route": "qwen3-human",
         "schema_path": "icbot_backend.schemas.warmup.WarmupTurn"
       },
       "candidate.reply": {
-        "route": "qwen3-4b-local",
+        "route": "qwen3-human",
         "schema_path": "candidate_service.schemas.CandidateReply"
       },
       "evaluation.score": {
-        "route": "qwen3-4b-local",
+        "route": "phi-4",
         "schema_path": "icbot_backend.schemas.evaluation.EvaluationVerdict"
       },
       "evaluation.criterion": {
-        "route": "qwen3-4b-local",
+        "route": "phi-4",
         "schema_path": "icbot_backend.schemas.criterion.EvaluationResult"
       },
       "wrapup.summary": {
-        "route": "qwen3-4b-local",
+        "route": "phi-4",
         "schema_path": "icbot_backend.schemas.wrapup_summary.WrapupSummary"
       },
       "styles.directive": {
-        "route": "qwen3-4b-local",
+        "route": "phi-4",
         "schema_path": "icbot_backend.styles.base.DirectiveSchema"
       }
     }

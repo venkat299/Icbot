@@ -56,6 +56,7 @@ export function Chatbot({
 }: ChatbotProps) { // Orchestrates chat UI backed by backend session flow.
   const [messages, setMessages] = useState<Message[]>([]); // Chat transcript state.
   const [ttsEnabled, setTtsEnabled] = useState(initialTtsEnabled); // Tracks text-to-speech toggle.
+  const [autoReplyOn, setAutoReplyOn] = useState(autoReplyEnabled); // Tracks auto candidate reply toggle.
   const [isSpeaking, setIsSpeaking] = useState(false); // Indicates active speech synthesis.
   const [status, setStatus] = useState<ChatStatus>('thinking'); // Reflects assistant status indicator.
   const [sessionId, setSessionId] = useState<string | null>(null); // Holds active session identifier.
@@ -73,12 +74,18 @@ export function Chatbot({
   const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const fallbackSidebar = useMemo<SidebarSnapshot>(() => ({
-    overallScore: 0,
+    overallScore: null,
     currentCompetency: interview?.competencies?.[0]?.name ?? 'Competency',
+    currentCriterion: null,
     interviewStyle: interview?.competencies?.[0]?.interviewStyle ?? 'Style',
     criteria: [],
     scoreNotes: 'No evaluation notes yet.',
     redFlags: [],
+    directiveObjective: null,
+    scoringLevels: {},
+    evaluationStatus: 'pending',
+    proficiencyLevel: null,
+    confidence: null,
   }), [interview]); // Provides stable sidebar defaults.
 
   const sidebarData = sidebarSnapshot ?? fallbackSidebar;
@@ -107,6 +114,22 @@ export function Chatbot({
   useEffect(() => {
     messagesRef.current = messages;
   }, [messages]);
+
+  useEffect(() => {
+    setAutoReplyOn(autoReplyEnabled);
+  }, [autoReplyEnabled]);
+
+  const handleAutoReplyToggle = useCallback(
+    (enabled: boolean) => {
+      setAutoReplyOn(enabled);
+      if (!enabled) {
+        autoReplyInFlightRef.current = false;
+        setStatus('waiting for answer');
+      }
+    },
+    [setStatus],
+  ); // Resets state when interviewer disables auto replies.
+
 
   const stopSpeaking = useCallback(() => {
     window.speechSynthesis.cancel();
@@ -332,6 +355,11 @@ export function Chatbot({
       if (!trimmedText) {
         return;
       }
+      const pendingPrompt = [...messagesRef.current].reverse().find(message => message.expectCandidateReply);
+      if (pendingPrompt && !autoReplyOn && !options?.skipAutoReply) {
+        await handleCandidateReply(trimmedText);
+        return;
+      }
       const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const userMessage: Message = {
         id: Date.now().toString(),
@@ -354,11 +382,11 @@ export function Chatbot({
         setStatus('waiting for answer');
         return;
       }
-      if (!autoReplyEnabled) {
+      if (!autoReplyOn) {
         setStatus('waiting for answer');
         return;
       }
-      const prompt = [...messagesRef.current].reverse().find(message => message.expectCandidateReply);
+      const prompt = pendingPrompt;
       if (!prompt) {
         setStatus('waiting for answer');
         return;
@@ -391,7 +419,7 @@ export function Chatbot({
       }
     },
     [
-      autoReplyEnabled,
+      autoReplyOn,
       buildCandidatePersona,
       handleCandidateReply,
       mapConversationEntries,
@@ -402,7 +430,7 @@ export function Chatbot({
   ); // Handles interviewer messages and optionally triggers auto candidate replies.
 
   useEffect(() => {
-    if (!autoReplyEnabled || !sessionId) {
+    if (!autoReplyOn || !sessionId) {
       return;
     }
     const prompt = [...messages].reverse().find(message => message.expectCandidateReply);
@@ -438,7 +466,7 @@ export function Chatbot({
     };
     void respond();
   }, [
-    autoReplyEnabled,
+    autoReplyOn,
     buildCandidatePersona,
     handleCandidateReply,
     mapConversationEntries,
@@ -537,9 +565,11 @@ export function Chatbot({
               )}
             </div>
 
-            <div className="px-4 sm:px-6 pb-3 bg-white/50 shrink-0">
-              <InterviewProgress currentStage={currentStage} competencyNumber={competencyNumber} totalCompetencies={totalCompetencies} />
-            </div>
+            {!isInterviewerView && (
+              <div className="px-4 sm:px-6 pb-3 bg-white/50 shrink-0">
+                <InterviewProgress currentStage={currentStage} competencyNumber={competencyNumber} totalCompetencies={totalCompetencies} />
+              </div>
+            )}
 
             <div className="flex-1 overflow-y-auto px-6 py-8 scroll-smooth">
               <div className="relative max-w-5xl mx-auto">
@@ -573,7 +603,14 @@ export function Chatbot({
             </div>
 
             <div className="p-6 pt-4 shrink-0">
-              <ChatInput onSendMessage={handleSendMessage} onListeningChange={isListening => setStatus(isListening ? 'listening' : 'waiting for answer')} />
+              <ChatInput
+                onSendMessage={
+                  isInterviewerView
+                    ? (value) => { void handleSendMessage(value); }
+                    : (value) => { void handleCandidateReply(value); }
+                }
+                onListeningChange={isListening => setStatus(isListening ? 'listening' : 'waiting for answer')}
+              />
             </div>
           </div>
         </ResizablePanel>
@@ -585,10 +622,21 @@ export function Chatbot({
               <InterviewerSidebar
                 overallScore={sidebarData.overallScore}
                 currentCompetency={sidebarData.currentCompetency}
+                currentCriterion={sidebarData.currentCriterion ?? undefined}
                 interviewStyle={sidebarData.interviewStyle}
                 criteria={sidebarData.criteria}
                 scoreNotes={sidebarData.scoreNotes}
                 redFlags={sidebarData.redFlags}
+                directiveObjective={sidebarData.directiveObjective ?? undefined}
+                scoringLevels={sidebarData.scoringLevels ?? {}}
+                evaluationStatus={sidebarData.evaluationStatus ?? 'pending'}
+                proficiencyLevel={sidebarData.proficiencyLevel ?? null}
+                confidence={sidebarData.confidence ?? null}
+                autoReplyEnabled={autoReplyOn}
+                onToggleAutoReply={handleAutoReplyToggle}
+                currentStage={currentStage}
+                competencyNumber={competencyNumber}
+                totalCompetencies={totalCompetencies}
               />
             </ResizablePanel>
           </>

@@ -19,6 +19,7 @@ export interface InterviewSessionResponse {
   messages: SessionMessage[];
   done: boolean;
   competencyId?: string | null;
+  sidebar?: SidebarSnapshot | null;
 }
 
 export type SessionEventType = 'interviewer_message' | 'candidate_reply';
@@ -30,15 +31,23 @@ export interface SessionEventRequest {
 
 export interface SidebarCriteriaItem {
   name: string;
-  level: string;
+  level?: number | null;
+  confidence?: number | null;
+  status?: 'pending' | 'in_progress' | 'follow_up' | 'complete';
   maxLevel: number;
 }
 
 export interface SidebarSnapshot {
-  overallScore: number;
+  overallScore: number | null;
   currentCompetency: string;
+  currentCriterion?: string | null;
   interviewStyle: string;
   criteria: SidebarCriteriaItem[];
   scoreNotes: string;
   redFlags: string[];
+  directiveObjective?: string | null;
+  scoringLevels?: Record<string, string>;
+  evaluationStatus?: 'pending' | 'in_progress' | 'follow_up' | 'complete';
+  proficiencyLevel?: number | null;
+  confidence?: number | null;
 }

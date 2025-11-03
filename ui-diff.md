@@ -38,7 +38,17 @@
 29. Default landing view switched to the scheduled interviews dashboard; setup flow is now reached via the existing “Schedule New Interview” CTA.
 30. Moved back navigation from the scheduled view to the setup header so users return via the create flow instead of the schedule list toolbar.
 31. Added entry-level Python backend, data analyst, and data scientist presets (job descriptions and resumes) to the setup dropdowns for quicker demo scheduling.
+32. Introduced an interviewer sidebar toggle for auto candidate responses so facilitators can switch to manual typing on demand.
+33. Loosened concept primer directives to encourage varied question openers and richer rationale prompts in competency interviews.
+34. Wrapped the auto-reply toggle in a bordered, shadowed container to make the control pop within the interviewer sidebar.
 22. Auto candidate reply watcher now keys solely on reply expectation so competency directives trigger auto responses even when rendered as interviewer turns.
+35. Relocated the interview progress indicator into the interviewer sidebar so facilitators track flow alongside evaluation context.
+36. Defaulted auto-reply control to off so interviewers opt-in before the assistant speaks for candidates.
+37. Styled the auto-reply toggle with a gray border to match the sidebar’s control affordances.
+38. Added a dedicated report view from scheduled interviews with full PDF-ready summary data.
+39. Interview report now renders highlights, attachments, and LLM metadata for transparency.
+40. Enabled PDF export for reports with backend streaming endpoint and frontend download controls.
+41. Interviewer sidebar now streams live evaluation status, directive objectives, scoring levels, and manual replies even with auto-reply disabled.
 
 ## Detailed Notes
 
@@ -89,21 +99,29 @@
 - Detects warm-up completion, streams competency style directives via the new `/api/competency/stage` endpoint, and loops directives across competencies using shared style state snapshots.
 - Reordered the post-reply callback definitions so the competency advance helper is initialized before dependency arrays consume it, eliminating the runtime ReferenceError.
 - Memoized the competency focus selector so the warm-up bootstrap effect runs just once per interview instead of re-firing on every render.
+- Sends candidate-typed responses to the backend when the UI operates in candidate mode, keeping manual interviews functional.
+- Detects pending prompts and routes typed text as candidate replies even while remaining in interviewer view when auto-reply is disabled.
+- Hydrates the interviewer sidebar with backend-provided snapshots so evaluation metrics update in real time.
 - Removed the failure-side reset of the competency-start flag so the bootstrap effect no longer hammers `/api/competency/stage` when the first fetch returns 400.
 - Included backend error details in the competency directive client so console logs show the precise failure reason when the service rejects a request.
 - Added a client-side guard that skips stage requests for competencies lacking an interview style, emitting a directive message prompting the scheduler to assign one.
 - Rebuilt the component to consume the backend-managed interview session API, trimming local warm-up/competency orchestration, demo question controls, and competency state tracking.
 - Derives sidebar snapshots from returned directives and falls back to schedule metadata so interviewer view stays stable when flow data is sparse.
+- Hides the progress banner when the interviewer sidebar is visible, delegating the indicator to the facilitator-only panel.
+- Defaults auto-reply to disabled until UI config loads so the toggle starts in the off position.
 
 ### src/components/InterviewerSidebar.tsx
-- Accepts optional props with sensible defaults so empty criteria snapshots no longer raise runtime errors.
+- Renders an evaluation snapshot card with directive objective, status badge, proficiency level, and confidence.
+- Shows scoring levels and criterion status badges, including confidence readouts for each rubric item.
+- Hosts the interview progress component with stage counts and retains the auto-reply toggle styling.
+- Accepts optional props with sensible defaults so empty snapshots no longer raise runtime errors.
 
 ### src/services/interviewSession.ts
-- Adds typed session client helpers and centralized error handling for the new flow endpoints.
-- Exposes `extractSidebarSnapshot` so the UI can derive sidebar metrics from backend directives with safe fallbacks.
+- Maps backend sidebar snapshots into camelCase structures and retains directive parsing as a fallback.
+- Keeps centralized error handling for session endpoints.
 
 ### src/types/interviewSession.ts
-- Defines sidebar snapshot contracts consumed by the chat experience.
+- Extends sidebar snapshot contracts with evaluation status, directive objective, scoring levels, and confidence metrics.
 - Instrumented the chat experience with `console.info` hooks so warm-up completion, stage launches, directive responses, and manual progressions are traceable during debugging.
 
 ### src/services/candidateAutoReply.ts
@@ -121,3 +139,33 @@
 
 ### src/components/ui/button.tsx
 - Wraps the button component with `forwardRef` so Radix dialog triggers can attach refs without runtime warnings.
+
+### icbot_backend/interview_sessions/models.py
+- Introduces sidebar snapshot and criterion snapshot schemas attached to session responses.
+
+### icbot_backend/interview_sessions/manager.py
+- Computes sidebar snapshots from live session state and includes them on every response.
+
+### src/components/ScheduledInterviews.tsx
+- Adds a View Report button beside Evaluation, triggering the backend report fetch for the selected interview.
+
+### src/App.tsx
+- Wires the report view to `/api/interviews/{id}/report`, manages loading/error state, and drops the mock data helper.
+
+### src/components/InterviewReport.tsx
+- Expands the report UI to surface resume highlights, attachments, stage flow, and LLM metadata.
+
+### src/components/ReportPage.tsx
+- Adds loading/error handling with retry support around the report renderer and wires export controls.
+
+### icbot_backend/api/server.py
+- Exposes `GET /api/interviews/{interview_id}/report` returning structured JSON and `GET /api/interviews/{interview_id}/report.pdf` streaming PDF exports.
+
+### icbot_backend/schemas/report.py
+- Defines typed interview report models covering candidate, position, session, evaluation, and LLM metadata sections.
+
+### icbot_backend/reporting/builder.py
+- Builds the interview report from stored interview data, deriving summaries, evaluations, and attachments.
+
+### icbot_backend/reporting/pdf.py
+- Renders interview reports to PDF using `fpdf2` for download support.

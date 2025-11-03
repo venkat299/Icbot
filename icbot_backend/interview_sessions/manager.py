@@ -25,6 +25,8 @@ from .models import (
     InterviewSessionState,
     SessionEventType,
     SessionMessage,
+    SidebarCriterion,
+    SidebarSnapshot,
     TranscriptEntry,
 )
 from .store import SessionStore, get_session_store
@@ -76,12 +78,23 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
             if msg.expect_candidate_reply:
                 state.transcript.append(TranscriptEntry(role="interviewer", text=msg.text))
             _log_waiting_for_reply(session_id, "warmup", msg)
-        return InterviewSessionResponse(session_id=session_id, stage="warmup", messages=messages)
+        return InterviewSessionResponse(
+            session_id=session_id,
+            stage="warmup",
+            messages=messages,
+            sidebar=self._build_sidebar_snapshot(state),
+        )
 
     async def advance(self, session_id: str, payload: InterviewSessionEvent) -> InterviewSessionResponse:  # Applies an event and returns emitted messages.
         state = self._store.get(session_id)
         if state.stage == "completed":
-            return InterviewSessionResponse(session_id=session_id, stage="completed", messages=[], done=True)
+            return InterviewSessionResponse(
+                session_id=session_id,
+                stage="completed",
+                messages=[],
+                done=True,
+                sidebar=self._build_sidebar_snapshot(state),
+            )
 
         text = payload.text.strip()
 
@@ -89,12 +102,14 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
             if state.stage == "competency":
                 state.transcript.append(TranscriptEntry(role="interviewer", text=text))
             self._store.save(state)
+            snapshot = self._build_sidebar_snapshot(state)
             return InterviewSessionResponse(
                 session_id=session_id,
                 stage=state.stage,
                 messages=[],
                 done=state.stage == "completed",
                 competency_id=state.active_criterion.directive.competency_id if state.active_criterion else None,
+                sidebar=snapshot,
             )
 
         if payload.event == SessionEventType.CANDIDATE_REPLY:
@@ -174,6 +189,7 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
             stage="warmup",
             messages=messages,
             done=False,
+            sidebar=self._build_sidebar_snapshot(state),
         )
 
     async def _prompt_next_criterion(
@@ -213,6 +229,7 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
             question,
         )
         messages = list(seed_messages or [])
+        snapshot = self._build_sidebar_snapshot(state)
         messages.append(message)
         return InterviewSessionResponse(
             session_id=state.session_id,
@@ -220,6 +237,7 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
             messages=messages,
             done=False,
             competency_id=criterion.directive.competency_id,
+            sidebar=snapshot,
         )
 
     async def _handle_criterion_reply(self, state: InterviewSessionState, text: str) -> InterviewSessionResponse:  # Processes candidate replies for criteria.
@@ -264,12 +282,14 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
                 len(updated_state.attempts),
                 updated_state.confidence,
             )
+            snapshot = self._build_sidebar_snapshot(state)
             return InterviewSessionResponse(
                 session_id=state.session_id,
                 stage="competency",
                 messages=[message],
                 done=False,
                 competency_id=criterion.directive.competency_id,
+                sidebar=snapshot,
             )
 
         logger.info(
@@ -473,6 +493,7 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
             stage="completed",
             messages=messages,
             done=True,
+            sidebar=self._build_sidebar_snapshot(state),
         )
 
     def _build_warmup_messages(self, warmup: WarmupTurn) -> list[SessionMessage]:  # Converts warm-up plan into messages.
@@ -491,6 +512,64 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
             objective=prompt.objective,
         )
         return [greeting, question]
+
+    def _build_sidebar_snapshot(self, state: InterviewSessionState) -> SidebarSnapshot | None:  # Derives sidebar snapshot from current state.
+        if not state.criteria:
+            return None
+        index = min(max(state.criterion_index, 0), len(state.criteria) - 1)
+        if index < 0:
+            return None
+        criterion_state = state.criteria[index]
+        directive = criterion_state.directive
+        competency_record = next((comp for comp in state.interview.competencies if comp.id == directive.competency_id), None)
+        scoring_levels = self._criterion_levels(state, criterion_state)
+        if criterion_state.done:
+            evaluation_status = "complete"
+        elif criterion_state.pending_question and criterion_state.attempts:
+            evaluation_status = "follow_up"
+        elif criterion_state.attempts:
+            evaluation_status = "in_progress"
+        else:
+            evaluation_status = "pending"
+        criteria_snapshots: list[SidebarCriterion] = []
+        for item in state.criteria:
+            if item.done:
+                status = "complete"
+            elif item.pending_question and item.attempts:
+                status = "follow_up"
+            elif item.attempts:
+                status = "in_progress"
+            else:
+                status = "pending"
+            criteria_snapshots.append(
+                SidebarCriterion(
+                    name=item.directive.criterion_name,
+                    level=item.level,
+                    confidence=item.confidence if item.attempts else None,
+                    status=status,
+                    max_level=5,
+                )
+            )
+        levels = [item.level for item in state.criteria if item.level is not None]
+        overall_score = int(sum(level * 20 for level in levels) / len(levels)) if levels else None
+        notes = criterion_state.attempts[-1].notes if criterion_state.attempts else None
+        score_notes = notes.strip() if notes and notes.strip() else "Awaiting evaluation notes."
+        confidence = criterion_state.confidence if criterion_state.attempts else None
+        return SidebarSnapshot(
+            stage=state.stage,
+            current_competency=directive.competency_name,
+            current_criterion=directive.criterion_name,
+            interview_style=competency_record.interview_style if competency_record else None,
+            directive_objective=directive.directive.task_brief,
+            evaluation_status=evaluation_status,
+            proficiency_level=criterion_state.level,
+            confidence=confidence,
+            scoring_levels=scoring_levels,
+            criteria=criteria_snapshots,
+            score_notes=score_notes,
+            overall_score=overall_score,
+            red_flags=[],
+        )
 
 def _competency_focus(interview: ScheduledInterviewModel) -> list[str]:  # Extracts competency names for warm-up context.
     return [comp.name for comp in interview.competencies if comp.name.strip()]

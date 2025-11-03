@@ -16,12 +16,37 @@ interface ApiSessionMessage {
   metadata?: Record<string, string> | null;
 }
 
+interface ApiSidebarCriterion {
+  name: string;
+  level: number | null;
+  confidence: number | null;
+  status: 'pending' | 'in_progress' | 'follow_up' | 'complete';
+  max_level: number;
+}
+
+interface ApiSidebarSnapshot {
+  stage: 'warmup' | 'competency' | 'wrapup' | 'completed';
+  current_competency?: string | null;
+  current_criterion?: string | null;
+  interview_style?: string | null;
+  directive_objective?: string | null;
+  evaluation_status?: 'pending' | 'in_progress' | 'follow_up' | 'complete';
+  proficiency_level?: number | null;
+  confidence?: number | null;
+  scoring_levels?: Record<string, string> | null;
+  criteria?: ApiSidebarCriterion[] | null;
+  score_notes?: string | null;
+  overall_score?: number | null;
+  red_flags?: string[] | null;
+}
+
 interface ApiSessionResponse {
   session_id: string;
   stage: 'warmup' | 'competency' | 'wrapup' | 'completed';
   messages: ApiSessionMessage[];
   done: boolean;
   competency_id?: string | null;
+  sidebar?: ApiSidebarSnapshot | null;
 }
 
 const mapSessionMessage = (payload: ApiSessionMessage): SessionMessage => ({ // Normalizes API message payload.
@@ -39,6 +64,7 @@ const mapSessionResponse = (payload: ApiSessionResponse): InterviewSessionRespon
   messages: payload.messages.map(mapSessionMessage),
   done: payload.done,
   competencyId: payload.competency_id ?? null,
+  sidebar: mapSidebarSnapshot(payload.sidebar ?? null),
 });
 
 const handleError = async (response: Response, fallback: string) => { // Parses API errors with detail support.
@@ -92,6 +118,9 @@ export async function completeInterviewSession(sessionId: string): Promise<void>
 } // Finalizes the interview session and persists results.
 
 export const extractSidebarSnapshot = (session: InterviewSessionResponse): SidebarSnapshot | null => {
+  if (session.sidebar) {
+    return session.sidebar;
+  }
   if (session.stage !== 'competency') {
     return null;
   }
@@ -107,15 +136,51 @@ export const extractSidebarSnapshot = (session: InterviewSessionResponse): Sideb
   const bulletMatches = directive.text.match(/•\s([^\n]+)/g) ?? [];
   const criteria = bulletMatches.map(entry => entry.replace(/^•\s/, '')).map(name => ({
     name,
-    level: '0',
+    level: null,
+    confidence: null,
+    status: 'pending' as const,
     maxLevel: 5,
   }));
   return {
-    overallScore: 0,
+    overallScore: null,
     currentCompetency: competencyName,
+    currentCriterion: null,
     interviewStyle,
     criteria,
     scoreNotes: directive.objective ?? 'Awaiting evaluation notes.',
     redFlags: [],
+    directiveObjective: directive.objective ?? null,
+    scoringLevels: {},
+    evaluationStatus: 'pending',
+    proficiencyLevel: null,
+    confidence: null,
   };
 }; // Produces sidebar snapshot fallback data from session response.
+
+const mapSidebarSnapshot = (payload: ApiSidebarSnapshot | null): SidebarSnapshot | null => {
+  if (!payload) {
+    return null;
+  }
+  return {
+    overallScore: payload.overall_score ?? null,
+    currentCompetency: payload.current_competency ?? 'Competency',
+    currentCriterion: payload.current_criterion ?? null,
+    interviewStyle: payload.interview_style ?? 'Style',
+    criteria: (payload.criteria ?? []).map(mapSidebarCriterion),
+    scoreNotes: payload.score_notes ?? 'Awaiting evaluation notes.',
+    redFlags: payload.red_flags ?? [],
+    directiveObjective: payload.directive_objective ?? null,
+    scoringLevels: payload.scoring_levels ?? {},
+    evaluationStatus: payload.evaluation_status ?? 'pending',
+    proficiencyLevel: payload.proficiency_level ?? null,
+    confidence: payload.confidence ?? null,
+  };
+};
+
+const mapSidebarCriterion = (payload: ApiSidebarCriterion): SidebarSnapshot['criteria'][number] => ({
+  name: payload.name,
+  level: payload.level ?? null,
+  confidence: payload.confidence ?? null,
+  status: payload.status,
+  maxLevel: payload.max_level,
+});
