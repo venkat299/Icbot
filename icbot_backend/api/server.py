@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import FastAPI, HTTPException, Request  # Provides HTTP API surface.
+from fastapi.responses import StreamingResponse  # Streams file responses.
 from fastapi.exception_handlers import request_validation_exception_handler  # Reuses default validation response.
 from fastapi.exceptions import RequestValidationError  # Signals request body validation errors.
 from fastapi.middleware.cors import CORSMiddleware  # Enables CORS for local dev.
@@ -17,6 +18,7 @@ from ..schemas import StagePlan, StyleSummary  # Uses shared style plan schema.
 from ..schemas.competency import CompetencyPlan, CompetencyRequest  # Uses shared competency schema types.
 from ..schemas.competency_stage import CompetencyStageRequest  # Uses competency stage request schema.
 from ..schemas.interview import ScheduleInterviewRequest, ScheduledInterviewModel  # Uses interview scheduling schemas.
+from ..schemas.report import InterviewReport  # Uses interview report schema.
 from ..schemas.rubric import RubricModel, RubricRequest  # Uses rubric schema types.
 from ..schemas.warmup import (  # Uses warm-up schema types.
     WarmupFollowUp,
@@ -26,6 +28,7 @@ from ..schemas.warmup import (  # Uses warm-up schema types.
 )
 from ..schemas import UiConfigModel  # Uses config schema types.
 from ..styles.toolkit import list_style_summaries  # Lists available style summaries.
+from ..reporting import build_interview_report, render_report_pdf  # Builds reports and PDF exports.
 
 app = FastAPI(title="icbot-backend")  # Creates FastAPI application instance.
 app.add_middleware(
@@ -210,3 +213,30 @@ async def remove_interview(interview_id: str) -> None:
     except Exception as exc:
         logger.exception("Failed to delete interview")
         raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.get("/api/interviews/{interview_id}/report", response_model=InterviewReport)  # Returns structured interview report.
+async def get_interview_report(interview_id: str) -> InterviewReport:
+    interview = _get_interview_or_404(interview_id)
+    try:
+        return build_interview_report(interview)
+    except Exception as exc:
+        logger.exception("Failed to build interview report")
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.get("/api/interviews/{interview_id}/report.pdf")  # Streams interview report as a PDF document.
+async def export_interview_report_pdf(interview_id: str) -> StreamingResponse:
+    interview = _get_interview_or_404(interview_id)
+    try:
+        report = build_interview_report(interview)
+        payload = render_report_pdf(report)
+    except Exception as exc:
+        logger.exception("Failed to export interview report PDF")
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    filename = f"{report.report_id}.pdf"
+    return StreamingResponse(
+        iter([payload]),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )

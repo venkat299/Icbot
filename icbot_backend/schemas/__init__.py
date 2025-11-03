@@ -23,6 +23,7 @@ from .interview import (  # Re-exports interview scheduling schemas.
     ScoreDetail,
 )
 from .rubric import RubricCategory, RubricCompetencyInput, RubricCriterion, RubricModel, RubricRequest  # Re-exports rubric schemas.
+from .report import InterviewReport  # Re-exports interview report schema.
 from .warmup import (  # Re-exports warmup schemas.
     WarmupComfortScore,
     WarmupContext,
@@ -70,6 +71,7 @@ __all__ = [
     "RubricCriterion",
     "RubricModel",
     "RubricRequest",
+    "InterviewReport",
     "WarmupPrompt",
     "WarmupRequest",
     "WarmupTurn",

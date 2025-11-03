@@ -77,6 +77,7 @@ interface ScheduledInterviewsProps {
   error: string | null;
   onRetry: () => void;
   onDeleteInterview: (interviewId: string) => void;
+  onViewReport: (interviewId: string) => void;
 }
 
 export function ScheduledInterviews({
@@ -87,7 +88,8 @@ export function ScheduledInterviews({
   isLoading,
   error,
   onRetry,
-  onDeleteInterview
+  onDeleteInterview,
+  onViewReport
 }: ScheduledInterviewsProps) { // Renders scheduled interview dashboard with actions.
 
   const handleDelete = (interviewId: string) => {
@@ -627,127 +629,142 @@ export function ScheduledInterviews({
                             </DialogContent>
                           </Dialog>
 
-                          {/* Evaluation summary */}
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="
-                                  bg-white/80 border-gray-300/50 text-gray-700
-                                  hover:bg-gray-50 hover:border-gray-400/50
-                                  shadow-[0_2px_8px_rgba(0,0,0,0.06)]
-                                "
-                              >
-                                <Award className="w-3.5 h-3.5 mr-1.5" />
-                                Evaluation
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-3xl max-h-[80vh] overflow-hidden p-0">
-                              <div className="flex h-full max-h-[80vh] flex-col">
-                                <DialogHeader className="px-6 pt-6 pb-3">
-                                  <DialogTitle>Evaluation Report</DialogTitle>
-                                  <DialogDescription>
-                                    Summary reporting for the completed interview.
-                                  </DialogDescription>
-                                </DialogHeader>
-                                <div className="flex-1 min-h-0 overflow-y-auto px-6 pb-6">
-                                  <div className="pr-4">
-                                    <div className="text-sm text-gray-800 space-y-4">
-                                      {interview.wrapupSummary ? (
-                                        <div className="bg-white/80 border border-gray-200/60 rounded-lg p-4 shadow-[0_1px_4px_rgba(0,0,0,0.04)] space-y-3">
-                                          <h4 className="text-xs uppercase tracking-wide text-gray-500">Wrap-up Summary</h4>
-                                          <p className="text-gray-800 whitespace-pre-wrap">{interview.wrapupSummary.closingStatement}</p>
-                                          {interview.wrapupSummary.keyStrengths.length > 0 && (
-                                            <div>
-                                              <h5 className="text-xs font-semibold text-gray-600 mb-1">Key Strengths</h5>
-                                              <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
-                                                {interview.wrapupSummary.keyStrengths.map((item, idx) => (
-                                                  <li key={`strength-${idx}`}>{item}</li>
-                                                ))}
-                                              </ul>
-                                            </div>
-                                          )}
-                                          {interview.wrapupSummary.riskFlags.length > 0 && (
-                                            <div>
-                                              <h5 className="text-xs font-semibold text-gray-600 mb-1">Risks</h5>
-                                              <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
-                                                {interview.wrapupSummary.riskFlags.map((item, idx) => (
-                                                  <li key={`risk-${idx}`}>{item}</li>
-                                                ))}
-                                              </ul>
-                                            </div>
-                                          )}
-                                          {interview.wrapupSummary.nextSteps.length > 0 && (
-                                            <div>
-                                              <h5 className="text-xs font-semibold text-gray-600 mb-1">Suggested Next Steps</h5>
-                                              <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
-                                                {interview.wrapupSummary.nextSteps.map((item, idx) => (
-                                                  <li key={`step-${idx}`}>{item}</li>
-                                                ))}
-                                              </ul>
-                                            </div>
-                                          )}
-                                        </div>
-                                      ) : (
-                                        <p className="text-sm text-gray-600">
-                                          Evaluation summaries are not available yet for this interview.
-                                        </p>
-                                      )}
+                          <div className="flex items-center gap-2">
+                            {/* Evaluation summary */}
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="
+                                    bg-white/80 border-gray-300/50 text-gray-700
+                                    hover:bg-gray-50 hover:border-gray-400/50
+                                    shadow-[0_2px_8px_rgba(0,0,0,0.06)]
+                                  "
+                                >
+                                  <Award className="w-3.5 h-3.5 mr-1.5" />
+                                  Evaluation
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-3xl max-h-[80vh] overflow-hidden p-0">
+                                <div className="flex h-full max-h-[80vh] flex-col">
+                                  <DialogHeader className="px-6 pt-6 pb-3">
+                                    <DialogTitle>Evaluation Report</DialogTitle>
+                                    <DialogDescription>
+                                      Summary reporting for the completed interview.
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  <div className="flex-1 min-h-0 overflow-y-auto px-6 pb-6">
+                                    <div className="pr-4">
+                                      <div className="text-sm text-gray-800 space-y-4">
+                                        {interview.wrapupSummary ? (
+                                          <div className="bg-white/80 border border-gray-200/60 rounded-lg p-4 shadow-[0_1px_4px_rgba(0,0,0,0.04)] space-y-3">
+                                            <h4 className="text-xs uppercase tracking-wide text-gray-500">Wrap-up Summary</h4>
+                                            <p className="text-gray-800 whitespace-pre-wrap">{interview.wrapupSummary.closingStatement}</p>
+                                            {interview.wrapupSummary.keyStrengths.length > 0 && (
+                                              <div>
+                                                <h5 className="text-xs font-semibold text-gray-600 mb-1">Key Strengths</h5>
+                                                <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
+                                                  {interview.wrapupSummary.keyStrengths.map((item, idx) => (
+                                                    <li key={`strength-${idx}`}>{item}</li>
+                                                  ))}
+                                                </ul>
+                                              </div>
+                                            )}
+                                            {interview.wrapupSummary.riskFlags.length > 0 && (
+                                              <div>
+                                                <h5 className="text-xs font-semibold text-gray-600 mb-1">Risks</h5>
+                                                <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
+                                                  {interview.wrapupSummary.riskFlags.map((item, idx) => (
+                                                    <li key={`risk-${idx}`}>{item}</li>
+                                                  ))}
+                                                </ul>
+                                              </div>
+                                            )}
+                                            {interview.wrapupSummary.nextSteps.length > 0 && (
+                                              <div>
+                                                <h5 className="text-xs font-semibold text-gray-600 mb-1">Suggested Next Steps</h5>
+                                                <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
+                                                  {interview.wrapupSummary.nextSteps.map((item, idx) => (
+                                                    <li key={`step-${idx}`}>{item}</li>
+                                                  ))}
+                                                </ul>
+                                              </div>
+                                            )}
+                                          </div>
+                                        ) : (
+                                          <p className="text-sm text-gray-600">
+                                            Evaluation summaries are not available yet for this interview.
+                                          </p>
+                                        )}
 
-                                      {interview.criterionResults && interview.criterionResults.length > 0 && (
-                                        <div className="space-y-3">
-                                          <h4 className="text-xs uppercase tracking-wide text-gray-500">Criterion Results</h4>
-                                          {interview.criterionResults.map((result, idx) => (
-                                            <div
-                                              key={`${result.criterionId}-${idx}`}
-                                              className="bg-white/80 border border-gray-200/60 rounded-lg p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
-                                            >
-                                              <div className="text-xs text-gray-500 mb-1">
-                                                {result.competencyName}
-                                              </div>
-                                              <div className="text-sm text-gray-800 font-medium">
-                                                {result.criterionName}
-                                              </div>
-                                              <div className="text-xs text-gray-600 mt-1">
-                                                Level: {result.level ?? 'pending'} • Confidence: {result.confidence !== undefined ? result.confidence.toFixed(2) : 'n/a'}
-                                              </div>
-                                              {result.notes && (
-                                                <div className="text-xs text-gray-600 mt-2 whitespace-pre-wrap">
-                                                  {result.notes}
+                                        {interview.criterionResults && interview.criterionResults.length > 0 && (
+                                          <div className="space-y-3">
+                                            <h4 className="text-xs uppercase tracking-wide text-gray-500">Criterion Results</h4>
+                                            {interview.criterionResults.map((result, idx) => (
+                                              <div
+                                                key={`${result.criterionId}-${idx}`}
+                                                className="bg-white/80 border border-gray-200/60 rounded-lg p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
+                                              >
+                                                <div className="text-xs text-gray-500 mb-1">
+                                                  {result.competencyName}
                                                 </div>
-                                              )}
-                                            </div>
-                                          ))}
-                                        </div>
-                                      )}
-
-                                      {typeof interview.overallScore === 'number' && (
-                                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
-                                          <h4 className="text-xs uppercase tracking-wide text-gray-500 mb-2">Overall Score</h4>
-                                          <p className="text-sm text-gray-800">{interview.overallScore}</p>
-                                        </div>
-                                      )}
-
-                                      {interview.scoreDetails && interview.scoreDetails.length > 0 && (
-                                        <div className="bg-white/80 border border-gray-200/60 rounded-lg p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
-                                          <h4 className="text-xs uppercase tracking-wide text-gray-500 mb-2">Score Details</h4>
-                                          <div className="text-xs text-gray-700 space-y-1">
-                                            {interview.scoreDetails.map(detail => (
-                                              <div key={detail.criteria}>
-                                                <span className="font-medium text-gray-700">{detail.criteria}</span>: {detail.score}
-                                                {detail.feedback ? ` – ${detail.feedback}` : ''}
+                                                <div className="text-sm text-gray-800 font-medium">
+                                                  {result.criterionName}
+                                                </div>
+                                                <div className="text-xs text-gray-600 mt-1">
+                                                  Level: {result.level ?? 'pending'} • Confidence: {result.confidence !== undefined ? result.confidence.toFixed(2) : 'n/a'}
+                                                </div>
+                                                {result.notes && (
+                                                  <div className="text-xs text-gray-600 mt-2 whitespace-pre-wrap">
+                                                    {result.notes}
+                                                  </div>
+                                                )}
                                               </div>
                                             ))}
                                           </div>
-                                        </div>
-                                      )}
+                                        )}
+
+                                        {typeof interview.overallScore === 'number' && (
+                                          <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                                            <h4 className="text-xs uppercase tracking-wide text-gray-500 mb-2">Overall Score</h4>
+                                            <p className="text-sm text-gray-800">{interview.overallScore}</p>
+                                          </div>
+                                        )}
+
+                                        {interview.scoreDetails && interview.scoreDetails.length > 0 && (
+                                          <div className="bg-white/80 border border-gray-200/60 rounded-lg p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+                                            <h4 className="text-xs uppercase tracking-wide text-gray-500 mb-2">Score Details</h4>
+                                            <div className="text-xs text-gray-700 space-y-1">
+                                              {interview.scoreDetails.map(detail => (
+                                                <div key={detail.criteria}>
+                                                  <span className="font-medium text-gray-700">{detail.criteria}</span>: {detail.score}
+                                                  {detail.feedback ? ` – ${detail.feedback}` : ''}
+                                                </div>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            </DialogContent>
-                          </Dialog>
+                              </DialogContent>
+                            </Dialog>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="
+                                bg-white/80 border-gray-300/50 text-gray-700
+                                hover:bg-gray-50 hover:border-gray-400/50
+                                shadow-[0_2px_8px_rgba(0,0,0,0.06)]
+                              "
+                              onClick={() => onViewReport(interview.id)}
+                            >
+                              <FileText className="w-3.5 h-3.5 mr-1.5" />
+                              View Report
+                            </Button>
+                          </div>
                         </div>
                       )}
                     </div>

@@ -5,6 +5,7 @@ from .models import (
     InterviewSessionEvent,
     InterviewSessionResponse,
     SessionEventType,
+    SidebarSnapshot,
 )  # Surface request/response contracts.
 from .store import get_session_store  # Exposes store factory.
 
@@ -13,5 +14,6 @@ __all__ = [
     "InterviewSessionEvent",
     "InterviewSessionResponse",
     "SessionEventType",
+    "SidebarSnapshot",
     "get_session_store",
 ]

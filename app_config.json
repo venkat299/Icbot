@@ -17,7 +17,7 @@
         "model": "microsoft/phi-4",
         "base_url": "http://localhost:1234/v1",
         "endpoint": "/v1/chat/completions",
-        "timeout_seconds": 60,
+        "timeout_seconds": 120,
         "max_retries": 2,
         "api_key_env": "LLM_API_KEY",
         "requires_api_key": false,
@@ -46,11 +46,11 @@
         "schema_path": "icbot_backend.schemas.competency.CompetencyPlan"
       },
       "warmup.opening": {
-        "route": "qwen3-human",
+        "route": "phi-4",
         "schema_path": "icbot_backend.schemas.warmup.WarmupTurn"
       },
       "candidate.reply": {
-        "route": "qwen3-human",
+        "route": "qwen3-4b-local",
         "schema_path": "candidate_service.schemas.CandidateReply"
       },
       "evaluation.score": {
@@ -62,11 +62,11 @@
         "schema_path": "icbot_backend.schemas.criterion.EvaluationResult"
       },
       "wrapup.summary": {
-        "route": "phi-4",
+        "route": "qwen3-4b-local",
         "schema_path": "icbot_backend.schemas.wrapup_summary.WrapupSummary"
       },
       "styles.directive": {
-        "route": "phi-4",
+        "route": "qwen3-4b-local",
         "schema_path": "icbot_backend.styles.base.DirectiveSchema"
       }
     }
@@ -91,7 +91,7 @@
   },
   "evaluation": {
     "routes": {
-      "scoring": "qwen3-4b-local"
+      "scoring": "phi-4"
     },
     "schema_registry": {
       "final_report": "icbot_backend.schemas.evaluation.EvaluationVerdict"
@@ -105,6 +105,6 @@
   "ui": {
     "default_view_mode": "interviewer",
     "tts_enabled": false,
-    "auto_candidate_reply": true
+    "auto_candidate_reply": false
   }
 }

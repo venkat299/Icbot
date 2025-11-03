@@ -26,6 +26,30 @@ class SessionMessage(BaseModel):  # Represents a message emitted to the UI.
     metadata: dict[str, str] = Field(default_factory=dict)
 
 
+class SidebarCriterion(BaseModel):  # Describes criterion status for the sidebar snapshot.
+    name: str = Field(..., min_length=1)
+    level: int | None = Field(default=None, ge=0, le=5)
+    confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+    status: Literal["pending", "in_progress", "follow_up", "complete"] = "pending"
+    max_level: int = Field(default=5, ge=1)
+
+
+class SidebarSnapshot(BaseModel):  # Aggregates sidebar data for interviewer insights.
+    stage: Literal["warmup", "competency", "wrapup", "completed"]
+    current_competency: str | None = None
+    current_criterion: str | None = None
+    interview_style: str | None = None
+    directive_objective: str | None = None
+    evaluation_status: Literal["pending", "in_progress", "follow_up", "complete"] = "pending"
+    proficiency_level: int | None = Field(default=None, ge=0, le=5)
+    confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+    scoring_levels: dict[str, str] = Field(default_factory=dict)
+    criteria: list[SidebarCriterion] = Field(default_factory=list)
+    score_notes: str | None = None
+    overall_score: int | None = Field(default=None, ge=0, le=100)
+    red_flags: list[str] = Field(default_factory=list)
+
+
 class InterviewSessionEvent(BaseModel):  # Carries client events into the session manager.
     event: SessionEventType
     text: str = Field(..., min_length=1)
@@ -37,6 +61,7 @@ class InterviewSessionResponse(BaseModel):  # Returns the next step in the inter
     messages: list[SessionMessage] = Field(default_factory=list)
     done: bool = False
     competency_id: str | None = None
+    sidebar: SidebarSnapshot | None = None
 
 
 class TranscriptEntry(BaseModel):  # Tracks interviewer/candidate transcript history.

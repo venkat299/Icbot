@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 from typing import Any, Iterable, Type
 
@@ -8,12 +9,13 @@ from langchain_core.messages import AIMessage, BaseMessage, ChatMessage, HumanMe
 from langchain_core.prompt_values import ChatPromptValue  # Supports prompt value normalization.
 from langchain_core.runnables import RunnableLambda  # Provides runnable wrapper for pipelines.
 from langchain_openai import ChatOpenAI  # Supplies OpenAI chat client adapter.
-from pydantic import BaseModel  # Validates structured LLM responses.
+from pydantic import BaseModel, ValidationError  # Validates structured LLM responses.
 
 from .config import EnvConfig, LlmRoute, load_env_config  # Accesses route and environment settings.
 
 
 _ANON_API_KEY = "anonymous"  # Placeholder for routes that skip authentication.
+logger = logging.getLogger(__name__)
 
 
 def _system_hint(schema: Type[BaseModel], extra_hint: str | None) -> str:  # Builds enforced JSON response instruction.
@@ -31,6 +33,40 @@ def _read_text(message: AIMessage | ChatMessage) -> str:  # Extracts string cont
         if isinstance(chunk, dict) and chunk.get("type") == "text":
             parts.append(chunk.get("text", ""))
     return "".join(parts)
+
+
+def _normalize_json_payload(text: str) -> str:  # Extracts JSON payload from fenced responses.
+    stripped = text.strip()
+    if not stripped.startswith("```"):
+        return stripped
+    lines = stripped.splitlines()
+    if lines and lines[0].startswith("```"):
+        lines = lines[1:]
+    while lines and lines[-1].strip() == "```":
+        lines.pop()
+    return "\n".join(lines).strip() or stripped
+
+
+def _truncate(text: str, limit: int = 600) -> str:  # Truncates large payloads for logging.
+    return text if len(text) <= limit else f"{text[:limit]}..."
+
+
+def _extract_json_object(text: str) -> str:  # Parses the first JSON object and drops trailing commentary.
+    stripped = text.strip()
+    if not stripped:
+        return stripped
+    decoder = json.JSONDecoder()
+    try:
+        value, end = decoder.raw_decode(stripped)
+    except json.JSONDecodeError:
+        return stripped
+    remainder = stripped[end:].strip()
+    if remainder:
+        logger.warning(
+            "LLM payload included trailing text after JSON | trailing_snippet=%s",
+            _truncate(remainder),
+        )
+    return json.dumps(value, separators=(",", ":"))
 
 
 def _build_model(route: LlmRoute, env: EnvConfig) -> ChatOpenAI:  # Instantiates the concrete chat model.
@@ -91,8 +127,25 @@ def _ensure_messages(payload: Any) -> list[BaseMessage]:  # Normalizes runnable 
 
 
 def _parse_response(message: AIMessage | ChatMessage, schema: Type[BaseModel]) -> BaseModel:  # Parses and validates the response message.
-    text = _read_text(message).strip()
-    return schema.model_validate_json(text)
+    payload = _extract_json_object(_normalize_json_payload(_read_text(message)))
+    try:
+        return schema.model_validate_json(payload)
+    except ValidationError as exc:
+        logger.error(
+            "LLM response schema validation failed | schema=%s | errors=%s | payload_snippet=%s",
+            schema.__name__,
+            exc.errors(),
+            _truncate(payload),
+        )
+        raise
+    except ValueError as exc:
+        logger.error(
+            "LLM response parsing failed | schema=%s | error=%s | payload_snippet=%s",
+            schema.__name__,
+            exc,
+            _truncate(payload),
+        )
+        raise
 
 
 def call(task: str, schema: Type[BaseModel], *, cfg: LlmRoute, env: EnvConfig | None = None, extra_hint: str | None = None) -> BaseModel:  # Executes a one-shot LLM call and returns typed output.

@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field  # Defines interview persistence schemas.
+from pydantic import BaseModel, Field, field_validator  # Defines interview persistence schemas.
 
 from .wrapup_summary import WrapupSummary  # Imports wrap-up summary schema.
 
@@ -61,6 +61,12 @@ class ScheduleInterviewRequest(BaseModel):  # Defines payload required to persis
     resume: str = Field(..., min_length=1)
     competencies: list[ScheduledCompetency] = Field(min_length=1)
     rubric: ScheduledRubric
+
+    @field_validator("resume", mode="before")
+    @classmethod
+    def _normalize_resume(cls, value: str | None) -> str:  # Converts empty resume submissions to placeholder text.
+        text = (value or "").strip()
+        return text or "Resume not provided."
 
 
 class ScheduledInterviewModel(ScheduleInterviewRequest):  # Extends request payload with runtime fields.

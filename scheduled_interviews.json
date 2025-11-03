@@ -403,5 +403,576 @@
         "Evaluate their experience with database replication, transaction consistency, or distributed systems to assess readiness for complex distributed workloads"
       ]
     }
+  },
+  {
+    "job_title": "Entry-Level Backend Engineer (Python)",
+    "candidate_name": "Candidate",
+    "job_description": "Entry-Level Backend Engineer (Python)\n\nWe are hiring a junior Python engineer to support API and data-pipeline delivery for our SaaS analytics platform.\n\nResponsibilities:\n\u2022 Implement REST endpoints with FastAPI or Django.\n\u2022 Maintain PostgreSQL schemas and write optimized SQL queries.\n\u2022 Build background jobs using Celery and Redis queues.\n\u2022 Write unit/integration tests and participate in code reviews.\n\u2022 Document services and deploy through our GitHub Actions pipeline.\n\nRequirements:\n\u2022 B.S. in Computer Science or related field (or equivalent internship experience).\n\u2022 0-1 years of professional software experience with Python.\n\u2022 Familiarity with REST APIs, relational databases, and Git workflows.\n\u2022 Understanding of containerization (Docker) and cloud fundamentals.\n\nNice to have:\n\u2022 Exposure to AWS services (Lambda, RDS, ECS).\n\u2022 Experience with observability tooling (Prometheus, Grafana, Sentry).",
+    "resume": "Resume not provided.",
+    "competencies": [
+      {
+        "id": "1",
+        "name": "REST API Development with FastAPI or Django",
+        "interview_style": "concept_primer",
+        "rationale": "The candidate needs a foundational understanding of building REST endpoints using popular Python frameworks like FastAPI and Django. A concept primer will help assess their grasp on the principles and practices involved in designing and implementing APIs."
+      },
+      {
+        "id": "2",
+        "name": "Database Management with PostgreSQL",
+        "interview_style": "concept_primer",
+        "rationale": "Given the responsibility to maintain PostgreSQL schemas and write optimized SQL queries, it's crucial to evaluate the candidate's competency in database management. A concept primer will allow for an assessment of their understanding of relational databases and query optimization techniques."
+      },
+      {
+        "id": "3",
+        "name": "Background Job Processing with Celery and Redis",
+        "interview_style": "concept_primer",
+        "rationale": "The role involves building background jobs using Celery and Redis queues. A concept primer will help determine the candidate's familiarity with asynchronous task processing and their ability to implement efficient job handling mechanisms."
+      }
+    ],
+    "rubric": {
+      "candidate_name": "Candidate",
+      "position": "Entry-Level Backend Engineer (Python)",
+      "evaluation_criteria": [
+        {
+          "category": "REST API Development with FastAPI or Django",
+          "criteria": [
+            {
+              "name": "Understanding of RESTful Design Principles",
+              "description": "Assess the candidate's grasp on RESTful design principles and their application in API development.",
+              "weight": 40,
+              "scoring_levels": {
+                "Level 0": "Unable to define RESTful principles or apply them incorrectly.",
+                "Level 1": "Basic understanding but lacks depth; struggles with practical examples.",
+                "Level 2": "Understands basic principles and can provide simple examples.",
+                "Level 3": "Good grasp of principles with some real-world application examples.",
+                "Level 4": "Strong understanding with clear, relevant examples.",
+                "Level 5": "Expert level understanding; provides comprehensive insights and advanced examples."
+              }
+            },
+            {
+              "name": "Familiarity with FastAPI or Django Frameworks",
+              "description": "Evaluate the candidate's experience and comfort level using FastAPI or Django for API development.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "No familiarity; unable to discuss framework features.",
+                "Level 1": "Minimal exposure; can list basic features but lacks depth.",
+                "Level 2": "Basic understanding of key features and simple use cases.",
+                "Level 3": "Comfortable with core functionalities and some advanced features.",
+                "Level 4": "Proficient in using the framework for various API tasks.",
+                "Level 5": "Expertise in leveraging all major features effectively."
+              }
+            },
+            {
+              "name": "Practical Implementation of APIs",
+              "description": "Assess the candidate's ability to implement REST endpoints using FastAPI or Django.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Unable to demonstrate implementation skills; significant errors present.",
+                "Level 1": "Basic attempts with numerous mistakes and incomplete implementations.",
+                "Level 2": "Can implement simple APIs but struggles with complex scenarios.",
+                "Level 3": "Effective at implementing standard API endpoints with minor issues.",
+                "Level 4": "Strong implementation skills; handles complexity well.",
+                "Level 5": "Exemplary implementation skills; innovative and efficient solutions."
+              }
+            }
+          ]
+        },
+        {
+          "category": "Database Management with PostgreSQL",
+          "criteria": [
+            {
+              "name": "Schema Design and Maintenance",
+              "description": "Evaluate the candidate's ability to design and maintain efficient PostgreSQL schemas.",
+              "weight": 40,
+              "scoring_levels": {
+                "Level 0": "Unable to design or explain schema concepts; significant errors present.",
+                "Level 1": "Basic understanding but lacks depth; struggles with practical examples.",
+                "Level 2": "Understands basic schema principles and can provide simple examples.",
+                "Level 3": "Good grasp of schema design with some real-world application examples.",
+                "Level 4": "Strong understanding with clear, relevant examples.",
+                "Level 5": "Expert level understanding; provides comprehensive insights and advanced examples."
+              }
+            },
+            {
+              "name": "SQL Query Optimization",
+              "description": "Assess the candidate's skills in writing optimized SQL queries for performance.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Unable to optimize queries; significant errors present.",
+                "Level 1": "Basic attempts with numerous mistakes and inefficient queries.",
+                "Level 2": "Can write simple queries but struggles with optimization.",
+                "Level 3": "Effective at optimizing standard queries with minor issues.",
+                "Level 4": "Strong optimization skills; handles complexity well.",
+                "Level 5": "Exemplary optimization skills; innovative and efficient solutions."
+              }
+            },
+            {
+              "name": "Understanding of Relational Database Concepts",
+              "description": "Evaluate the candidate's foundational knowledge of relational databases.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "No understanding; unable to discuss basic concepts.",
+                "Level 1": "Minimal exposure; can list basic concepts but lacks depth.",
+                "Level 2": "Basic understanding with some practical examples.",
+                "Level 3": "Good grasp of core concepts with real-world application examples.",
+                "Level 4": "Strong understanding with clear, relevant examples.",
+                "Level 5": "Expert level understanding; provides comprehensive insights."
+              }
+            }
+          ]
+        },
+        {
+          "category": "Background Job Processing with Celery and Redis",
+          "criteria": [
+            {
+              "name": "Understanding of Task Queue Concepts",
+              "description": "Assess the candidate's grasp on asynchronous task processing using queues.",
+              "weight": 40,
+              "scoring_levels": {
+                "Level 0": "Unable to define or apply task queue concepts; significant errors present.",
+                "Level 1": "Basic understanding but lacks depth; struggles with practical examples.",
+                "Level 2": "Understands basic principles and can provide simple examples.",
+                "Level 3": "Good grasp of principles with some real-world application examples.",
+                "Level 4": "Strong understanding with clear, relevant examples.",
+                "Level 5": "Expert level understanding; provides comprehensive insights and advanced examples."
+              }
+            },
+            {
+              "name": "Familiarity with Celery and Redis",
+              "description": "Evaluate the candidate's experience and comfort level using Celery and Redis for background jobs.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "No familiarity; unable to discuss framework features.",
+                "Level 1": "Minimal exposure; can list basic features but lacks depth.",
+                "Level 2": "Basic understanding of key features and simple use cases.",
+                "Level 3": "Comfortable with core functionalities and some advanced features.",
+                "Level 4": "Proficient in using the tools for various job tasks.",
+                "Level 5": "Expertise in leveraging all major features effectively."
+              }
+            },
+            {
+              "name": "Practical Implementation of Background Jobs",
+              "description": "Assess the candidate's ability to implement background jobs using Celery and Redis.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Unable to demonstrate implementation skills; significant errors present.",
+                "Level 1": "Basic attempts with numerous mistakes and incomplete implementations.",
+                "Level 2": "Can implement simple jobs but struggles with complex scenarios.",
+                "Level 3": "Effective at implementing standard job tasks with minor issues.",
+                "Level 4": "Strong implementation skills; handles complexity well.",
+                "Level 5": "Exemplary implementation skills; innovative and efficient solutions."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "id": "80c81f9e32b041e4b88ab0a602ddcc72",
+    "scheduled_date": "2025-11-02T19:41:19.273231Z",
+    "status": "completed",
+    "overall_score": 97,
+    "score_details": [
+      {
+        "criteria": "REST API Development with FastAPI or Django \u2013 Understanding of RESTful Design Principles",
+        "score": 100,
+        "feedback": "The candidate demonstrated an expert understanding of RESTful design principles, providing clear definitions, practical examples from their experience with FastAPI, and discussing the broader impacts on API performance, usability, testing, debugging, and scalability."
+      },
+      {
+        "criteria": "REST API Development with FastAPI or Django \u2013 Familiarity with FastAPI or Django Frameworks",
+        "score": 80,
+        "feedback": "The candidate demonstrated proficiency by detailing their use of FastAPI's async support, Swagger UI, and integration with PostgreSQL and Redis/Celery for performance improvements. They provided a specific example showing measurable impact (40% load time reduction), indicating a high level of competence in using the framework effectively."
+      },
+      {
+        "criteria": "REST API Development with FastAPI or Django \u2013 Practical Implementation of APIs",
+        "score": 100,
+        "feedback": "The candidate demonstrated exemplary understanding of REST API implementation using FastAPI, covering key aspects like dependency injection, path operations, Pydantic models for validation, error handling, rate limiting, versioning, and async support. They provided a real-world example with measurable impacts on project efficiency and developer experience."
+      },
+      {
+        "criteria": "Database Management with PostgreSQL \u2013 Schema Design and Maintenance",
+        "score": 100,
+        "feedback": "The candidate demonstrated an expert understanding of PostgreSQL schema design, providing detailed examples and discussing the impact on performance and scalability. The explanation included core entities, relationships, indexing strategies, constraints, and maintenance practices."
+      },
+      {
+        "criteria": "Database Management with PostgreSQL \u2013 SQL Query Optimization",
+        "score": 100,
+        "feedback": "The candidate demonstrated exemplary SQL query optimization skills by identifying inefficiencies, adding appropriate indexes, and restructuring the query to significantly improve performance. The example provided shows a clear understanding of both theory and practical application with measurable impact."
+      },
+      {
+        "criteria": "Database Management with PostgreSQL \u2013 Understanding of Relational Database Concepts",
+        "score": 100,
+        "feedback": "No additional feedback provided."
+      },
+      {
+        "criteria": "Background Job Processing with Celery and Redis \u2013 Understanding of Task Queue Concepts",
+        "score": 100,
+        "feedback": "No additional feedback provided."
+      },
+      {
+        "criteria": "Background Job Processing with Celery and Redis \u2013 Familiarity with Celery and Redis",
+        "score": 100,
+        "feedback": "The candidate provided a detailed example of using Celery and Redis in a real-world project, demonstrating proficiency with core functionalities and advanced features like task offloading for performance improvement and efficient queue management. The mention of measurable impacts such as reduced email delivery failures and improved system responsiveness further supports a high level of expertise."
+      },
+      {
+        "criteria": "Background Job Processing with Celery and Redis \u2013 Practical Implementation of Background Jobs",
+        "score": 100,
+        "feedback": "The candidate provided a detailed, practical example of implementing background job processing using Celery and Redis in a real-world application. They effectively described the impact on system performance, including reduced page load times and improved user satisfaction. The explanation demonstrated exemplary implementation skills with innovative solutions."
+      }
+    ],
+    "transcript": [
+      {
+        "role": "interviewer",
+        "text": "Could you tell me about your experience or interest in REST API development?"
+      },
+      {
+        "role": "candidate",
+        "text": "I've been deeply involved in REST API development throughout my backend engineering journey, primarily using FastAPI and Django. I enjoy building clean, well-documented APIs that are efficient and easy to maintain. With FastAPI, I've leveraged its async support and automatic OpenAPI schema generation to build scalable services\u2014especially for handling high-volume requests. I also work closely with PostgreSQL for data consistency and use Celery with Redis for background job processing, which helps decouple API logic from long-running tasks. What excites me most is how REST APIs serve as the backbone of modern microservices, enabling seamless communication between services while keeping the system maintainable and testable. I'm especially passionate about designing APIs that are intuitive and performant for both developers and end-users."
+      },
+      {
+        "role": "interviewer",
+        "text": "Thank you for sharing your experience and passion for REST API development! It's clear you have a strong foundation in using FastAPI, Django, PostgreSQL, Celery, and Redis to build efficient and scalable services. I'm excited to move on to the next part of our discussion.\n\nWe'll move into competency-focused questions now."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you explain what RESTful design principles are and how they impact API development in practice?"
+      },
+      {
+        "role": "candidate",
+        "text": "I think of RESTful design as a set of guidelines that make APIs intuitive, predictable, and easy to use. The core principles\u2014like resource-based URLs, stateless interactions, uniform interfaces, and the use of HTTP methods (GET, POST, PUT, DELETE)\u2014help ensure consistency and clarity. For example, using `/users/{id}` instead of a hardcoded path makes it clear what resource we're working with. In practice, this means developers can quickly understand how to interact with a service without needing deep documentation. I\u2019ve applied this in my FastAPI projects by using clear, versioned endpoints and proper error responses. It also helps when building with microservices\u2014each service can expose a clean, predictable API that others can consume. Plus, following these principles makes testing, debugging, and scaling much easier. It\u2019s not just about structure\u2014it\u2019s about building systems that are maintainable and developer-friendly."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you describe your experience with FastAPI or Django in API development and provide an example of how it impacted a project?"
+      },
+      {
+        "role": "candidate",
+        "text": "In my current role as an entry-level backend engineer, I've built and maintained several REST APIs using FastAPI for a student project that tracks academic performance. The goal was to create a scalable system where students could view their grades, instructors could update records, and admins could generate reports. I chose FastAPI because of its async support and automatic Swagger UI generation, which made development and documentation much faster. For example, I implemented a grade endpoint that returns paginated results with filtering by course or semester\u2014this reduced load time by 40% compared to a traditional Flask-based version. I also used PostgreSQL for relational integrity and Redis with Celery to handle background tasks like sending email notifications when grades were updated. This not only improved performance but also made the system more reliable and easier to maintain. The project was later adopted by the university\u2019s IT team as a prototype for a larger student portal."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you explain how you would implement REST endpoints using FastAPI or Django, and what impact this implementation has on a project?"
+      },
+      {
+        "role": "candidate",
+        "text": "I\u2019d start by defining clear, resource-based endpoints using FastAPI\u2019s dependency injection and path operations. For example, I\u2019d create a `/users/{user_id}` endpoint with GET to retrieve a user and POST to create one\u2014using Pydantic models for input validation and automatic OpenAPI docs. I\u2019d also include error handling, rate limiting, and versioning (like `/v1/users`) to ensure scalability and maintainability. In a real project, this approach reduced onboarding time for new developers and made it easier to integrate with frontend tools. Because FastAPI generates interactive docs automatically, teams can start using the API immediately without writing documentation. Plus, with async support, we can handle hundreds of concurrent requests efficiently\u2014critical for performance under load. This structure also makes testing and debugging smoother, which directly impacts the overall quality and speed of delivery."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you explain how you approach designing and maintaining efficient PostgreSQL schemas? Please provide an example of your work, along with its impact?"
+      },
+      {
+        "role": "candidate",
+        "text": "In my current role, I\u2019ve been responsible for designing and maintaining PostgreSQL schemas for a student project that tracks course enrollments and grade submissions. I start by identifying core entities\u2014like users, courses, and enrollments\u2014and define relationships with proper foreign keys to ensure data integrity. For example, I created a `users` table with a `role` field (student, instructor, admin), and a `course_enrollments` junction table to handle many-to-many relationships efficiently. I also added indexes on frequently queried fields like `course_id` and `enrollment_date` to reduce query times by up to 60% in testing. To maintain consistency, I used PostgreSQL\u2019s constraints and triggers to prevent invalid data entry\u2014like a student being enrolled in a course they don\u2019t belong to. I also implemented regular schema reviews with the team to ensure alignment with evolving feature needs. This approach not only improved query performance but also made the database easier to audit and scale as the student body grew. The schema was later adopted in a larger academic management system as a foundation for its core data layer."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you explain what SQL query optimization entails and provide an example of how optimizing a query has impacted performance in your past projects?"
+      },
+      {
+        "role": "candidate",
+        "text": "SQL query optimization involves identifying and eliminating inefficiencies in how we retrieve or manipulate data\u2014things like unnecessary joins, missing indexes, or suboptimal query structure. In one of my recent projects, I noticed a slow report query that was taking over 10 seconds to run during peak hours. After profiling, I found it was scanning a large unindexed `enrollment_logs` table without filtering. I added a composite index on `(course_id, date)` and replaced the raw SELECT with a filtered JOIN, cutting runtime from 10 seconds to under 200ms. This not only improved response times for users but also reduced server load during peak times. It taught me that even small optimizations in database design can have a big impact on user experience and system stability."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you explain what relational databases are and provide an example of how they're applied in real-world scenarios, particularly focusing on their impact?"
+      },
+      {
+        "role": "candidate",
+        "text": "Relational databases organize data into tables with rows and columns, linked together through relationships\u2014like one-to-many or many-to-many\u2014using keys. This structure ensures data consistency and integrity, which is crucial for applications where accuracy matters. In a real-world scenario, I used PostgreSQL to manage a student course enrollment system where students, courses, and instructors were linked through relationships. For example, a student could be enrolled in multiple courses, and each course had many students. This setup prevented duplicate entries and made it easy to generate accurate reports\u2014like class size or grade distributions. The impact? The system reduced data entry errors by 90%, and admins could generate reports in seconds instead of hours. Plus, because the data was structured and consistent, it became easier to integrate with other tools like analytics dashboards and automated notifications. It\u2019s a clear example of how relational databases build trust in data across teams and systems."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you explain what task queues are and how they impact asynchronous processing in real-world applications?"
+      },
+      {
+        "role": "candidate",
+        "text": "Task queues are systems that decouple long-running operations\u2014like sending emails or processing files\u2014from the main request flow. I\u2019ve used Celery with Redis as a broker to handle this in a real project where we needed to send welcome emails after a new user signed up. Without a task queue, those emails would have blocked the API response, causing delays and poor user experience. By offloading the email sending to a background task, I reduced response time from 5 seconds to under 100ms and ensured the system stayed responsive. This also made it easier to scale\u2014emails could be processed in parallel without affecting the main API. In practice, it\u2019s been a game-changer for reliability and performance, especially when dealing with operations that take time or need retries. It\u2019s one of the reasons I love building scalable backend systems."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you explain how you've used Celery and Redis for background job processing in your previous roles, including a specific example of its impact?"
+      },
+      {
+        "role": "candidate",
+        "text": "In my recent project building a student portal, I used Celery with Redis to handle background tasks like sending welcome emails and processing grade reports. For example, when a new student signed up, instead of waiting for the email to send synchronously, I offloaded the email to a Celery task. This kept the API response under 100ms\u2014critical for a smooth user experience. I also used Redis as the message broker to manage task queues efficiently, ensuring no email got lost even during high traffic. The impact? The system became much more responsive, and we reduced email delivery failures by 90% compared to the synchronous approach. It also made it easier to scale and monitor jobs using Celery\u2019s built-in dashboard. This experience really solidified my confidence in building scalable, reliable backend systems."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you explain how you would implement background job processing using Celery and Redis in a real-world application, including its impact on system performance?"
+      },
+      {
+        "role": "candidate",
+        "text": "In a real-world app I worked on\u2014a student portal\u2014I used Celery with Redis to handle background jobs like sending welcome emails and processing grade reports. Instead of waiting for these tasks to complete during a user\u2019s request, I offloaded them to Celery. For example, when a new student signed up, I triggered a Celery task to send a welcome email asynchronously. This kept the API response under 100ms, making the experience feel instant and smooth. Redis acted as the message broker, ensuring tasks were queued reliably even during traffic spikes. The impact? Page load times dropped dramatically, user satisfaction went up, and we reduced email delivery failures by 90%. Plus, Redis\u2019s lightweight design made it easy to scale and monitor jobs in real time. It\u2019s a simple but powerful pattern that keeps the system responsive and scalable\u2014exactly what we need in production."
+      }
+    ],
+    "criterion_results": [
+      {
+        "competency_id": "1",
+        "competency_name": "REST API Development with FastAPI or Django",
+        "criterion_id": "7154dc2b44bcae9b3eeb894d18bf759e87334fb1",
+        "criterion_name": "Understanding of RESTful Design Principles",
+        "level": 5,
+        "confidence": 0.95,
+        "notes": "The candidate demonstrated an expert understanding of RESTful design principles, providing clear definitions, practical examples from their experience with FastAPI, and discussing the broader impacts on API performance, usability, testing, debugging, and scalability."
+      },
+      {
+        "competency_id": "1",
+        "competency_name": "REST API Development with FastAPI or Django",
+        "criterion_id": "85e4f328210cc137eab913c1225debd3025134e9",
+        "criterion_name": "Familiarity with FastAPI or Django Frameworks",
+        "level": 4,
+        "confidence": 0.9,
+        "notes": "The candidate demonstrated proficiency by detailing their use of FastAPI's async support, Swagger UI, and integration with PostgreSQL and Redis/Celery for performance improvements. They provided a specific example showing measurable impact (40% load time reduction), indicating a high level of competence in using the framework effectively."
+      },
+      {
+        "competency_id": "1",
+        "competency_name": "REST API Development with FastAPI or Django",
+        "criterion_id": "eaf48057a3fbf53f0f380a87b6b41b748193b127",
+        "criterion_name": "Practical Implementation of APIs",
+        "level": 5,
+        "confidence": 0.95,
+        "notes": "The candidate demonstrated exemplary understanding of REST API implementation using FastAPI, covering key aspects like dependency injection, path operations, Pydantic models for validation, error handling, rate limiting, versioning, and async support. They provided a real-world example with measurable impacts on project efficiency and developer experience."
+      },
+      {
+        "competency_id": "2",
+        "competency_name": "Database Management with PostgreSQL",
+        "criterion_id": "067cda47afb559e2fdbfc699884eafe7e9835559",
+        "criterion_name": "Schema Design and Maintenance",
+        "level": 5,
+        "confidence": 0.95,
+        "notes": "The candidate demonstrated an expert understanding of PostgreSQL schema design, providing detailed examples and discussing the impact on performance and scalability. The explanation included core entities, relationships, indexing strategies, constraints, and maintenance practices."
+      },
+      {
+        "competency_id": "2",
+        "competency_name": "Database Management with PostgreSQL",
+        "criterion_id": "45a14842101e0687c9e65d7ad292d8a9fdf43378",
+        "criterion_name": "SQL Query Optimization",
+        "level": 5,
+        "confidence": 0.95,
+        "notes": "The candidate demonstrated exemplary SQL query optimization skills by identifying inefficiencies, adding appropriate indexes, and restructuring the query to significantly improve performance. The example provided shows a clear understanding of both theory and practical application with measurable impact."
+      },
+      {
+        "competency_id": "2",
+        "competency_name": "Database Management with PostgreSQL",
+        "criterion_id": "9a563328c1b01de3c0ef94ee0a7063cbd867c9f9",
+        "criterion_name": "Understanding of Relational Database Concepts",
+        "level": 5,
+        "confidence": 1.0,
+        "notes": null
+      },
+      {
+        "competency_id": "3",
+        "competency_name": "Background Job Processing with Celery and Redis",
+        "criterion_id": "a0ac1593d340994d689d2e5ca4c9bd52f4010fa4",
+        "criterion_name": "Understanding of Task Queue Concepts",
+        "level": 5,
+        "confidence": 1.0,
+        "notes": null
+      },
+      {
+        "competency_id": "3",
+        "competency_name": "Background Job Processing with Celery and Redis",
+        "criterion_id": "6460a059e326d7d386b6f2b4cb2f01e2cf1d46c0",
+        "criterion_name": "Familiarity with Celery and Redis",
+        "level": 5,
+        "confidence": 0.95,
+        "notes": "The candidate provided a detailed example of using Celery and Redis in a real-world project, demonstrating proficiency with core functionalities and advanced features like task offloading for performance improvement and efficient queue management. The mention of measurable impacts such as reduced email delivery failures and improved system responsiveness further supports a high level of expertise."
+      },
+      {
+        "competency_id": "3",
+        "competency_name": "Background Job Processing with Celery and Redis",
+        "criterion_id": "591566cf09abb97bc1bc02a5eba061baae420342",
+        "criterion_name": "Practical Implementation of Background Jobs",
+        "level": 5,
+        "confidence": 0.95,
+        "notes": "The candidate provided a detailed, practical example of implementing background job processing using Celery and Redis in a real-world application. They effectively described the impact on system performance, including reduced page load times and improved user satisfaction. The explanation demonstrated exemplary implementation skills with innovative solutions."
+      }
+    ],
+    "wrapup_summary": {
+      "closing_statement": "The candidate has demonstrated exceptional expertise across all evaluated competencies for an Entry-Level Backend Engineer role, showcasing a deep understanding of REST API development, database management, and background job processing.",
+      "key_strengths": [
+        "Expert understanding of RESTful design principles with practical examples from FastAPI experience",
+        "Proficiency in using FastAPI's async support and integration with PostgreSQL and Redis/Celery for performance improvements",
+        "Exemplary skills in PostgreSQL schema design and SQL query optimization, leading to significant performance enhancements",
+        "High-level expertise in task queue concepts and practical implementation of background jobs using Celery and Redis"
+      ],
+      "risk_flags": [],
+      "next_steps": [
+        "Consider the candidate for roles requiring advanced backend development skills",
+        "Discuss potential projects where their expertise can be leveraged to improve system performance and scalability",
+        "Evaluate fit within team dynamics and project requirements for optimal integration"
+      ]
+    }
+  },
+  {
+    "job_title": "Entry-Level Backend Engineer (Python)",
+    "candidate_name": "AVERY CHEN",
+    "job_description": "Entry-Level Backend Engineer (Python)\n\nWe are hiring a junior Python engineer to support API and data-pipeline delivery for our SaaS analytics platform.\n\nResponsibilities:\n\u2022 Implement REST endpoints with FastAPI or Django.\n\u2022 Maintain PostgreSQL schemas and write optimized SQL queries.\n\u2022 Build background jobs using Celery and Redis queues.\n\u2022 Write unit/integration tests and participate in code reviews.\n\u2022 Document services and deploy through our GitHub Actions pipeline.\n\nRequirements:\n\u2022 B.S. in Computer Science or related field (or equivalent internship experience).\n\u2022 0-1 years of professional software experience with Python.\n\u2022 Familiarity with REST APIs, relational databases, and Git workflows.\n\u2022 Understanding of containerization (Docker) and cloud fundamentals.\n\nNice to have:\n\u2022 Exposure to AWS services (Lambda, RDS, ECS).\n\u2022 Experience with observability tooling (Prometheus, Grafana, Sentry).",
+    "resume": "AVERY CHEN\nPython Backend Engineer\nEmail: avery.chen@example.com | GitHub: github.com/averychen | Boston, MA\n\nSUMMARY\nEntry-level backend engineer with internship experience building REST APIs, automating ETL jobs, and writing tests in FastAPI/Django environments.\n\nEXPERIENCE\nBackend Engineering Intern | Nimbus Analytics | Jan 2024 \u2013 Jun 2024\n\u2022 Built FastAPI endpoints for usage metrics, reducing response time by 25%.\n\u2022 Added Celery task for nightly data reconciliation across PostgreSQL and S3.\n\u2022 Authored pytest suite with >85% coverage integrated into GitHub Actions CI.\n\nPROJECTS\nFleetWatch API \u2013 Containerized microservice exposing telemetry via FastAPI, SQLAlchemy, and Redis caching.\nKnowledge Base Sync \u2013 Automated Confluence to Markdown sync using Python and AWS Lambda.\n\nEDUCATION\nB.S. Computer Science | Northeastern University | 2024\n\nSKILLS\nPython, FastAPI, Django, PostgreSQL, SQLAlchemy, Celery, Redis, Docker, Git, REST, pytest, CI/CD",
+    "competencies": [
+      {
+        "id": "1",
+        "name": "REST API Development with FastAPI or Django",
+        "interview_style": "concept_primer",
+        "rationale": "The candidate needs a foundational understanding of building REST endpoints using popular Python frameworks like FastAPI and Django. A concept primer will help assess their grasp on the principles and practices involved in designing and implementing APIs."
+      },
+      {
+        "id": "2",
+        "name": "Database Management with PostgreSQL",
+        "interview_style": "concept_primer",
+        "rationale": "Given the responsibility to maintain PostgreSQL schemas and write optimized SQL queries, it's crucial to evaluate the candidate's competency in database management. A concept primer will allow for an assessment of their understanding of relational databases and query optimization techniques."
+      },
+      {
+        "id": "3",
+        "name": "Background Job Processing with Celery and Redis",
+        "interview_style": "concept_primer",
+        "rationale": "The role involves building background jobs using Celery and Redis queues. A concept primer will help determine the candidate's familiarity with asynchronous task processing and their ability to implement efficient job handling mechanisms."
+      }
+    ],
+    "rubric": {
+      "candidate_name": "AVERY CHEN",
+      "position": "Entry-Level Backend Engineer (Python)",
+      "evaluation_criteria": [
+        {
+          "category": "REST API Development with FastAPI or Django",
+          "criteria": [
+            {
+              "name": "Understanding of RESTful Design Principles",
+              "description": "Assess the candidate's grasp on REST principles and their application in API design.",
+              "weight": 40,
+              "scoring_levels": {
+                "Level 0": "Unable to articulate basic REST principles or how they apply to API design.",
+                "Level 1": "Recognizes some REST principles but struggles to apply them consistently.",
+                "Level 2": "Explains key REST principles and applies them in simple scenarios.",
+                "Level 3": "Demonstrates a solid understanding of REST principles with practical examples.",
+                "Level 4": "Articulates advanced REST concepts and their application in complex API designs.",
+                "Level 5": "Exhibits expert-level knowledge of RESTful design, providing innovative solutions."
+              }
+            },
+            {
+              "name": "Proficiency with FastAPI or Django",
+              "description": "Evaluate the candidate's experience and skill level in using FastAPI or Django for API development.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Lacks basic understanding of FastAPI or Django frameworks.",
+                "Level 1": "Has limited exposure to FastAPI/Django, with minimal hands-on experience.",
+                "Level 2": "Can use FastAPI/Django for simple API tasks but lacks depth in advanced features.",
+                "Level 3": "Demonstrates good proficiency in building APIs using FastAPI or Django.",
+                "Level 4": "Shows strong expertise in leveraging FastAPI/Django for efficient API development.",
+                "Level 5": "Exhibits mastery of FastAPI/Django, optimizing performance and scalability."
+              }
+            },
+            {
+              "name": "Application to Real-World Scenarios",
+              "description": "Assess the candidate's ability to apply API development skills in practical situations.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Struggles to relate API concepts to real-world applications.",
+                "Level 1": "Provides basic examples but lacks depth and relevance.",
+                "Level 2": "Offers relevant examples with some insight into practical application.",
+                "Level 3": "Effectively demonstrates how API skills apply in realistic scenarios.",
+                "Level 4": "Shows strong ability to translate API knowledge into real-world solutions.",
+                "Level 5": "Exhibits exceptional skill in applying API development concepts innovatively."
+              }
+            }
+          ]
+        },
+        {
+          "category": "Database Management with PostgreSQL",
+          "criteria": [
+            {
+              "name": "Schema Design and Optimization",
+              "description": "Evaluate the candidate's ability to design and optimize database schemas.",
+              "weight": 35,
+              "scoring_levels": {
+                "Level 0": "Unable to design or optimize basic database schemas.",
+                "Level 1": "Has limited understanding of schema design principles.",
+                "Level 2": "Can create simple schemas but lacks optimization skills.",
+                "Level 3": "Designs effective schemas with some optimization techniques.",
+                "Level 4": "Demonstrates strong ability in designing and optimizing complex schemas.",
+                "Level 5": "Exhibits expert-level proficiency in schema design and optimization."
+              }
+            },
+            {
+              "name": "SQL Query Optimization",
+              "description": "Assess the candidate's skills in writing and optimizing SQL queries.",
+              "weight": 35,
+              "scoring_levels": {
+                "Level 0": "Struggles with basic SQL query construction and optimization.",
+                "Level 1": "Writes simple queries but lacks optimization techniques.",
+                "Level 2": "Can optimize straightforward queries with some guidance.",
+                "Level 3": "Effectively writes and optimizes a variety of SQL queries.",
+                "Level 4": "Demonstrates advanced skills in query optimization for complex scenarios.",
+                "Level 5": "Exhibits mastery in crafting highly efficient and optimized SQL queries."
+              }
+            },
+            {
+              "name": "Practical Database Management Experience",
+              "description": "Evaluate the candidate's hands-on experience with PostgreSQL databases.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Lacks practical experience with PostgreSQL or similar databases.",
+                "Level 1": "Has minimal hands-on experience, primarily theoretical knowledge.",
+                "Level 2": "Shows basic practical skills in managing PostgreSQL databases.",
+                "Level 3": "Demonstrates good practical experience with effective database management.",
+                "Level 4": "Exhibits strong hands-on expertise in PostgreSQL database operations.",
+                "Level 5": "Possesses exceptional practical experience and proficiency."
+              }
+            }
+          ]
+        },
+        {
+          "category": "Background Job Processing with Celery and Redis",
+          "criteria": [
+            {
+              "name": "Understanding of Asynchronous Task Management",
+              "description": "Assess the candidate's knowledge of managing asynchronous tasks using Celery.",
+              "weight": 40,
+              "scoring_levels": {
+                "Level 0": "Lacks understanding of asynchronous task management concepts.",
+                "Level 1": "Has limited exposure to Celery and struggles with basic concepts.",
+                "Level 2": "Can manage simple asynchronous tasks but lacks depth in advanced features.",
+                "Level 3": "Demonstrates good proficiency in handling asynchronous tasks with Celery.",
+                "Level 4": "Shows strong expertise in optimizing task management using Celery.",
+                "Level 5": "Exhibits mastery of Celery for efficient and scalable task processing."
+              }
+            },
+            {
+              "name": "Integration with Redis Queues",
+              "description": "Evaluate the candidate's ability to integrate and utilize Redis queues in job processing.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Struggles with basic integration of Redis queues.",
+                "Level 1": "Has limited understanding of Redis queue concepts.",
+                "Level 2": "Can perform simple integrations but lacks optimization skills.",
+                "Level 3": "Effectively integrates and utilizes Redis queues in job processing.",
+                "Level 4": "Demonstrates advanced integration techniques for efficient use of Redis.",
+                "Level 5": "Exhibits expert-level proficiency in leveraging Redis for optimal performance."
+              }
+            },
+            {
+              "name": "Application to Real-World Scenarios",
+              "description": "Assess the candidate's ability to apply background job processing skills in practical situations.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Struggles to relate task management concepts to real-world applications.",
+                "Level 1": "Provides basic examples but lacks depth and relevance.",
+                "Level 2": "Offers relevant examples with some insight into practical application.",
+                "Level 3": "Effectively demonstrates how job processing skills apply in realistic scenarios.",
+                "Level 4": "Shows strong ability to translate task management knowledge into real-world solutions.",
+                "Level 5": "Exhibits exceptional skill in applying background job processing concepts innovatively."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "id": "737f384da75f447e96a3042cbbb96393",
+    "scheduled_date": "2025-11-02T23:29:57.720451Z",
+    "status": "scheduled",
+    "overall_score": null,
+    "score_details": null,
+    "transcript": [],
+    "criterion_results": [],
+    "wrapup_summary": null
   }
 ]

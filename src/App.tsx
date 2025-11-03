@@ -2,10 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { Chatbot } from './components/Chatbot';
 import { SetupPage, InterviewDetails } from './components/SetupPage';
 import { ScheduledInterviews, ScheduledInterview } from './components/ScheduledInterviews';
+import { ReportPage } from './components/ReportPage';
+import type { InterviewReportData } from './components/InterviewReport';
 import { API_BASE_URL } from './config';
 import { fetchUiConfig, UiClientConfig } from './services/uiConfig';
 
-type AppView = 'setup' | 'scheduled' | 'interview';
+type AppView = 'setup' | 'scheduled' | 'interview' | 'report';
 
 interface ApiCompetency {
   id: string;
@@ -83,6 +85,9 @@ export default function App() {
   const [interviewLoadError, setInterviewLoadError] = useState<string | null>(null);
   const [uiConfig, setUiConfig] = useState<UiClientConfig | null>(null);
   const [isInterviewerView, setIsInterviewerView] = useState(true);
+  const [activeReport, setActiveReport] = useState<InterviewReportData | null>(null);
+  const [isLoadingReport, setIsLoadingReport] = useState(false);
+  const [reportError, setReportError] = useState<string | null>(null);
 
   const mapFromApi = useCallback((payload: ApiScheduledInterview): ScheduledInterview => ({
     id: payload.id,
@@ -261,9 +266,35 @@ export default function App() {
 
   const handleBackToScheduled = useCallback(() => {
     setCurrentInterviewId(null);
+    setActiveReport(null);
+    setReportError(null);
+    setIsLoadingReport(false);
     setCurrentView('scheduled');
     void fetchScheduledInterviews();
   }, [fetchScheduledInterviews]);
+
+  const handleViewReport = useCallback(async (interviewId: string) => {
+    setCurrentInterviewId(interviewId);
+    setActiveReport(null);
+    setReportError(null);
+    setIsLoadingReport(true);
+    setCurrentView('report');
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/interviews/${interviewId}/report`);
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        const message = body?.detail ?? `Request failed with status ${response.status}`;
+        throw new Error(message);
+      }
+      const payload: InterviewReportData = await response.json();
+      setActiveReport(payload);
+    } catch (error) {
+      console.error('Failed to load interview report', error);
+      setReportError('Unable to load interview report. Please try again.');
+    } finally {
+      setIsLoadingReport(false);
+    }
+  }, []);
 
   const handleDeleteInterview = async (interviewId: string) => {
     try {
@@ -292,11 +323,23 @@ export default function App() {
         <Chatbot
           interview={activeInterview}
           isInterviewerView={isInterviewerView}
-          autoReplyEnabled={uiConfig?.auto_candidate_reply ?? true}
+          autoReplyEnabled={uiConfig?.auto_candidate_reply ?? false}
           initialTtsEnabled={uiConfig?.tts_enabled ?? true}
           onEndInterview={handleBackToScheduled}
         />
       </div>
+    );
+  }
+
+  if (currentView === 'report') {
+    return (
+      <ReportPage
+        reportData={activeReport}
+        onBack={handleBackToScheduled}
+        isLoading={isLoadingReport}
+        error={reportError}
+        onRetry={currentInterviewId ? () => { void handleViewReport(currentInterviewId); } : undefined}
+      />
     );
   }
 
@@ -313,6 +356,7 @@ export default function App() {
           void fetchScheduledInterviews();
         }}
         onDeleteInterview={handleDeleteInterview}
+        onViewReport={(interviewId) => { void handleViewReport(interviewId); }}
       />
     );
   }
