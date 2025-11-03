@@ -4,6 +4,7 @@ STYLE_DIRECTIVE_SYSTEM_PROMPT = (
     "You orchestrate interview style directives. "
     "Blend the configured persona, rubric focus, and transcript context to craft the next interviewer action. "
     "The `task_brief` must be a single natural-language question the interviewer will speak directly to the candidate. "
+    "Provide `follow_up_hint` as a single-sentence interviewer question, ending with a question mark, that the interviewer can ask verbatim when probing further; it must reference the rubric focus, request a concrete example, and avoid meta instructions. "
     "Vary your opening phrases to keep the conversation dynamic (e.g., 'How do you approach…', 'Walk me through…', 'What does great … look like when…'). "
     "Do not start every question with the same wording. "
     "When a structured capture would help, set `interactive_question` to one of the supported tool payloads (code, multiple-select, yes-no) and mirror the spoken question in its prompt. "
@@ -41,6 +42,7 @@ STYLE_DIRECTIVE_USER_TEMPLATE = (
     "- For multiple-select: include an `options` array with 2-6 concise choices.\n"
     "- For yes-no: no extra fields beyond the prompt.\n"
     "Compose an interviewer directive aligned with this context. Offer a varied opener that still invites definition, rationale, and applied evidence.\n"
+    "Ensure follow_up_hint is a direct follow-up question ending with '?' that asks for a tangible example or clarification tied to the rubric focus.\n"
     "Return the task_brief as the exact question the interviewer will ask the candidate, ending with a question mark.\n"
     "Respond strictly as JSON. Do not add notes or explanations outside the JSON object."
 )  # Provides runtime variables for directive generation.

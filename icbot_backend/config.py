@@ -5,7 +5,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Final, Literal
 
-from pydantic import BaseModel, Field, HttpUrl, PositiveFloat, PositiveInt  # Defines configuration schema models.
+from pydantic import BaseModel, Field, HttpUrl, PositiveFloat, PositiveInt, model_validator  # Defines configuration schema models.
 
 if TYPE_CHECKING:  # Provides style type for static analysis.
     from .styles.base import StyleSpec
@@ -53,6 +53,26 @@ class LlmConfig(BaseModel):  # Aggregates routes and registry entries.
     registry: dict[str, LlmRegistryEntry] = Field(default_factory=dict)
 
 
+class CandidateLevelConfig(BaseModel):  # Describes candidate reply persona levels.
+    label: str = Field(..., min_length=1)
+    prompt_id: str = Field(..., min_length=1)
+    index: int = Field(..., ge=0, le=5)
+
+
+class CandidateConfig(BaseModel):  # Groups candidate simulation configuration.
+    default_level: str = Field(..., min_length=2)
+    post_processing_prompt_id: str = Field(..., min_length=1)
+    generation_notes_prompt_id: str = Field(..., min_length=1)
+    response_format_prompt_id: str = Field(default="response_format", min_length=1)
+    levels: dict[str, CandidateLevelConfig] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def _validate_default_level(cls, values: "CandidateConfig") -> "CandidateConfig":  # Ensures default level exists in catalog.
+        if values.default_level not in values.levels:
+            raise ValueError("default_level must reference a configured candidate level.")
+        return values
+
+
 class CompetencyLimits(BaseModel):  # Stores competency stage range.
     min: PositiveInt
     max: PositiveInt
@@ -73,10 +93,23 @@ class RubricConfig(BaseModel):  # Configures rubric generation constraints.
     max_criteria_per_competency: PositiveInt = 3
 
 
+class CriterionFlowTuning(BaseModel):  # Configures probe thresholds for criterion flow.
+    confidence_threshold: float = Field(default=0.7, ge=0.0, le=1.0)
+    min_attempts: PositiveInt = Field(default=1)
+    max_attempts: PositiveInt = Field(default=2)
+
+    @model_validator(mode="after")
+    def _validate_attempts(cls, values: "CriterionFlowTuning") -> "CriterionFlowTuning":  # Ensures attempt minimum does not exceed cap.
+        if values.min_attempts > values.max_attempts:
+            raise ValueError("criterion_flow.min_attempts must be less than or equal to max_attempts.")
+        return values
+
+
 class EvaluationConfig(BaseModel):  # Holds evaluation stage wiring.
     routes: dict[str, str] = Field(default_factory=dict)
     schema_registry: dict[str, str] = Field(default_factory=dict)
     weights: dict[str, float] = Field(default_factory=dict)
+    criterion_flow: CriterionFlowTuning = Field(default_factory=CriterionFlowTuning)
 
 
 class UiConfig(BaseModel):  # Exposes UI-facing defaults.
@@ -91,6 +124,7 @@ class StylesConfig(BaseModel):  # Holds all style catalog entries.
 
 class AppConfig(BaseModel):  # Top-level application configuration model.
     llm: LlmConfig
+    candidate: CandidateConfig
     flow: FlowConfig
     rubric: RubricConfig = Field(default_factory=RubricConfig)
     evaluation: EvaluationConfig

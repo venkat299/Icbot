@@ -23,10 +23,16 @@ class CriterionGraph:  # Executes criterion-level turn taking using LangGraph.
         evaluator: EvaluationAgent,
         *,
         confidence_threshold: float = 0.7,
+        min_attempts: int = 1,
         max_attempts: int = 2,
     ) -> None:  # Initializes the criterion flow controller.
         self._evaluator = evaluator
+        if min_attempts < 1:
+            raise ValueError("min_attempts must be at least 1.")
+        if min_attempts > max_attempts:
+            raise ValueError("min_attempts cannot exceed max_attempts.")
         self._confidence_threshold = confidence_threshold
+        self._min_attempts = min_attempts
         self._max_attempts = max_attempts
         self._graph = self._build()
 
@@ -102,11 +108,12 @@ class CriterionGraph:  # Executes criterion-level turn taking using LangGraph.
         state = payload["state"]
         evaluation = payload["evaluation"]
         assert evaluation is not None
-        sufficient = (
-            evaluation.confidence >= self._confidence_threshold
-            or evaluation.disposition == "complete"
-            or len(state.attempts) >= self._max_attempts
-        )
+        attempts = len(state.attempts)
+        meets_floor = attempts >= self._min_attempts
+        exhausted = attempts >= self._max_attempts
+        high_confidence = evaluation.confidence >= self._confidence_threshold
+        completed = evaluation.disposition == "complete"
+        sufficient = exhausted or (meets_floor and (high_confidence or completed))
         if sufficient:
             state.done = True
             state.pending_question = None
@@ -120,11 +127,14 @@ class CriterionGraph:  # Executes criterion-level turn taking using LangGraph.
         evaluation = payload["evaluation"]
         assert evaluation is not None
         directive = state.directive
-        hint = directive.directive.follow_up_hint or "Please expand on a different example or angle."
-        follow_up = (
-            f"Thanks for the context so far. {hint.strip()} "
-            f"Focus on: {directive.criterion_name}."
-        )
+        hint = (directive.directive.follow_up_hint or "").strip()
+        if not hint:
+            hint = f"Could you walk through a concrete example that shows strong {directive.criterion_name}?"
+        question = hint if hint.endswith("?") else f"{hint.rstrip('.')}?"
+        if directive.criterion_name.lower() not in question.lower():
+            stem = question.rstrip("?")
+            question = f"{stem} focusing on {directive.criterion_name}?"
+        follow_up = f"Thanks for the context so far. {question}"
         state.pending_question = follow_up
         payload["follow_up"] = follow_up
         return payload

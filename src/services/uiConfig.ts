@@ -3,10 +3,22 @@ import { API_BASE_URL } from '../config'; // Provides API host.
 
 export type ViewMode = 'interviewer' | 'candidate';
 
+export interface CandidateLevelOption { // Defines candidate level options for selection UI.
+  id: string;
+  label: string;
+  index: number;
+}
+
+export interface UiCandidateConfig { // Holds candidate level defaults and options.
+  default_level: CandidateLevelOption['id'];
+  levels: CandidateLevelOption[];
+}
+
 export interface UiClientConfig {
   default_view_mode: ViewMode;
   tts_enabled: boolean;
   auto_candidate_reply: boolean;
+  candidate_levels: UiCandidateConfig;
 }
 
 // Requests UI config defaults from the backend.

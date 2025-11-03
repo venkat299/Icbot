@@ -75,6 +75,20 @@
       }
     }
   },
+  "candidate": {
+    "default_level": "L3",
+    "post_processing_prompt_id": "post_processing",
+    "generation_notes_prompt_id": "generation_notes",
+    "response_format_prompt_id": "response_format",
+    "levels": {
+      "L0": { "label": "Level 0 - Novice", "prompt_id": "L0", "index": 0 },
+      "L1": { "label": "Level 1 - Beginner", "prompt_id": "L1", "index": 1 },
+      "L2": { "label": "Level 2 - Junior", "prompt_id": "L2", "index": 2 },
+      "L3": { "label": "Level 3 - Mid", "prompt_id": "L3", "index": 3 },
+      "L4": { "label": "Level 4 - Senior", "prompt_id": "L4", "index": 4 },
+      "L5": { "label": "Level 5 - Principal", "prompt_id": "L5", "index": 5 }
+    }
+  },
   "flow": {
     "stages": [
       "warmup",
@@ -87,7 +101,7 @@
     },
     "warmup": {
       "max_turns": 3,
-      "ready_threshold": 0.75
+      "ready_threshold": 0.1
     }
   },
   "rubric": {
@@ -104,6 +118,11 @@
       "competency-1": 0.34,
       "competency-2": 0.33,
       "competency-3": 0.33
+    },
+    "criterion_flow": {
+      "confidence_threshold": 0.7,
+      "min_attempts": 2,
+      "max_attempts": 2
     }
   },
   "ui": {

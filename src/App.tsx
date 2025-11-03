@@ -325,6 +325,8 @@ export default function App() {
           isInterviewerView={isInterviewerView}
           autoReplyEnabled={uiConfig?.auto_candidate_reply ?? false}
           initialTtsEnabled={uiConfig?.tts_enabled ?? true}
+          candidateLevelOptions={uiConfig?.candidate_levels.levels ?? []}
+          initialCandidateLevel={uiConfig?.candidate_levels.default_level ?? 'L3'}
           onEndInterview={handleBackToScheduled}
         />
       </div>

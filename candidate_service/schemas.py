@@ -12,6 +12,15 @@ class CandidateRole(str, Enum):  # Enumerates supported chat roles.
     CANDIDATE = "candidate"
 
 
+class CandidateLevel(str, Enum):  # Enumerates candidate proficiency bands.
+    L0 = "L0"
+    L1 = "L1"
+    L2 = "L2"
+    L3 = "L3"
+    L4 = "L4"
+    L5 = "L5"
+
+
 class CandidateMessage(BaseModel):  # Represents a single chat message in the interview log.
     role: CandidateRole
     text: str = Field(..., min_length=1)
@@ -33,6 +42,7 @@ class CandidateReplyRequest(BaseModel):  # Defines request payload for generatin
     question: str = Field(..., min_length=1)
     conversation: list[CandidateMessage] = Field(default_factory=list)
     persona: CandidatePersona | None = None
+    level: CandidateLevel = Field(default=CandidateLevel.L3)
 
     @validator("question")
     def _trim_question(cls, value: str) -> str:  # Ensures interviewer question is trimmed.

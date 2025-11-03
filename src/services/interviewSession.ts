@@ -8,6 +8,10 @@ import type {
   SidebarSnapshot,
 } from '../types/interviewSession';
 
+export interface ApiError extends Error {
+  status?: number;
+}
+
 interface ApiInteractiveQuestion {
   id?: string | null;
   type: 'code' | 'multiple-select' | 'yes-no';
@@ -117,15 +121,22 @@ const mapSessionResponse = (payload: ApiSessionResponse): InterviewSessionRespon
 });
 
 const handleError = async (response: Response, fallback: string) => { // Parses API errors with detail support.
+  let detail: string | undefined;
   try {
     const body = await response.json();
     if (body?.detail) {
-      throw new Error(`${fallback}: ${body.detail}`);
+      detail = body.detail as string;
     }
   } catch {
-    throw new Error(`${fallback} (${response.status})`);
+    // ignore JSON parsing errors; we'll use fallback
   }
-  throw new Error(`${fallback} (${response.status})`);
+  if (response.status === 404 && !detail) {
+    detail = 'Session not found or expired.';
+  }
+  const message = detail ? `${fallback}: ${detail}` : `${fallback} (${response.status})`;
+  const error = new Error(message) as ApiError;
+  error.status = response.status;
+  throw error;
 };
 
 export async function startInterviewSession(interviewId: string): Promise<InterviewSessionResponse> {

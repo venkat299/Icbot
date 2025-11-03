@@ -26,7 +26,7 @@ from ..schemas.warmup import (  # Uses warm-up schema types.
     WarmupRequest,
     WarmupTurn,
 )
-from ..schemas import UiConfigModel  # Uses config schema types.
+from ..schemas import UiCandidateConfigModel, UiCandidateLevelModel, UiConfigModel  # Uses config schema types.
 from ..styles.toolkit import list_style_summaries  # Lists available style summaries.
 from ..reporting import build_interview_report, render_report_pdf  # Builds reports and PDF exports.
 
@@ -192,7 +192,19 @@ async def get_interviews() -> list[ScheduledInterviewModel]:
 @app.get("/api/config/ui", response_model=UiConfigModel)  # Returns UI defaults.
 async def get_ui_config() -> UiConfigModel:
     config = load_app_config()
-    return UiConfigModel.model_validate(config.ui.model_dump())
+    candidate_cfg = config.candidate
+    ordered_levels = sorted(candidate_cfg.levels.items(), key=lambda item: item[1].index)
+    level_models = [
+        UiCandidateLevelModel(id=level_id, label=settings.label, index=settings.index)
+        for level_id, settings in ordered_levels
+    ]
+    payload = UiConfigModel(
+        default_view_mode=config.ui.default_view_mode,
+        tts_enabled=config.ui.tts_enabled,
+        auto_candidate_reply=config.ui.auto_candidate_reply,
+        candidate_levels=UiCandidateConfigModel(default_level=candidate_cfg.default_level, levels=level_models),
+    )
+    return payload
 
 
 @app.get("/api/styles", response_model=list[StyleSummary])  # Returns configured interview styles.

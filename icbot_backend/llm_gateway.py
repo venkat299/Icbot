@@ -15,6 +15,7 @@ from .config import EnvConfig, LlmRoute, load_env_config  # Accesses route and e
 
 
 _ANON_API_KEY = "anonymous"  # Placeholder for routes that skip authentication.
+_SCHEMA_RETRY_ATTEMPTS = 2  # Limits schema repair retries per request.
 logger = logging.getLogger(__name__)
 
 
@@ -69,7 +70,7 @@ def _extract_json_object(text: str) -> str:  # Parses the first JSON object and 
     return json.dumps(value, separators=(",", ":"))
 
 
-def _build_model(route: LlmRoute, env: EnvConfig) -> ChatOpenAI:  # Instantiates the concrete chat model.
+def _build_model(route: LlmRoute, env: EnvConfig, schema: Type[BaseModel] | None = None) -> ChatOpenAI:  # Instantiates the concrete chat model.
     provider = route.provider.lower()
     if provider != "openai":
         raise ValueError(f"Unsupported LLM provider '{route.provider}'")
@@ -79,7 +80,13 @@ def _build_model(route: LlmRoute, env: EnvConfig) -> ChatOpenAI:  # Instantiates
     api_key = _resolve_api_key(route, provider_cfg.api_key_env)
     model_kwargs: dict[str, Any] = {}
     if route.enforce_json:
-        model_kwargs["response_format"] = {"type": "json_object"}
+        if schema is not None:
+            model_kwargs["response_format"] = {
+                "type": "json_schema",
+                "json_schema": schema.model_json_schema(),
+            }
+        else:
+            model_kwargs["response_format"] = {"type": "json_object"}
 
     kwargs: dict[str, Any] = {
         "model": route.model,
@@ -148,22 +155,52 @@ def _parse_response(message: AIMessage | ChatMessage, schema: Type[BaseModel]) -
         raise
 
 
+def _build_retry_instruction(schema: Type[BaseModel], error: Exception) -> str:  # Crafts follow-up instruction after schema failure.
+    if isinstance(error, ValidationError):
+        detail = json.dumps(error.errors(), separators=(",", ":"))
+    else:
+        detail = str(error)
+    return (
+        f"The prior reply failed to match schema {schema.__name__}. "
+        "Respond with a single JSON object that satisfies the schema and do not add commentary. "
+        f"Error detail: {detail}"
+    )
+
+
+def _invoke_with_repair(model: ChatOpenAI, messages: list[BaseMessage], schema: Type[BaseModel]) -> BaseModel:  # Retries malformed outputs with corrective guidance.
+    attempt_messages = list(messages)
+    for attempt in range(1, _SCHEMA_RETRY_ATTEMPTS + 1):
+        response = model.invoke(attempt_messages)
+        try:
+            return _parse_response(response, schema)
+        except (ValidationError, ValueError) as exc:
+            logger.warning(
+                "Schema enforcement retry | schema=%s | attempt=%s | error=%s",
+                schema.__name__,
+                attempt,
+                exc,
+            )
+            if attempt == _SCHEMA_RETRY_ATTEMPTS:
+                raise
+            instruction = _build_retry_instruction(schema, exc)
+            attempt_messages = [*attempt_messages, HumanMessage(content=instruction)]
+    raise RuntimeError("Schema repair loop exhausted unexpectedly")
+
+
 def call(task: str, schema: Type[BaseModel], *, cfg: LlmRoute, env: EnvConfig | None = None, extra_hint: str | None = None) -> BaseModel:  # Executes a one-shot LLM call and returns typed output.
     environment = env or load_env_config()
-    model = _build_model(cfg, environment)
+    model = _build_model(cfg, environment, schema)
     messages = _augment_messages([HumanMessage(content=task)], schema, extra_hint)
-    response = model.invoke(messages)
-    return _parse_response(response, schema)
+    return _invoke_with_repair(model, messages, schema)
 
 
 def runnable(cfg: LlmRoute, schema: Type[BaseModel], *, env: EnvConfig | None = None, extra_hint: str | None = None) -> RunnableLambda:  # Provides a runnable that validates outputs against a schema.
     environment = env or load_env_config()
-    model = _build_model(cfg, environment)
+    model = _build_model(cfg, environment, schema)
 
     def _invoke(payload: Any) -> BaseModel:  # Invokes the underlying model with enforced JSON schema.
         messages = _ensure_messages(payload)
         augmented = _augment_messages(messages, schema, extra_hint)
-        response = model.invoke(augmented)
-        return _parse_response(response, schema)
+        return _invoke_with_repair(model, augmented, schema)
 
     return RunnableLambda(_invoke)

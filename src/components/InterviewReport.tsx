@@ -101,7 +101,6 @@ export interface InterviewReportData {
   };
   overall_evaluation: {
     status: string;
-    recommended_next_step: string;
     confidence: number;
     overall_score: number;
     scoring_scale: {
@@ -352,15 +351,7 @@ export function InterviewReport({ data }: InterviewReportProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="
-                backdrop-blur-xl bg-gradient-to-br from-white to-gray-50/50
-                border border-gray-200/50 rounded-xl p-4
-                shadow-[0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)]
-              ">
-                <p className="text-xs text-gray-600 mb-1">Recommended Next Step</p>
-                <p className="text-sm text-gray-900">{data.overall_evaluation.recommended_next_step}</p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="
                 backdrop-blur-xl bg-gradient-to-br from-white to-gray-50/50
                 border border-gray-200/50 rounded-xl p-4

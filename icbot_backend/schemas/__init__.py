@@ -15,7 +15,7 @@ from .wrapup_summary import (  # Re-exports wrap-up schemas.
     WrapupCriterionSummary,
 )
 from .evaluation import EvaluationEvidence, EvaluationVerdict  # Re-exports evaluation schemas.
-from .config import UiConfigModel  # Re-exports config schemas.
+from .config import UiCandidateConfigModel, UiCandidateLevelModel, UiConfigModel  # Re-exports config schemas.
 from .interview import (  # Re-exports interview scheduling schemas.
     ScheduleInterviewRequest,
     ScheduledCompetency,
@@ -52,6 +52,8 @@ __all__ = [
     "CompetencyRequest",
     "CompetencyStageRequest",
     "UiConfigModel",
+    "UiCandidateConfigModel",
+    "UiCandidateLevelModel",
     "CriterionDirective",
     "CriterionState",
     "CriterionAttempt",

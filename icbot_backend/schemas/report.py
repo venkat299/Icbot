@@ -90,7 +90,6 @@ class ScoringScale(BaseModel):  # Declares min/max scoring ranges.
 
 class OverallEvaluation(BaseModel):  # Summarizes the global evaluation.
     status: str = Field(..., min_length=1)
-    recommended_next_step: str = Field(..., min_length=1)
     confidence: float = Field(ge=0.0, le=1.0)
     overall_score: int = Field(ge=0)
     scoring_scale: ScoringScale

@@ -111,12 +111,14 @@
 - Derives sidebar snapshots from returned directives and falls back to schedule metadata so interviewer view stays stable when flow data is sparse.
 - Hides the progress banner when the interviewer sidebar is visible, delegating the indicator to the facilitator-only panel.
 - Defaults auto-reply to disabled until UI config loads so the toggle starts in the off position.
+- Tracks the candidate proficiency level, forwards it with auto-reply requests, and hands options to the interviewer sidebar dropdown.
 
 ### src/components/InterviewerSidebar.tsx
 - Renders an evaluation snapshot card with directive objective, status badge, proficiency level, and confidence.
 - Shows scoring levels and criterion status badges, including confidence readouts for each rubric item.
 - Hosts the interview progress component with stage counts and retains the auto-reply toggle styling.
 - Accepts optional props with sensible defaults so empty snapshots no longer raise runtime errors.
+- Adds a compact select next to the auto-reply switch for choosing candidate level 0-5 with config-driven labels.
 
 ### src/services/interviewSession.ts
 - Maps backend sidebar snapshots into camelCase structures and retains directive parsing as a fallback.
@@ -128,9 +130,11 @@
 
 ### src/services/candidateAutoReply.ts
 - Focuses solely on candidate reply submissions while UI config duties move into a dedicated helper.
+- Includes the L0-L5 level identifier in request payloads so the backend can pick the correct prompt.
 
 ### src/services/uiConfig.ts
 - Adds a shared fetcher for the backend-driven UI config so multiple components can reuse the same defaults.
+- Surfaces candidate level defaults and ordered options from the backend so the UI can populate the dropdown.
 
 ### icbot_backend/api/server.py
 - Removes the legacy `/api/config/features` route; clients now retrieve all UI toggles via `/api/config/ui`.
@@ -161,9 +165,11 @@
 
 ### src/App.tsx
 - Wires the report view to `/api/interviews/{id}/report`, manages loading/error state, and drops the mock data helper.
+- Threaded the candidate level defaults/options from UI config into the live interview view so the chatbot can render the new dropdown.
 
 ### src/components/InterviewReport.tsx
 - Expands the report UI to surface resume highlights, attachments, stage flow, and LLM metadata.
+- Removes the Recommended Next Step card and tightens the evaluation metric grid.
 
 ### src/components/ReportPage.tsx
 - Adds loading/error handling with retry support around the report renderer and wires export controls.
@@ -173,12 +179,16 @@
 
 ### icbot_backend/schemas/report.py
 - Defines typed interview report models covering candidate, position, session, evaluation, and LLM metadata sections.
+- Removes the `recommended_next_step` field from overall evaluation so downstream surfaces can omit it cleanly.
 
 ### icbot_backend/reporting/builder.py
 - Builds the interview report from stored interview data, deriving summaries, evaluations, and attachments.
+- Stops deriving recommended next steps, leaving overall evaluation to communicate status, score, and confidence only.
 
 ### icbot_backend/reporting/pdf.py
 - Renders interview reports to PDF using `fpdf2` for download support.
+- Drops the printed next-step line to match the streamlined evaluation payload.
+- Applies the glassmorphism-inspired palette with styled headings, accent cards, and success/warning fills so the PDF matches the UI theme.
 
 ### src/components/InteractiveQuestion.tsx
 - Switches to shared interactive question types and submits structured answers back to the chat flow.
@@ -189,9 +199,11 @@
 ### src/components/Chatbot.tsx
 - Maps interactive question payloads from the session API, surfaces them in the timeline, and routes submissions through the existing reply handler.
 - Reordered reply handler hooks so interactive submissions call initialized callbacks without runtime reference errors.
+- Detects expired interview sessions, shows a friendly notice, and automatically reboots the flow so 404s from the backend recover without manual refresh.
 
 ### src/services/interviewSession.ts
 - Normalizes interactive question payloads from the backend into camel-cased data for the chat UI.
+- Attaches HTTP status metadata to thrown errors and provides clearer messaging for expired sessions.
 
 ### src/types/interactiveQuestion.ts
 - Centralizes interactive question and answer type definitions for reuse across UI modules.

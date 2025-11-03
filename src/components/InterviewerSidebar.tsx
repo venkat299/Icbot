@@ -3,8 +3,11 @@ import { useCallback } from 'react';
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
 import { Switch } from './ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { AlertCircle, TrendingUp } from 'lucide-react';
 import { InterviewProgress, InterviewStage } from './InterviewProgress';
+import type { CandidateLevelId } from '../services/candidateAutoReply';
+import type { CandidateLevelOption } from '../services/uiConfig';
 interface CriteriaItem {
   name: string;
   level?: number | null;
@@ -31,6 +34,9 @@ interface InterviewerSidebarProps {
   currentStage?: InterviewStage;
   competencyNumber?: number;
   totalCompetencies?: number;
+  candidateLevel?: CandidateLevelId;
+  candidateLevels?: CandidateLevelOption[];
+  onCandidateLevelChange?: (level: CandidateLevelId) => void;
 }
 
 export function InterviewerSidebar({
@@ -51,6 +57,9 @@ export function InterviewerSidebar({
   currentStage = 'warmup',
   competencyNumber = 1,
   totalCompetencies = 3,
+  candidateLevel = 'L3',
+  candidateLevels = [],
+  onCandidateLevelChange,
 }: InterviewerSidebarProps) {
   const getScoreColor = (score: number | null) => {
     if (score === null) return 'text-gray-500';
@@ -105,6 +114,13 @@ export function InterviewerSidebar({
     [onToggleAutoReply],
   ); // Bridges toggle events to parent.
 
+  const handleLevelChange = useCallback(
+    (value: string) => {
+      onCandidateLevelChange?.(value as CandidateLevelId);
+    },
+    [onCandidateLevelChange],
+  ); // Bridges candidate level dropdown to parent state.
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -133,11 +149,25 @@ export function InterviewerSidebar({
             "
           >
             <span className="text-xs text-gray-600">Auto candidate replies</span>
-            <Switch
-              checked={autoReplyEnabled}
-              onCheckedChange={handleAutoReplyChange}
-              className="shadow-[0_1px_4px_rgba(0,0,0,0.1)] border border-gray-200"
-            />
+            <div className="flex items-center gap-2">
+              <Select value={candidateLevel} onValueChange={handleLevelChange} disabled={candidateLevels.length === 0}>
+                <SelectTrigger className="h-8 w-32 bg-white/70 border-gray-200/60 text-xs text-gray-700">
+                  <SelectValue placeholder="Select level" />
+                </SelectTrigger>
+                <SelectContent>
+                  {candidateLevels.map(level => (
+                    <SelectItem key={level.id} value={level.id} className="text-xs">
+                      {level.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Switch
+                checked={autoReplyEnabled}
+                onCheckedChange={handleAutoReplyChange}
+                className="shadow-[0_1px_4px_rgba(0,0,0,0.1)] border border-gray-200"
+              />
+            </div>
           </div>
         )}
       </div>

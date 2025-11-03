@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from uuid import uuid4
 
+from ..config import load_app_config  # Provides access to app configuration.
 from ..agents.warmup_agent import WarmupAgent  # Warm-up orchestration.
 from ..agents.evaluation_agent import EvaluationAgent  # Criterion scoring.
 from ..agents.wrapup_agent import WrapupAgent  # Wrap-up summarization.
@@ -46,7 +47,14 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
         self._warmup_agent = warmup_agent or WarmupAgent()
         self._style_runtime = style_runtime or StyleRuntime()
         self._evaluation_agent = EvaluationAgent()
-        self._criterion_graph = CriterionGraph(self._evaluation_agent)
+        app_config = load_app_config()
+        tuning = app_config.evaluation.criterion_flow
+        self._criterion_graph = CriterionGraph(
+            self._evaluation_agent,
+            confidence_threshold=tuning.confidence_threshold,
+            min_attempts=tuning.min_attempts,
+            max_attempts=tuning.max_attempts,
+        )
         self._wrapup_agent = WrapupAgent()
 
     async def start(self, interview: ScheduledInterviewModel) -> InterviewSessionResponse:  # Initializes a session and returns warm-up prompt.

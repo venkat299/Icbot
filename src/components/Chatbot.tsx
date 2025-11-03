@@ -8,13 +8,21 @@ import { InterviewerSidebar } from './InterviewerSidebar';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './ui/resizable';
 import {
   CandidateConversationEntry,
+  CandidateLevelId,
   CandidatePersonaPayload,
   fetchCandidateReply,
 } from '../services/candidateAutoReply';
-import { startInterviewSession, advanceInterviewSession, completeInterviewSession, extractSidebarSnapshot } from '../services/interviewSession';
+import {
+  startInterviewSession,
+  advanceInterviewSession,
+  completeInterviewSession,
+  extractSidebarSnapshot,
+} from '../services/interviewSession';
+import type { ApiError } from '../services/interviewSession';
 import type { SessionMessage, InterviewSessionResponse, SidebarSnapshot } from '../types/interviewSession';
 import type { ScheduledInterview } from './ScheduledInterviews';
 import type { InteractiveQuestionAnswer, InteractiveQuestionData } from '../types/interactiveQuestion';
+import type { CandidateLevelOption } from '../services/uiConfig';
 
 interface Message { // Represents a chat transcript entry for the UI.
   id: string;
@@ -29,6 +37,11 @@ interface Message { // Represents a chat transcript entry for the UI.
 }
 
 type ChatStatus = 'listening' | 'thinking' | 'waiting for answer';
+
+const SESSION_EXPIRED_NOTICE = 'Interview session expired. Reconnecting...';
+
+const isSessionExpiredError = (error: unknown): error is ApiError =>
+  typeof error === 'object' && error !== null && 'status' in error && (error as ApiError).status === 404;
 
 const mapSessionMessage = (entry: SessionMessage): Message => ({ // Maps backend session payload to UI message.
   id: entry.messageId,
@@ -46,6 +59,8 @@ interface ChatbotProps {
   isInterviewerView?: boolean;
   autoReplyEnabled?: boolean;
   initialTtsEnabled?: boolean;
+  candidateLevelOptions?: CandidateLevelOption[];
+  initialCandidateLevel?: CandidateLevelId;
   onEndInterview?: () => void;
 }
 
@@ -54,6 +69,8 @@ export function Chatbot({
   isInterviewerView = false,
   autoReplyEnabled = false,
   initialTtsEnabled = true,
+  candidateLevelOptions = [],
+  initialCandidateLevel = 'L3',
   onEndInterview,
 }: ChatbotProps) { // Orchestrates chat UI backed by backend session flow.
   const [messages, setMessages] = useState<Message[]>([]); // Chat transcript state.
@@ -69,6 +86,7 @@ export function Chatbot({
   const [sessionError, setSessionError] = useState<string | null>(null); // Stores session bootstrap/advance errors.
   const [isLoadingSession, setIsLoadingSession] = useState(false); // Indicates session bootstrap.
   const [isEnding, setIsEnding] = useState(false); // Tracks manual end processing state.
+  const [candidateLevel, setCandidateLevel] = useState<CandidateLevelId>(initialCandidateLevel); // Tracks candidate proficiency level.
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<Message[]>([]);
   const autoReplyInFlightRef = useRef(false);
@@ -120,6 +138,10 @@ export function Chatbot({
   useEffect(() => {
     setAutoReplyOn(autoReplyEnabled);
   }, [autoReplyEnabled]);
+
+  useEffect(() => {
+    setCandidateLevel(initialCandidateLevel);
+  }, [initialCandidateLevel]);
 
   const handleAutoReplyToggle = useCallback(
     (enabled: boolean) => {
@@ -216,12 +238,14 @@ export function Chatbot({
     [patchMessages, replaceMessages, resolveCompetencyNumber],
   ); // Synchronizes UI state with backend session snapshot.
 
-  const resetSession = useCallback(() => {
+  const resetSession = useCallback((preserveError = false) => {
     setSessionId(null);
     setCurrentStage('warmup');
     setCompetencyNumber(1);
     replaceMessages([]);
-    setSessionError(null);
+    if (!preserveError) {
+      setSessionError(null);
+    }
     setStatus('thinking');
     lastAutoReplyPromptRef.current = null;
     autoReplyInFlightRef.current = false;
@@ -229,18 +253,18 @@ export function Chatbot({
     setSidebarSnapshot(null);
   }, [replaceMessages, stopSpeaking]); // Clears state when interview changes or session ends.
 
-  const bootstrapSession = useCallback(async () => {
+  const bootstrapSession = useCallback(async (preserveError = false) => {
     if (!interview) {
-      resetSession();
+      resetSession(preserveError);
       return;
     }
-    resetSession();
+    resetSession(preserveError);
     setIsLoadingSession(true);
-    setSessionError(null);
     setStatus('thinking');
     try {
       const response = await startInterviewSession(interview.id);
       applySessionResponse(response, 'replace');
+      setSessionError(null);
     } catch (error) {
       console.error('Failed to start interview session', error);
       setSessionError('Unable to load interview session. Please try again.');
@@ -248,10 +272,10 @@ export function Chatbot({
     } finally {
       setIsLoadingSession(false);
     }
-  }, [applySessionResponse, interview, replaceMessages, resetSession, setStatus]);
+  }, [applySessionResponse, interview, replaceMessages, resetSession, setSessionError, setStatus]);
 
   useEffect(() => {
-    bootstrapSession();
+    void bootstrapSession();
   }, [bootstrapSession]);
 
   const handleEndInterviewClick = useCallback(async () => {
@@ -314,6 +338,7 @@ export function Chatbot({
 
   const handleCandidateReply = useCallback(
     async (text: string) => {
+      let sessionExpired = false;
       const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const candidateMessage: Message = {
         id: `candidate-reply-${Date.now()}`,
@@ -336,19 +361,25 @@ export function Chatbot({
         applySessionResponse(response, 'append');
       } catch (error) {
         console.error('Failed to advance interview session', error);
-        const failure: Message = {
-          id: `session-advance-error-${Date.now()}`,
-          text: 'Unable to advance the interview. Please retry shortly.',
-          isUser: false,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          expectCandidateReply: false,
-        };
-        patchMessages(prev => [...prev, failure]);
+        if (isSessionExpiredError(error)) {
+          sessionExpired = true;
+          setSessionError(SESSION_EXPIRED_NOTICE);
+          void bootstrapSession(true);
+        } else {
+          const failure: Message = {
+            id: `session-advance-error-${Date.now()}`,
+            text: 'Unable to advance the interview. Please retry shortly.',
+            isUser: false,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            expectCandidateReply: false,
+          };
+          patchMessages(prev => [...prev, failure]);
+        }
       } finally {
-        setStatus('waiting for answer');
+        setStatus(sessionExpired ? 'thinking' : 'waiting for answer');
       }
     },
-    [applySessionResponse, patchMessages, sessionId, speak, ttsEnabled],
+    [applySessionResponse, bootstrapSession, patchMessages, sessionId, setSessionError, speak, ttsEnabled],
   ); // Handles candidate responses and advances backend session.
 
   const formatInteractiveAnswer = useCallback(
@@ -412,6 +443,12 @@ export function Chatbot({
           await advanceInterviewSession(sessionId, { event: 'interviewer_message', text: trimmedText });
         } catch (error) {
           console.error('Failed to record interviewer message', error);
+          if (isSessionExpiredError(error)) {
+            setSessionError(SESSION_EXPIRED_NOTICE);
+            setStatus('thinking');
+            void bootstrapSession(true);
+            return;
+          }
         }
       }
       if (options?.skipAutoReply) {
@@ -429,38 +466,52 @@ export function Chatbot({
       }
       lastAutoReplyPromptRef.current = prompt.id;
       autoReplyInFlightRef.current = true;
+      let sessionExpired = false;
       try {
         const conversation = mapConversationEntries(updatedHistory);
         const persona = buildCandidatePersona();
         const candidateResponse = await fetchCandidateReply({
           question: trimmedText,
           conversation,
+          level: candidateLevel,
           ...(persona ? { persona } : {}),
         });
         await handleCandidateReply(candidateResponse.reply);
       } catch (error) {
         console.error('Failed to auto-generate candidate reply', error);
-        const failureTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const notice: Message = {
-          id: `candidate-auto-error-${Date.now()}`,
-          text: 'Candidate auto-response is unavailable. Please retry shortly.',
-          isUser: false,
-          timestamp: failureTimestamp,
-          expectCandidateReply: false,
-        };
-        patchMessages(prev => [...prev, notice]);
-        setStatus('waiting for answer');
+        if (isSessionExpiredError(error)) {
+          sessionExpired = true;
+          setSessionError(SESSION_EXPIRED_NOTICE);
+          void bootstrapSession(true);
+        } else {
+          const failureTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const notice: Message = {
+            id: `candidate-auto-error-${Date.now()}`,
+            text: 'Candidate auto-response is unavailable. Please retry shortly.',
+            isUser: false,
+            timestamp: failureTimestamp,
+            expectCandidateReply: false,
+          };
+          patchMessages(prev => [...prev, notice]);
+          setStatus('waiting for answer');
+        }
       } finally {
         autoReplyInFlightRef.current = false;
+        if (!sessionExpired) {
+          setStatus('waiting for answer');
+        }
       }
     },
     [
       autoReplyOn,
+      bootstrapSession,
       buildCandidatePersona,
+      candidateLevel,
       handleCandidateReply,
       mapConversationEntries,
       patchMessages,
       replaceMessages,
+      setSessionError,
       sessionId,
     ],
   ); // Handles interviewer messages and optionally triggers auto candidate replies.
@@ -490,6 +541,7 @@ export function Chatbot({
         const candidateResponse = await fetchCandidateReply({
           question: trimmedQuestion,
           conversation,
+          level: candidateLevel,
           ...(persona ? { persona } : {}),
         });
         await handleCandidateReply(candidateResponse.reply);
@@ -504,12 +556,17 @@ export function Chatbot({
   }, [
     autoReplyOn,
     buildCandidatePersona,
+    candidateLevel,
     handleCandidateReply,
     mapConversationEntries,
     messages,
     sessionId,
     setStatus,
   ]); // Auto-generates candidate replies when feature flag enabled.
+
+  const handleCandidateLevelChange = useCallback((levelId: CandidateLevelId) => {
+    setCandidateLevel(levelId);
+  }, []); // Updates candidate level state from sidebar dropdown.
 
   return (
     <motion.div
@@ -677,6 +734,9 @@ export function Chatbot({
                 currentStage={currentStage}
                 competencyNumber={competencyNumber}
                 totalCompetencies={totalCompetencies}
+                candidateLevel={candidateLevel}
+                candidateLevels={candidateLevelOptions}
+                onCandidateLevelChange={handleCandidateLevelChange}
               />
             </ResizablePanel>
           </>

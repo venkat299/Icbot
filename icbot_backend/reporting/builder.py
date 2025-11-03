@@ -163,21 +163,16 @@ def _build_overall_evaluation(interview: ScheduledInterviewModel) -> OverallEval
     thresholds = ScoringThresholds(strong_positive=85, lean_positive=70, neutral=55, concern=40)
     if score >= thresholds.strong_positive:
         status = "strong_positive"
-        next_step = "Offer Discussion"
     elif score >= thresholds.lean_positive:
         status = "lean_positive"
-        next_step = "Onsite Panel"
     elif score >= thresholds.neutral:
         status = "neutral"
-        next_step = "Team Calibration"
     else:
         status = "concern"
-        next_step = "Decline"
     strengths = interview.wrapup_summary.key_strengths if interview.wrapup_summary else []
     risks = interview.wrapup_summary.risk_flags if interview.wrapup_summary else []
     return OverallEvaluation(
         status=status,
-        recommended_next_step=next_step,
         confidence=0.6 if interview.criterion_results else 0.4,
         overall_score=score,
         scoring_scale=ScoringScale(min=0, max=100, thresholds=thresholds),
