@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field  # Defines criterion-level runtime models.
 
-from ..styles import DirectiveSchema  # Reuses directive schema for stored prompts.
+from ..styles import DirectiveSchema, InteractiveQuestion  # Reuses directive schema for stored prompts.
 
 
 class CriterionDirective(BaseModel):  # Stores the directive and metadata for a rubric criterion.
@@ -16,6 +16,7 @@ class CriterionDirective(BaseModel):  # Stores the directive and metadata for a 
     weight: int = Field(..., ge=0, le=100)
     directive: DirectiveSchema
     question: str = Field(..., min_length=1)
+    interactive_question: InteractiveQuestion | None = None
 
 
 class CriterionAttempt(BaseModel):  # Captures a single Q/A cycle for a criterion.

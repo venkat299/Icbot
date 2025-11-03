@@ -2,6 +2,7 @@ from __future__ import annotations  # Mirrors public schema exports for styles.
 
 from .base import (
     DirectiveSchema,
+    InteractiveQuestion,
     StagePlan,
     StyleDirectiveRequest,
     StyleStageControls,
@@ -12,6 +13,7 @@ from .base import (
 
 __all__ = [
     "DirectiveSchema",
+    "InteractiveQuestion",
     "StagePlan",
     "StyleDirectiveRequest",
     "StyleStageControls",

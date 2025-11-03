@@ -7,21 +7,21 @@
     "competencies": [
       {
         "id": "1",
-        "name": "REST API Development with FastAPI or Django",
-        "interview_style": "concept_primer",
-        "rationale": "The candidate needs a foundational understanding of building REST endpoints using popular Python frameworks like FastAPI and Django. A concept primer will help assess their grasp on the principles and practices involved in designing and implementing APIs."
+        "name": "Python Programming and Frameworks",
+        "interview_style": "objective_check",
+        "rationale": "The candidate needs a solid understanding of Python programming, particularly with frameworks like FastAPI or Django. A Concept Primer will help assess their foundational knowledge and ability to discuss key concepts."
       },
       {
         "id": "2",
-        "name": "Database Management with PostgreSQL",
-        "interview_style": "concept_primer",
-        "rationale": "Given the responsibility to maintain PostgreSQL schemas and write optimized SQL queries, it's crucial to evaluate the candidate's competency in database management. A concept primer will allow for an assessment of their understanding of relational databases and query optimization techniques."
+        "name": "Database Management and SQL Optimization",
+        "interview_style": "implementation_walkthrough",
+        "rationale": "Given the requirement to maintain PostgreSQL schemas and write optimized queries, an Implementation Walkthrough will allow candidates to demonstrate their practical skills in database management."
       },
       {
         "id": "3",
-        "name": "Background Job Processing with Celery and Redis",
-        "interview_style": "concept_primer",
-        "rationale": "The role involves building background jobs using Celery and Redis queues. A concept primer will help determine the candidate's familiarity with asynchronous task processing and their ability to implement efficient job handling mechanisms."
+        "name": "Testing and Code Review Practices",
+        "interview_style": "scenario_drill",
+        "rationale": "The candidate must be able to write tests and participate in code reviews. A Scenario Drill will simulate real-world situations, testing their ability to apply these practices effectively."
       }
     ],
     "rubric": {
@@ -29,377 +29,147 @@
       "position": "Entry-Level Backend Engineer (Python)",
       "evaluation_criteria": [
         {
-          "category": "REST API Development with FastAPI or Django",
+          "category": "Python Programming and Frameworks",
           "criteria": [
             {
-              "name": "Understanding of RESTful Design Principles",
-              "description": "Assess the candidate's grasp on REST principles and their application in API design.",
+              "name": "Objective Check - Fact Probe",
+              "description": "Assess the candidate's ability to provide concise factual claims or definitions with sources.",
               "weight": 40,
               "scoring_levels": {
-                "Level 0": "Unable to articulate basic REST principles or how they apply to API design.",
-                "Level 1": "Recognizes some REST principles but struggles to apply them consistently.",
-                "Level 2": "Explains key REST principles and applies them in simple scenarios.",
-                "Level 3": "Demonstrates a solid understanding of REST principles with practical examples.",
-                "Level 4": "Articulates advanced REST concepts and their application in complex API designs.",
-                "Level 5": "Exhibits expert-level knowledge of RESTful design, providing innovative solutions."
+                "Level 0": "Unable to provide any factual claim or definition.",
+                "Level 1": "Provides vague or incorrect facts without sources.",
+                "Level 2": "Provides correct facts but lacks clarity or source citation.",
+                "Level 3": "Provides clear and accurate facts with some source citation.",
+                "Level 4": "Provides detailed, accurate facts with appropriate source citation.",
+                "Level 5": "Exemplary factual claims with comprehensive sources and explanations."
               }
             },
             {
-              "name": "Proficiency with FastAPI or Django",
-              "description": "Evaluate the candidate's experience and skill level in using FastAPI or Django for API development.",
+              "name": "Objective Check - Calculation Check",
+              "description": "Evaluate the candidate's ability to perform calculations based on provided rules or numbers.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Lacks basic understanding of FastAPI or Django frameworks.",
-                "Level 1": "Has limited exposure to FastAPI/Django, with minimal hands-on experience.",
-                "Level 2": "Can use FastAPI/Django for simple API tasks but lacks depth in advanced features.",
-                "Level 3": "Demonstrates good proficiency in building APIs using FastAPI or Django.",
-                "Level 4": "Shows strong expertise in leveraging FastAPI/Django for efficient API development.",
-                "Level 5": "Exhibits mastery of FastAPI/Django, optimizing performance and scalability."
+                "Level 0": "Unable to perform any calculation correctly.",
+                "Level 1": "Makes significant errors in calculations with no understanding of rules.",
+                "Level 2": "Performs basic calculations but makes minor errors.",
+                "Level 3": "Calculates accurately most of the time, showing good understanding.",
+                "Level 4": "Consistently performs accurate calculations with clear reasoning.",
+                "Level 5": "Demonstrates exceptional calculation skills with advanced problem-solving."
               }
             },
             {
-              "name": "Application to Real-World Scenarios",
-              "description": "Assess the candidate's ability to apply API development skills in practical situations.",
+              "name": "Concept Primer",
+              "description": "Assess foundational knowledge and ability to discuss key Python concepts.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Struggles to relate API concepts to real-world applications.",
-                "Level 1": "Provides basic examples but lacks depth and relevance.",
-                "Level 2": "Offers relevant examples with some insight into practical application.",
-                "Level 3": "Effectively demonstrates how API skills apply in realistic scenarios.",
-                "Level 4": "Shows strong ability to translate API knowledge into real-world solutions.",
-                "Level 5": "Exhibits exceptional skill in applying API development concepts innovatively."
+                "Level 0": "Lacks understanding of basic Python concepts.",
+                "Level 1": "Shows minimal understanding with many inaccuracies.",
+                "Level 2": "Demonstrates basic understanding but lacks depth.",
+                "Level 3": "Provides a solid explanation of key concepts with some detail.",
+                "Level 4": "Explains concepts clearly and accurately with good examples.",
+                "Level 5": "Exemplary discussion of Python concepts with insightful analysis."
               }
             }
           ]
         },
         {
-          "category": "Database Management with PostgreSQL",
+          "category": "Database Management and SQL Optimization",
           "criteria": [
             {
-              "name": "Schema Design and Optimization",
-              "description": "Evaluate the candidate's ability to design and optimize database schemas.",
-              "weight": 35,
+              "name": "Implementation Walkthrough - Approach Probe",
+              "description": "Evaluate the candidate's ability to outline a minimal viable approach for database tasks.",
+              "weight": 40,
               "scoring_levels": {
-                "Level 0": "Unable to design or optimize basic database schemas.",
-                "Level 1": "Has limited understanding of schema design principles.",
-                "Level 2": "Can create simple schemas but lacks optimization skills.",
-                "Level 3": "Designs effective schemas with some optimization techniques.",
-                "Level 4": "Demonstrates strong ability in designing and optimizing complex schemas.",
-                "Level 5": "Exhibits expert-level proficiency in schema design and optimization."
+                "Level 0": "Unable to propose any viable approach.",
+                "Level 1": "Proposes an unclear or incorrect approach with no justification.",
+                "Level 2": "Outlines a basic approach but lacks detail and justification.",
+                "Level 3": "Provides a clear approach with some interfaces and data flow details.",
+                "Level 4": "Describes a comprehensive approach with well-justified interfaces and data flow.",
+                "Level 5": "Exemplary approach with innovative solutions and thorough justification."
               }
             },
             {
-              "name": "SQL Query Optimization",
-              "description": "Assess the candidate's skills in writing and optimizing SQL queries.",
-              "weight": 35,
-              "scoring_levels": {
-                "Level 0": "Struggles with basic SQL query construction and optimization.",
-                "Level 1": "Writes simple queries but lacks optimization techniques.",
-                "Level 2": "Can optimize straightforward queries with some guidance.",
-                "Level 3": "Effectively writes and optimizes a variety of SQL queries.",
-                "Level 4": "Demonstrates advanced skills in query optimization for complex scenarios.",
-                "Level 5": "Exhibits mastery in crafting highly efficient and optimized SQL queries."
-              }
-            },
-            {
-              "name": "Practical Database Management Experience",
-              "description": "Evaluate the candidate's hands-on experience with PostgreSQL databases.",
+              "name": "Implementation Walkthrough - Complexity Reasoning",
+              "description": "Assess the candidate's ability to discuss time/space costs and identify bottlenecks.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Lacks practical experience with PostgreSQL or similar databases.",
-                "Level 1": "Has minimal hands-on experience, primarily theoretical knowledge.",
-                "Level 2": "Shows basic practical skills in managing PostgreSQL databases.",
-                "Level 3": "Demonstrates good practical experience with effective database management.",
-                "Level 4": "Exhibits strong hands-on expertise in PostgreSQL database operations.",
-                "Level 5": "Possesses exceptional practical experience and proficiency."
+                "Level 0": "Unable to discuss complexity or identify any bottlenecks.",
+                "Level 1": "Provides incorrect or irrelevant complexity analysis.",
+                "Level 2": "Discusses basic complexity but misses key details.",
+                "Level 3": "Accurately discusses time/space costs with some identification of bottlenecks.",
+                "Level 4": "Thoroughly analyzes complexity and identifies main bottlenecks effectively.",
+                "Level 5": "Exemplary analysis with deep insights into optimization opportunities."
+              }
+            },
+            {
+              "name": "SQL Optimization",
+              "description": "Evaluate the candidate's ability to write optimized SQL queries.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Unable to write any correct or optimized SQL query.",
+                "Level 1": "Writes incorrect or inefficient SQL queries with no optimization.",
+                "Level 2": "Writes basic SQL queries but lacks optimization techniques.",
+                "Level 3": "Writes correct SQL queries with some optimization efforts.",
+                "Level 4": "Writes efficient and well-optimized SQL queries consistently.",
+                "Level 5": "Exemplary SQL query writing with advanced optimization strategies."
               }
             }
           ]
         },
         {
-          "category": "Background Job Processing with Celery and Redis",
+          "category": "Testing and Code Review Practices",
           "criteria": [
             {
-              "name": "Understanding of Asynchronous Task Management",
-              "description": "Assess the candidate's knowledge of managing asynchronous tasks using Celery.",
+              "name": "Scenario Drill - Scenario Probe",
+              "description": "Assess the candidate's ability to plan testing strategies in given scenarios.",
               "weight": 40,
               "scoring_levels": {
-                "Level 0": "Lacks understanding of asynchronous task management concepts.",
-                "Level 1": "Has limited exposure to Celery and struggles with basic concepts.",
-                "Level 2": "Can manage simple asynchronous tasks but lacks depth in advanced features.",
-                "Level 3": "Demonstrates good proficiency in handling asynchronous tasks with Celery.",
-                "Level 4": "Shows strong expertise in optimizing task management using Celery.",
-                "Level 5": "Exhibits mastery of Celery for efficient and scalable task processing."
+                "Level 0": "Unable to propose any testing strategy.",
+                "Level 1": "Proposes an unclear or irrelevant testing strategy.",
+                "Level 2": "Outlines a basic testing strategy but lacks detail and relevance.",
+                "Level 3": "Provides a clear testing plan with some relevant details.",
+                "Level 4": "Describes a comprehensive testing strategy with well-justified steps.",
+                "Level 5": "Exemplary testing strategy with innovative solutions and thorough justification."
               }
             },
             {
-              "name": "Integration with Redis Queues",
-              "description": "Evaluate the candidate's ability to integrate and utilize Redis queues in job processing.",
+              "name": "Scenario Drill - Tradeoff Probe",
+              "description": "Evaluate the candidate's ability to make reasoned trade-offs in code review scenarios.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Struggles with basic integration of Redis queues.",
-                "Level 1": "Has limited understanding of Redis queue concepts.",
-                "Level 2": "Can perform simple integrations but lacks optimization skills.",
-                "Level 3": "Effectively integrates and utilizes Redis queues in job processing.",
-                "Level 4": "Demonstrates advanced integration techniques for efficient use of Redis.",
-                "Level 5": "Exhibits expert-level proficiency in leveraging Redis for optimal performance."
+                "Level 0": "Unable to identify or justify any trade-offs.",
+                "Level 1": "Identifies incorrect or irrelevant trade-offs without justification.",
+                "Level 2": "Recognizes basic trade-offs but lacks depth in reasoning.",
+                "Level 3": "Makes clear trade-off decisions with some reasoned justification.",
+                "Level 4": "Consistently makes well-reasoned trade-offs with good explanations.",
+                "Level 5": "Exemplary decision-making with insightful and innovative trade-offs."
               }
             },
             {
-              "name": "Application to Real-World Scenarios",
-              "description": "Assess the candidate's ability to apply background job processing skills in practical situations.",
+              "name": "Code Review Participation",
+              "description": "Assess the candidate's ability to effectively participate in code reviews.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Struggles to relate task management concepts to real-world applications.",
-                "Level 1": "Provides basic examples but lacks depth and relevance.",
-                "Level 2": "Offers relevant examples with some insight into practical application.",
-                "Level 3": "Effectively demonstrates how job processing skills apply in realistic scenarios.",
-                "Level 4": "Shows strong ability to translate task management knowledge into real-world solutions.",
-                "Level 5": "Exhibits exceptional skill in applying background job processing concepts innovatively."
+                "Level 0": "Unable to contribute meaningfully to code reviews.",
+                "Level 1": "Contributes irrelevant or incorrect feedback without justification.",
+                "Level 2": "Provides basic feedback but lacks depth and relevance.",
+                "Level 3": "Offers clear and relevant feedback with some constructive insights.",
+                "Level 4": "Consistently provides valuable and well-justified feedback.",
+                "Level 5": "Exemplary participation with insightful, innovative, and constructive contributions."
               }
             }
           ]
         }
       ]
     },
-    "id": "737f384da75f447e96a3042cbbb96393",
-    "scheduled_date": "2025-11-02T23:29:57.720451Z",
-    "status": "completed",
-    "overall_score": 88,
-    "score_details": [
-      {
-        "criteria": "REST API Development with FastAPI or Django \u2013 Understanding of RESTful Design Principles",
-        "score": 80,
-        "feedback": "The candidate demonstrated an advanced understanding of REST principles, including resource-based URLs, HTTP methods, and consistent response structures. They provided a concrete example from a real-world project using FastAPI, showing practical application in API design with standardized endpoints and error handling. This aligns well with Level 4 criteria."
-      },
-      {
-        "criteria": "REST API Development with FastAPI or Django \u2013 Proficiency with FastAPI or Django",
-        "score": 80,
-        "feedback": "The candidate demonstrated strong expertise in leveraging FastAPI for efficient API development, showcasing advanced features like dependency injection, structured error handling, and performance improvements through input validation."
-      },
-      {
-        "criteria": "REST API Development with FastAPI or Django \u2013 Application to Real-World Scenarios",
-        "score": 80,
-        "feedback": "The candidate provided a detailed example of applying REST API principles in a real-world project, demonstrating strong ability to translate API knowledge into practical solutions with measurable impact."
-      },
-      {
-        "criteria": "Database Management with PostgreSQL \u2013 Schema Design and Optimization",
-        "score": 100,
-        "feedback": "The candidate provided a comprehensive answer that included specific techniques such as normalization, indexing strategies, and schema versioning. They also shared a concrete example with measurable improvements in performance and maintainability, demonstrating expert-level proficiency."
-      },
-      {
-        "criteria": "Database Management with PostgreSQL \u2013 SQL Query Optimization",
-        "score": 80,
-        "feedback": "The candidate demonstrated advanced skills in query optimization, providing specific examples of performance improvements and technical details such as indexing strategies. The response was thorough and aligned well with the criteria for level 4."
-      },
-      {
-        "criteria": "Database Management with PostgreSQL \u2013 Practical Database Management Experience",
-        "score": 100,
-        "feedback": "The candidate provided a detailed example of their hands-on experience, demonstrating proactive measures that significantly improved system performance and reliability. Their approach included automated index analysis, routine maintenance tasks, and monitoring alerts, which align with high-level practical database management skills."
-      },
-      {
-        "criteria": "Background Job Processing with Celery and Redis \u2013 Understanding of Asynchronous Task Management",
-        "score": 100,
-        "feedback": "The candidate provided a comprehensive explanation of asynchronous task management using Celery and Redis, including real-world application and impact on performance and reliability. The response demonstrated mastery by detailing specific improvements in system responsiveness and scalability."
-      },
-      {
-        "criteria": "Background Job Processing with Celery and Redis \u2013 Integration with Redis Queues",
-        "score": 100,
-        "feedback": "The candidate provided an expert-level explanation of how Redis integration enhances Celery's background job processing, including specific examples of improved system reliability and performance. The response demonstrated a deep understanding of the technology and its practical applications."
-      },
-      {
-        "criteria": "Background Job Processing with Celery and Redis \u2013 Application to Real-World Scenarios",
-        "score": 80,
-        "feedback": "The candidate provided a strong example of how Celery and Redis were used to improve system performance in a real-world scenario, demonstrating both the practical problem solved and the impact on user experience and system reliability."
-      }
-    ],
-    "transcript": [
-      {
-        "role": "interviewer",
-        "text": "Could you tell me about your experience with building REST APIs using FastAPI or Django?"
-      },
-      {
-        "role": "candidate",
-        "text": "I've built several REST APIs using FastAPI in my recent projects, especially for handling real-time data and high-performance endpoints. I used FastAPI's async support and automatic OpenAPI generation to streamline development and improve documentation. I've also worked with Django for a few smaller projects, where I focused on its built-in admin and authentication features. In both cases, I integrated PostgreSQL for data persistence and used Celery with Redis for background job processing\u2014like sending email confirmations or processing file uploads. I'm especially proud of one API that reduced response time by 40% through better query optimization and async handling in FastAPI. I'm excited to bring that level of efficiency to a team working on scalable backend systems."
-      },
-      {
-        "role": "interviewer",
-        "text": "Avery, it's impressive how you've leveraged FastAPI and Django for building efficient REST APIs, especially with your focus on performance optimization and background job processing. Your experience with PostgreSQL and Celery sounds very relevant to the role we're discussing today. I'm looking forward to diving deeper into these topics as we move forward in our conversation.\n\nWe'll move into competency-focused questions now."
-      },
-      {
-        "role": "interviewer",
-        "text": "How would you define a RESTful API, and what's one concrete way you've applied that definition in a real-world API design to ensure clarity and consistency?"
-      },
-      {
-        "role": "candidate",
-        "text": "I define a RESTful API as a set of endpoints that follow the REST principles\u2014resource-based URLs, HTTP methods (GET, POST, PUT, DELETE) for operations, and consistent, predictable responses. The key is clarity: every endpoint should have a clear, intuitive purpose, and the response structure should be consistent across operations.\n\nIn one real-world project, I built a user management API using FastAPI where I standardized all endpoint paths under `/api/v1/users/{user_id}` and used consistent response formats (like returning a 200 OK with a JSON object containing `id`, `email`, and `created_at`). I also added clear error responses (404, 400) with descriptive messages. This made it easier for frontend developers to integrate and reduced bugs during onboarding. The consistency in structure and error handling helped reduce onboarding time by 30%\u2014a direct win for team velocity and maintainability."
-      },
-      {
-        "role": "interviewer",
-        "text": "How would you define a well-designed REST API in the context of FastAPI or Django, and what's one concrete example where that design choice had a measurable impact on performance or usability?"
-      },
-      {
-        "role": "candidate",
-        "text": "To me, a well-designed REST API in FastAPI or Django means clarity, consistency, and performance\u2014where every endpoint follows predictable patterns, uses appropriate HTTP methods, and returns structured, human-readable responses. In one project, I built a file-processing API where users could upload documents and trigger background processing via Celery. I standardized the endpoint structure at `/api/v1/files/{file_id}` and used FastAPI\u2019s dependency injection to validate file types and sizes upfront. I also added detailed error responses and clear status codes. This reduced frontend debugging time by 40% and cut down API response latency by 25% through better input validation and early error handling. The result? Faster onboarding and fewer integration issues\u2014proving that thoughtful design directly improves both usability and performance."
-      },
-      {
-        "role": "interviewer",
-        "text": "How do you define a successful REST API in a real-world product context, and can you give an example of when you applied that definition in a project with measurable impact?"
-      },
-      {
-        "role": "candidate",
-        "text": "To me, a successful REST API in a real-world product context isn't just about functionality\u2014it's about being predictable, easy to use, and aligned with how the product team actually works. It should reduce friction for frontend developers, enable consistent data flow, and support scalability without breaking the user experience. \n\nI applied this in a project where we built a document review API for a SaaS platform. We wanted users to upload files and have them reviewed by AI\u2014without long wait times or confusing error messages. I designed the API with clear, versioned endpoints like `/api/v1/reviews` and `/api/v1/reviews/{id}`, used consistent response formats, and included clear status codes (like 202 Accepted for background processing). \n\nThe impact? Frontend engineers reduced onboarding time by 50% because they could integrate the API without debugging. We also saw a 30% drop in support tickets related to API errors. Most importantly, the API handled 10k+ requests per day with stable performance\u2014proving that clarity and consistency directly support product velocity and user trust."
-      },
-      {
-        "role": "interviewer",
-        "text": "How do you define a well-designed PostgreSQL schema for performance and maintainability, and what\u2019s one concrete example where that definition made a measurable difference?"
-      },
-      {
-        "role": "candidate",
-        "text": "To me, a well-designed PostgreSQL schema balances performance and maintainability by normalizing data to avoid redundancy, using appropriate indexes on frequently queried fields, and enforcing referential integrity through foreign keys. I also keep schema versioning in mind\u2014documenting changes and using migration scripts to ensure consistency across environments.\n\nIn one project, I was building a user activity tracking system where we needed to store millions of event logs with timestamps and user IDs. I created a normalized schema with a `users` table and a separate `events` table linked via foreign key. I added composite indexes on `(user_id, created_at)` and a B-tree index on `created_at` for efficient range queries. This reduced query latency by 60% during peak usage and cut down on duplicate data storage by 40%. The team also appreciated the clarity in queries and easier debugging\u2014especially when onboarding new developers. It made maintenance smoother and reduced database bloat over time."
-      },
-      {
-        "role": "interviewer",
-        "text": "How do you define a well-optimized SQL query in PostgreSQL, and what specific signs would you look for to know it's performing better in production?"
-      },
-      {
-        "role": "candidate",
-        "text": "To me, a well-optimized SQL query in PostgreSQL is one that minimizes execution time, uses efficient indexing, and avoids full table scans\u2014while staying readable and maintainable. I look for signs like low query execution time (under 100ms), minimal CPU usage, and no blocking or long-running transactions in production. I also watch for high I/O or memory usage, which can indicate inefficient joins or missing indexes. For example, in a recent project, I noticed a query taking 8 seconds in production\u2014after profiling, I found it was scanning a large table without an index on the filter column. Adding a B-tree index reduced execution time from 8s to 120ms and dropped the query\u2019s CPU usage from 90% to under 10%. I also saw a 30% improvement in overall system response time after that change. The key is not just speed, but consistency\u2014queries that perform well under load are a big win for both reliability and user experience."
-      },
-      {
-        "role": "interviewer",
-        "text": "How do you define practical database management in PostgreSQL, and can you give an example of when your approach had a measurable impact on system performance or reliability?"
-      },
-      {
-        "role": "candidate",
-        "text": "To me, practical database management in PostgreSQL means balancing performance, reliability, and maintainability\u2014through consistent schema versioning, proactive monitoring, and automated recovery practices. I don\u2019t just write queries; I set up routines for backup rotation, index maintenance, and query logging to catch performance drift early. In one project, we were handling 50k+ daily user sessions with a high-traffic analytics dashboard. The database was occasionally slowing down due to unindexed joins and stale stats. I introduced automated index analysis scripts and set up a cron job to vacuum and analyze tables weekly. We also added a monitoring alert for slow queries over 500ms. After implementing this, query response times dropped by 40%, and we reduced database downtime by 70% during peak hours. Plus, the team could onboard new developers faster because the schema and maintenance practices were well-documented. That\u2019s what practical database management feels like to me: proactive, sustainable, and team-aligned."
-      },
-      {
-        "role": "interviewer",
-        "text": "How would you define asynchronous task management in a system using Celery and Redis, and what\u2019s a real-world example where that approach makes a measurable difference in performance or reliability?"
-      },
-      {
-        "role": "candidate",
-        "text": "To me, asynchronous task management with Celery and Redis means offloading long-running operations\u2014like file processing, email sending, or data aggregation\u2014away from the main request flow so the user gets a fast, responsive response. It\u2019s about decoupling work and keeping the system scalable and reliable. \n\nIn a real-world project, I used this to handle user onboarding workflows. Instead of waiting for email or profile image processing to complete in the main request, I offloaded those tasks to Celery with Redis as the broker. This reduced the onboarding page load time from 8 seconds to under 1 second. More importantly, during peak sign-ups (10k+ users in a week), we saw a 90% drop in timeout errors and no system crashes\u2014because the main API stayed responsive. The email delivery and file processing completed reliably in the background, with Redis handling task queuing and retries. This not only improved user experience but also made the system more resilient under load. I now see async not just as a performance fix, but as a foundation for building reliable, scalable backend systems."
-      },
-      {
-        "role": "interviewer",
-        "text": "How does Redis integration specifically enable Celery to manage background job processing, and what\u2019s a concrete example of how that improves system reliability or performance?"
-      },
-      {
-        "role": "candidate",
-        "text": "Redis integration is what makes Celery\u2019s background job processing fast, reliable, and fault-tolerant. Redis acts as a lightweight, in-memory message broker\u2014storing tasks in a queue so they can be processed asynchronously. It\u2019s also great for handling high-throughput workloads because it\u2019s fast, persistent (with persistence options), and supports fan-out patterns for scaling. In one project, we used Redis + Celery to process 10k+ user profile images during onboarding. Without Redis, the main API would have blocked waiting for image resizing, causing timeouts and poor UX. With Redis, the image processing ran in the background, and we reduced API latency by 90%. More importantly, during a spike in traffic, the system didn\u2019t crash\u2014tasks were queued and retried gracefully. We also saw 99.9% uptime in the background jobs, which meant no data loss or failed uploads. That\u2019s the power of Redis: it keeps the system responsive and resilient, even under pressure."
-      },
-      {
-        "role": "interviewer",
-        "text": "How would you describe background job processing with Celery and Redis in a way that highlights both the practical problem it solves and a real-world example of its impact?"
-      },
-      {
-        "role": "candidate",
-        "text": "Background job processing with Celery and Redis solves the problem of blocking the main API when handling long-running tasks\u2014like file uploads, email sends, or image resizing. If you wait for these operations in the request flow, users get slow responses, timeouts, and a poor experience, especially during peak traffic. With Celery and Redis, those tasks run in the background, keeping the API fast and responsive. \n\nIn my last project, we were onboarding 10k+ users with profile picture uploads. Without async, the API would hang for 5\u20138 seconds while resizing images\u2014causing timeouts and frustrated users. We moved that work to Celery with Redis, and now the main page loads in under 1 second. During a traffic spike, the system stayed stable\u2014no crashes, no timeouts. We also saw a 90% drop in frontend errors and 99.9% reliability in background processing. It wasn\u2019t just about speed\u2014it gave us confidence that the system could scale without breaking. That\u2019s the real win: keeping users happy while building something reliable."
-      }
-    ],
-    "criterion_results": [
-      {
-        "competency_id": "1",
-        "competency_name": "REST API Development with FastAPI or Django",
-        "criterion_id": "7154dc2b44bcae9b3eeb894d18bf759e87334fb1",
-        "criterion_name": "Understanding of RESTful Design Principles",
-        "level": 4,
-        "confidence": 0.9,
-        "notes": "The candidate demonstrated an advanced understanding of REST principles, including resource-based URLs, HTTP methods, and consistent response structures. They provided a concrete example from a real-world project using FastAPI, showing practical application in API design with standardized endpoints and error handling. This aligns well with Level 4 criteria."
-      },
-      {
-        "competency_id": "1",
-        "competency_name": "REST API Development with FastAPI or Django",
-        "criterion_id": "f2cb5111d1bc9c8fa8dc7474bc8423b8f8d47914",
-        "criterion_name": "Proficiency with FastAPI or Django",
-        "level": 4,
-        "confidence": 0.9,
-        "notes": "The candidate demonstrated strong expertise in leveraging FastAPI for efficient API development, showcasing advanced features like dependency injection, structured error handling, and performance improvements through input validation."
-      },
-      {
-        "competency_id": "1",
-        "competency_name": "REST API Development with FastAPI or Django",
-        "criterion_id": "54bce0246563e392bad509782ec8fca646079b0d",
-        "criterion_name": "Application to Real-World Scenarios",
-        "level": 4,
-        "confidence": 0.9,
-        "notes": "The candidate provided a detailed example of applying REST API principles in a real-world project, demonstrating strong ability to translate API knowledge into practical solutions with measurable impact."
-      },
-      {
-        "competency_id": "2",
-        "competency_name": "Database Management with PostgreSQL",
-        "criterion_id": "78e8b323f525ad8126a89743323aaf9e8ec96f39",
-        "criterion_name": "Schema Design and Optimization",
-        "level": 5,
-        "confidence": 0.95,
-        "notes": "The candidate provided a comprehensive answer that included specific techniques such as normalization, indexing strategies, and schema versioning. They also shared a concrete example with measurable improvements in performance and maintainability, demonstrating expert-level proficiency."
-      },
-      {
-        "competency_id": "2",
-        "competency_name": "Database Management with PostgreSQL",
-        "criterion_id": "45a14842101e0687c9e65d7ad292d8a9fdf43378",
-        "criterion_name": "SQL Query Optimization",
-        "level": 4,
-        "confidence": 0.9,
-        "notes": "The candidate demonstrated advanced skills in query optimization, providing specific examples of performance improvements and technical details such as indexing strategies. The response was thorough and aligned well with the criteria for level 4."
-      },
-      {
-        "competency_id": "2",
-        "competency_name": "Database Management with PostgreSQL",
-        "criterion_id": "25ef3a2a4e64d60786cf19ad7bb8e71edcdc097a",
-        "criterion_name": "Practical Database Management Experience",
-        "level": 5,
-        "confidence": 0.95,
-        "notes": "The candidate provided a detailed example of their hands-on experience, demonstrating proactive measures that significantly improved system performance and reliability. Their approach included automated index analysis, routine maintenance tasks, and monitoring alerts, which align with high-level practical database management skills."
-      },
-      {
-        "competency_id": "3",
-        "competency_name": "Background Job Processing with Celery and Redis",
-        "criterion_id": "247734bcd53b53f62f27c076fc137dcbceacbf0a",
-        "criterion_name": "Understanding of Asynchronous Task Management",
-        "level": 5,
-        "confidence": 0.95,
-        "notes": "The candidate provided a comprehensive explanation of asynchronous task management using Celery and Redis, including real-world application and impact on performance and reliability. The response demonstrated mastery by detailing specific improvements in system responsiveness and scalability."
-      },
-      {
-        "competency_id": "3",
-        "competency_name": "Background Job Processing with Celery and Redis",
-        "criterion_id": "22803ff9609fde90fd9efb9741c47cda694c63cf",
-        "criterion_name": "Integration with Redis Queues",
-        "level": 5,
-        "confidence": 0.95,
-        "notes": "The candidate provided an expert-level explanation of how Redis integration enhances Celery's background job processing, including specific examples of improved system reliability and performance. The response demonstrated a deep understanding of the technology and its practical applications."
-      },
-      {
-        "competency_id": "3",
-        "competency_name": "Background Job Processing with Celery and Redis",
-        "criterion_id": "96cb8777da0ca02d9fdd132d2501e935ff103d80",
-        "criterion_name": "Application to Real-World Scenarios",
-        "level": 4,
-        "confidence": 0.9,
-        "notes": "The candidate provided a strong example of how Celery and Redis were used to improve system performance in a real-world scenario, demonstrating both the practical problem solved and the impact on user experience and system reliability."
-      }
-    ],
-    "wrapup_summary": {
-      "closing_statement": "Avery Chen demonstrates exceptional proficiency in backend engineering, with a strong command of REST API design using FastAPI, advanced PostgreSQL database management, and expert-level implementation of asynchronous task processing with Celery and Redis. Their real-world experience and measurable impact across performance, reliability, and maintainability highlight a highly capable and practical candidate for an Entry-Level Backend Engineer role.",
-      "key_strengths": [
-        "Advanced understanding and practical application of RESTful API design with FastAPI",
-        "Expert-level PostgreSQL schema design, optimization, and performance improvements",
-        "Mastery of asynchronous task management using Celery and Redis with real-world impact",
-        "Strong ability to translate technical knowledge into measurable, production-level solutions"
-      ],
-      "risk_flags": [
-        "Limited exposure to distributed systems or microservices architecture beyond the scope of the evaluated competencies",
-        "No explicit mention of version control, CI/CD, or infrastructure as code (IaC) experience"
-      ],
-      "next_steps": [
-        "Conduct a hands-on coding exercise to assess real-time problem-solving under pressure",
-        "Evaluate experience with containerization (Docker) and cloud deployment (e.g., AWS, GCP)",
-        "Explore alignment with team workflows, including code review practices and testing standards"
-      ]
-    }
+    "id": "1cf1bf34d88a4249b081bf5a1bad748b",
+    "scheduled_date": "2025-11-03T02:52:43.776834Z",
+    "status": "scheduled",
+    "overall_score": null,
+    "score_details": null,
+    "transcript": [],
+    "criterion_results": [],
+    "wrapup_summary": null
   },
   {
     "job_title": "Entry-Level Backend Engineer (Python)",
@@ -411,19 +181,19 @@
         "id": "1",
         "name": "Python Programming and Frameworks",
         "interview_style": "concept_primer",
-        "rationale": "The candidate needs a solid understanding of Python programming, particularly with frameworks like FastAPI or Django. This is foundational for implementing REST endpoints as required in the job responsibilities."
+        "rationale": "The candidate needs a solid understanding of Python programming, particularly with frameworks like FastAPI or Django. A Concept Primer will help assess their foundational knowledge and ability to discuss key concepts."
       },
       {
         "id": "2",
         "name": "Database Management and SQL Optimization",
-        "interview_style": "concept_primer",
-        "rationale": "Maintaining PostgreSQL schemas and writing optimized SQL queries are critical tasks. This competency ensures the candidate can handle database-related responsibilities effectively."
+        "interview_style": "implementation_walkthrough",
+        "rationale": "Given the requirement to maintain PostgreSQL schemas and write optimized queries, an Implementation Walkthrough will allow candidates to demonstrate their practical skills in database management."
       },
       {
         "id": "3",
-        "name": "Testing and Code Quality Assurance",
-        "interview_style": "concept_primer",
-        "rationale": "Writing unit/integration tests and participating in code reviews are essential for maintaining high-quality code. This competency focuses on the candidate's ability to ensure software reliability and quality."
+        "name": "Testing and Code Review Practices",
+        "interview_style": "scenario_drill",
+        "rationale": "The candidate must be able to write tests and participate in code reviews. A Scenario Drill will simulate real-world situations, testing their ability to apply these practices effectively."
       }
     ],
     "rubric": {
@@ -434,42 +204,42 @@
           "category": "Python Programming and Frameworks",
           "criteria": [
             {
-              "name": "Framework Knowledge",
-              "description": "Understanding of FastAPI or Django for building REST endpoints.",
+              "name": "Concept Understanding",
+              "description": "Assess the candidate's foundational knowledge of Python programming, particularly with frameworks like FastAPI or Django.",
               "weight": 40,
               "scoring_levels": {
-                "Level 0": "No understanding of FastAPI/Django frameworks.",
-                "Level 1": "Basic knowledge but unable to apply in practical scenarios.",
-                "Level 2": "Can describe framework features but lacks depth in application.",
-                "Level 3": "Able to implement basic REST endpoints using the frameworks.",
-                "Level 4": "Demonstrates good understanding and can optimize endpoint performance.",
-                "Level 5": "Expertly implements and optimizes complex REST APIs with best practices."
+                "Level 0": "Candidate cannot define key concepts and lacks understanding of framework basics.",
+                "Level 1": "Candidate provides vague definitions and shows limited practical examples.",
+                "Level 2": "Candidate defines key concepts but struggles to relate them to real-world applications.",
+                "Level 3": "Candidate explains concepts clearly with some relevant examples.",
+                "Level 4": "Candidate demonstrates a solid understanding of concepts with multiple relevant examples.",
+                "Level 5": "Candidate articulates deep insights into Python frameworks, providing comprehensive and practical examples."
               }
             },
             {
-              "name": "Python Proficiency",
-              "description": "Proficiency in Python programming for backend development.",
+              "name": "Practical Application",
+              "description": "Evaluate the candidate's ability to apply Python programming skills in real-world scenarios.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Limited understanding of Python syntax and features.",
-                "Level 1": "Basic proficiency but struggles with advanced concepts.",
-                "Level 2": "Comfortable with common Python constructs and libraries.",
-                "Level 3": "Writes efficient and clean Python code for backend tasks.",
-                "Level 4": "Demonstrates deep understanding of Python's capabilities in backend development.",
-                "Level 5": "Expertly applies advanced Python features to solve complex problems."
+                "Level 0": "Candidate fails to demonstrate any practical application of Python skills.",
+                "Level 1": "Candidate shows minimal practical application with significant errors.",
+                "Level 2": "Candidate demonstrates basic application but lacks depth and accuracy.",
+                "Level 3": "Candidate applies Python skills effectively in simple scenarios.",
+                "Level 4": "Candidate applies Python skills proficiently in complex scenarios with minor issues.",
+                "Level 5": "Candidate showcases expert-level practical application of Python skills across diverse scenarios."
               }
             },
             {
-              "name": "Real-World Application",
-              "description": "Ability to apply Python and frameworks in real-world scenarios.",
+              "name": "Framework Proficiency",
+              "description": "Assess the candidate's proficiency and experience with FastAPI or Django frameworks.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Unable to relate concepts to practical applications.",
-                "Level 1": "Struggles to connect theoretical knowledge with practice.",
-                "Level 2": "Can apply basic concepts but lacks confidence in complex situations.",
-                "Level 3": "Effectively applies knowledge to solve real-world problems.",
-                "Level 4": "Innovatively uses Python and frameworks for practical solutions.",
-                "Level 5": "Expertly integrates advanced techniques into real-world applications."
+                "Level 0": "Candidate has no knowledge of FastAPI or Django frameworks.",
+                "Level 1": "Candidate shows limited understanding and minimal hands-on experience.",
+                "Level 2": "Candidate demonstrates basic familiarity with framework features.",
+                "Level 3": "Candidate exhibits good proficiency in using the framework for standard tasks.",
+                "Level 4": "Candidate is proficient in advanced framework features and customization.",
+                "Level 5": "Candidate displays expert-level mastery of FastAPI or Django, including innovative uses."
               }
             }
           ]
@@ -478,141 +248,141 @@
           "category": "Database Management and SQL Optimization",
           "criteria": [
             {
-              "name": "SQL Query Optimization",
-              "description": "Ability to write optimized SQL queries for performance.",
-              "weight": 50,
+              "name": "Schema Design",
+              "description": "Evaluate the candidate's ability to design efficient PostgreSQL schemas.",
+              "weight": 40,
               "scoring_levels": {
-                "Level 0": "Unable to optimize or understand query performance issues.",
-                "Level 1": "Basic understanding but struggles with optimization techniques.",
-                "Level 2": "Can identify simple optimizations in SQL queries.",
-                "Level 3": "Writes optimized queries for common scenarios.",
-                "Level 4": "Effectively optimizes complex queries for performance gains.",
-                "Level 5": "Expertly refactors and optimizes all types of SQL queries."
+                "Level 0": "Candidate cannot design a basic schema and lacks understanding of database principles.",
+                "Level 1": "Candidate designs a flawed schema with significant inefficiencies.",
+                "Level 2": "Candidate creates a basic schema but overlooks optimization opportunities.",
+                "Level 3": "Candidate designs an efficient schema with some minor issues.",
+                "Level 4": "Candidate designs a highly optimized schema with minimal errors.",
+                "Level 5": "Candidate demonstrates expert-level proficiency in designing and optimizing schemas."
               }
             },
             {
-              "name": "Schema Management",
-              "description": "Proficiency in maintaining PostgreSQL schemas.",
-              "weight": 30,
+              "name": "Query Optimization",
+              "description": "Assess the candidate's ability to write and optimize SQL queries for performance.",
+              "weight": 40,
               "scoring_levels": {
-                "Level 0": "Lacks understanding of schema design and maintenance.",
-                "Level 1": "Basic knowledge but struggles with practical application.",
-                "Level 2": "Can manage simple schemas but lacks depth in complex scenarios.",
-                "Level 3": "Effectively maintains and updates PostgreSQL schemas.",
-                "Level 4": "Demonstrates advanced skills in schema optimization and management.",
-                "Level 5": "Expertly designs, optimizes, and manages complex database schemas."
+                "Level 0": "Candidate writes inefficient queries with no optimization attempts.",
+                "Level 1": "Candidate shows minimal understanding of query optimization techniques.",
+                "Level 2": "Candidate applies basic optimization but lacks depth and accuracy.",
+                "Level 3": "Candidate optimizes queries effectively for standard use cases.",
+                "Level 4": "Candidate demonstrates advanced query optimization skills with minor issues.",
+                "Level 5": "Candidate exhibits expert-level mastery in writing highly optimized SQL queries."
               }
             },
             {
-              "name": "Database Design Principles",
-              "description": "Understanding of relational database design principles.",
+              "name": "Complexity Reasoning",
+              "description": "Evaluate the candidate's ability to reason about time/space complexity and identify bottlenecks.",
               "weight": 20,
               "scoring_levels": {
-                "Level 0": "No understanding of relational database design.",
-                "Level 1": "Basic knowledge but struggles with application in real-world scenarios.",
-                "Level 2": "Can apply basic design principles to simple databases.",
-                "Level 3": "Effectively designs and implements relational databases.",
-                "Level 4": "Demonstrates deep understanding of advanced database design concepts.",
-                "Level 5": "Expertly applies complex design principles in innovative ways."
+                "Level 0": "Candidate cannot explain or identify any aspects of query complexity.",
+                "Level 1": "Candidate shows limited understanding of complexity concepts.",
+                "Level 2": "Candidate identifies basic complexities but lacks depth in reasoning.",
+                "Level 3": "Candidate explains time/space complexity effectively for simple queries.",
+                "Level 4": "Candidate provides detailed analysis of query complexities with minor errors.",
+                "Level 5": "Candidate demonstrates expert-level understanding and reasoning about query complexities."
               }
             }
           ]
         },
         {
-          "category": "Testing and Code Quality Assurance",
+          "category": "Testing and Code Review Practices",
           "criteria": [
             {
-              "name": "Test Implementation",
-              "description": "Ability to write unit and integration tests.",
+              "name": "Test Creation",
+              "description": "Assess the candidate's ability to write unit/integration tests.",
               "weight": 40,
               "scoring_levels": {
-                "Level 0": "Unable to write or understand the purpose of tests.",
-                "Level 1": "Basic understanding but struggles with test implementation.",
-                "Level 2": "Can write simple tests for basic functionality.",
-                "Level 3": "Effectively writes comprehensive unit and integration tests.",
-                "Level 4": "Demonstrates advanced skills in testing strategies and coverage.",
-                "Level 5": "Expertly designs and implements a robust testing framework."
+                "Level 0": "Candidate cannot create any meaningful tests.",
+                "Level 1": "Candidate writes minimal tests with significant gaps in coverage.",
+                "Level 2": "Candidate creates basic tests but lacks thoroughness and accuracy.",
+                "Level 3": "Candidate writes effective tests covering most scenarios.",
+                "Level 4": "Candidate demonstrates proficiency in writing comprehensive tests.",
+                "Level 5": "Candidate exhibits expert-level skills in creating robust and efficient test suites."
               }
             },
             {
               "name": "Code Review Participation",
-              "description": "Engagement in code reviews to ensure quality.",
+              "description": "Evaluate the candidate's ability to participate effectively in code reviews.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Does not participate or understand the value of code reviews.",
-                "Level 1": "Participates but struggles with providing constructive feedback.",
-                "Level 2": "Engages in code reviews and provides basic feedback.",
-                "Level 3": "Effectively participates and contributes to improving code quality.",
-                "Level 4": "Demonstrates strong skills in identifying issues and suggesting improvements.",
-                "Level 5": "Expertly leads code review sessions with insightful analysis."
+                "Level 0": "Candidate cannot engage meaningfully in code reviews.",
+                "Level 1": "Candidate shows minimal engagement with little constructive feedback.",
+                "Level 2": "Candidate participates but provides basic and sometimes inaccurate feedback.",
+                "Level 3": "Candidate engages effectively, offering relevant and accurate feedback.",
+                "Level 4": "Candidate demonstrates strong skills in providing insightful code review feedback.",
+                "Level 5": "Candidate exhibits expert-level proficiency in conducting thorough and constructive code reviews."
               }
             },
             {
-              "name": "Quality Assurance Practices",
-              "description": "Understanding of practices to ensure high-quality code.",
+              "name": "Tradeoff Analysis",
+              "description": "Assess the candidate's ability to make reasoned trade-offs during testing and review.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Lacks understanding of quality assurance in software development.",
-                "Level 1": "Basic knowledge but struggles with practical application.",
-                "Level 2": "Can apply basic QA practices in simple scenarios.",
-                "Level 3": "Effectively implements QA practices to maintain code quality.",
-                "Level 4": "Demonstrates advanced understanding of comprehensive QA strategies.",
-                "Level 5": "Expertly integrates and innovates QA processes for optimal results."
+                "Level 0": "Candidate cannot identify or analyze any trade-offs.",
+                "Level 1": "Candidate shows limited understanding of trade-off concepts.",
+                "Level 2": "Candidate identifies basic trade-offs but lacks depth in analysis.",
+                "Level 3": "Candidate analyzes trade-offs effectively for simple scenarios.",
+                "Level 4": "Candidate provides detailed trade-off analysis with minor errors.",
+                "Level 5": "Candidate demonstrates expert-level skills in analyzing and making reasoned trade-offs."
               }
             }
           ]
         }
       ]
     },
-    "id": "ee4cfbeab41d48a7b9ae98b6c2409f58",
-    "scheduled_date": "2025-11-03T01:23:49.806688Z",
+    "id": "965890bff98746558a1244a46bb85e1b",
+    "scheduled_date": "2025-11-03T03:02:46.440933Z",
     "status": "completed",
-    "overall_score": 88,
+    "overall_score": 84,
     "score_details": [
       {
-        "criteria": "Python Programming and Frameworks \u2013 Framework Knowledge",
+        "criteria": "Python Programming and Frameworks \u2013 Concept Understanding",
+        "score": 80,
+        "feedback": "The candidate demonstrated a solid understanding of FastAPI's asynchronous nature, clearly explaining the use of `async/await` syntax and its advantages over synchronous frameworks like Django. They provided relevant examples related to performance improvements in high-traffic scenarios."
+      },
+      {
+        "criteria": "Python Programming and Frameworks \u2013 Practical Application",
         "score": 100,
-        "feedback": "The candidate demonstrated expert knowledge by clearly distinguishing between FastAPI's focus on speed and performance with async support, and Django's comprehensive feature set for complex applications. They provided a concrete example of choosing FastAPI for high-performance needs in a real project, showcasing their ability to apply this understanding effectively."
+        "feedback": "The candidate demonstrated expert-level practical application by describing a reusable function for data validation using Pydantic, which significantly reduced errors and improved system reliability. The example provided was detailed and relevant to real-world applications."
       },
       {
-        "criteria": "Python Programming and Frameworks \u2013 Python Proficiency",
+        "criteria": "Python Programming and Frameworks \u2013 Framework Proficiency",
         "score": 80,
-        "feedback": "The candidate demonstrated a deep understanding of Python's advanced features such as context managers, generators, and type hints in the context of backend development. They provided specific examples from their experience that align with production-grade practices."
+        "feedback": "The candidate demonstrated strong proficiency in both FastAPI and Django, articulating their design philosophies and practical applications effectively. They provided a clear rationale for choosing one over the other based on project needs, indicating advanced understanding."
       },
       {
-        "criteria": "Python Programming and Frameworks \u2013 Real-World Application",
+        "criteria": "Database Management and SQL Optimization \u2013 Schema Design",
         "score": 80,
-        "feedback": "The candidate demonstrated innovative use of FastAPI and Python's async capabilities to address real-world scheduling issues, resulting in measurable improvements such as reduced response times and fewer errors."
+        "feedback": "The candidate demonstrated a strong understanding of schema design principles, including key tables, relationships, indexing for efficiency, and testability through SQL scripts and pytest. The approach was well-structured and aligned with best practices, though there might be minor areas for further optimization or consideration."
       },
       {
-        "criteria": "Database Management and SQL Optimization \u2013 SQL Query Optimization",
+        "criteria": "Database Management and SQL Optimization \u2013 Query Optimization",
         "score": 100,
-        "feedback": "The candidate demonstrated expert-level understanding by providing specific examples of optimization, including the use of indexing to improve performance significantly. They also mentioned using tools like EXPLAIN ANALYZE and database logs for monitoring, indicating a comprehensive approach to SQL query optimization."
+        "feedback": "The candidate demonstrated an expert-level understanding of query optimization, including profiling with `EXPLAIN ANALYZE`, rewriting queries for efficiency, adding indexes, and validating changes through both happy path and failure case scenarios. The use of unit testing to ensure robustness further supports their proficiency."
       },
       {
-        "criteria": "Database Management and SQL Optimization \u2013 Schema Management",
+        "criteria": "Database Management and SQL Optimization \u2013 Complexity Reasoning",
         "score": 80,
-        "feedback": "The candidate demonstrated advanced skills in schema management by discussing version control, documentation, and the use of tools like Alembic. They provided a concrete example of poor schema management impacting performance and team velocity, showing an understanding of both technical and operational aspects."
+        "feedback": "The candidate provided a detailed approach to designing the database schema, including key tables, interfaces, data flow, and validation methods. They effectively discussed indexing strategies for performance optimization and outlined both happy path and failure case validations. The response demonstrated a strong understanding of query complexities with minor areas that could be expanded upon, such as deeper reasoning about potential bottlenecks in more complex scenarios."
       },
       {
-        "criteria": "Database Management and SQL Optimization \u2013 Database Design Principles",
-        "score": 100,
-        "feedback": "The candidate demonstrated an expert understanding of relational database design principles, effectively applying them to a real-world scenario with clear examples of normalization, entity-relationship modeling, indexing, and data integrity measures."
-      },
-      {
-        "criteria": "Testing and Code Quality Assurance \u2013 Test Implementation",
+        "criteria": "Testing and Code Review Practices \u2013 Test Creation",
         "score": 80,
-        "feedback": "The candidate demonstrated advanced skills in test implementation by discussing logic correctness, edge cases, real-world conditions, and the use of pytest with parameterized inputs. The example provided shows a deep understanding of comprehensive testing beyond basic functionality."
+        "feedback": "The candidate demonstrated proficiency by outlining a clear approach to writing unit tests, including handling edge cases and potential risks. They effectively used Python's built-in `unittest` framework and considered the constraints of avoiding external dependencies. The plan included key test scenarios and identified significant risks such as list assumptions and time zone boundaries. However, there was room for more detailed discussion on specific implementation details or additional edge cases."
       },
       {
-        "criteria": "Testing and Code Quality Assurance \u2013 Code Review Participation",
-        "score": 100,
-        "feedback": "The candidate demonstrated expert-level understanding of effective code review participation, providing specific examples and strategies that align with high-quality practices. Their approach to balancing quality assurance with development speed is well-articulated."
-      },
-      {
-        "criteria": "Testing and Code Quality Assurance \u2013 Quality Assurance Practices",
+        "criteria": "Testing and Code Review Practices \u2013 Code Review Participation",
         "score": 80,
-        "feedback": "The candidate demonstrated an advanced understanding of quality assurance practices, including writing comprehensive tests, using automated tools for linting and static analysis, and actively reviewing pull requests to catch regressions. The real-world example provided shows practical application of these strategies."
+        "feedback": "The candidate demonstrated strong skills by identifying key areas to review, such as scope, error handling, and isolation of the payment gateway. They also highlighted critical risks like lack of error handling and missing rate limiting, which are essential for production readiness. The recommendation to defer for a design sync shows an understanding of balancing speed with safety."
+      },
+      {
+        "criteria": "Testing and Code Review Practices \u2013 Tradeoff Analysis",
+        "score": 80,
+        "feedback": "The candidate effectively prioritized test cases based on risk, focusing on critical paths and high-impact areas while acknowledging time constraints. They demonstrated a clear understanding of balancing coverage with delivery timelines and identified a significant top risk related to network failures. The response was detailed but could have included more specifics about the quick sprint review process."
       }
     ],
     "transcript": [
@@ -622,184 +392,185 @@
       },
       {
         "role": "candidate",
-        "text": "Absolutely! Last quarter, I worked on a backend API for a student scheduling system using FastAPI and PostgreSQL. I built the core endpoints to handle course enrollment, class time conflicts, and real-time availability checks. I used Python's SQLAlchemy for database interactions and optimized queries by adding proper indexes and using parameterized queries to prevent SQL injection. I also wrote unit tests with pytest to ensure data integrity and performance. The system reduced scheduling errors by 40% and helped onboard 500+ students smoothly. It was a great chance to apply both my Python backend skills and database optimization experience."
+        "text": "Sure! Last quarter, I worked on a backend API for a student scheduling system using FastAPI and PostgreSQL. I built the core endpoints to handle course enrollment and class time conflicts, and I optimized the SQL queries to reduce response time by 40% by adding proper indexing and query refactoring. I also implemented unit tests using pytest to ensure data integrity and consistency. It was a great chance to apply my Python skills in a real-world backend context while learning from my team on best practices in database design and error handling."
       },
       {
         "role": "interviewer",
-        "text": "That's fantastic work on the student scheduling system, Avery! Your efforts in optimizing queries and ensuring data integrity through testing are impressive. It sounds like you've had a significant impact with this project. I'm looking forward to diving deeper into your technical experiences. Let's move on to the next part of our discussion.\n\nWe'll move into competency-focused questions now."
+        "text": "That's fantastic work on optimizing the SQL queries and implementing unit tests! It sounds like you've had a valuable experience with both Python and database management. I'm looking forward to diving deeper into your technical skills. Let's move on to the next part of our interview.\n\nWe'll move into competency-focused questions now."
       },
       {
         "role": "interviewer",
-        "text": "How would you define the core difference between FastAPI and Django when building REST endpoints, and can you give a concrete example of when you'd choose one over the other in a real project?"
+        "text": "Can you walk me through the core concept of FastAPI's asynchronous nature and how it differs from traditional synchronous Python web frameworks like Django in terms of performance and resource usage?"
       },
       {
         "role": "candidate",
-        "text": "Great question! The core difference is in their primary focus: FastAPI is built for speed and performance with automatic async support and strong type hints, while Django is a full-featured MVC framework with built-in admin, authentication, and ORM\u2014great for larger, more complex apps. I\u2019d choose FastAPI when I need high-performance endpoints with real-time capabilities, like in our student scheduling system where we needed to handle 100+ concurrent requests for class availability checks. Django would be better if we were building a full student portal with user authentication, content management, and complex reporting\u2014something where the built-in tools save a lot of development time. In my last project, FastAPI\u2019s performance and developer experience made it the right fit."
+        "text": "Absolutely! FastAPI's async nature comes down to using Python's `async/await` syntax and async-friendly libraries like `aiohttp` or `SQLAlchemy` async mode. Unlike Django, which is primarily synchronous by default, FastAPI is built from the ground up to handle asynchronous operations\u2014meaning requests can be processed concurrently without blocking the event loop. For example, when handling multiple I/O tasks like database queries or API calls, FastAPI can process them in parallel, drastically reducing latency and improving throughput. This is especially useful in high-traffic scenarios where performance and scalability matter. I\u2019ve seen it reduce response times by up to 60% in a load-tested environment compared to a synchronous Django setup. It\u2019s a powerful shift in mindset\u2014from handling one request at a time to managing many efficiently at once. I\u2019m still learning the nuances, but I\u2019m excited by how it enables more responsive and scalable backend services."
       },
       {
         "role": "interviewer",
-        "text": "How would you define Python proficiency in a backend context, and can you give an example of how that shows up in real code you've worked with?"
+        "text": "Can you walk me through how you'd define a practical Python function for data validation in a real-world application, and give an example of how it impacts error reduction or system reliability?"
       },
       {
         "role": "candidate",
-        "text": "To me, Python proficiency in a backend context means more than just writing clean code\u2014it's about understanding how Python's features like context managers, generators, and type hints can improve reliability, performance, and maintainability. For example, in the student scheduling system, I used context managers (like `with` statements) to ensure database connections were properly closed, preventing resource leaks. I also leveraged generators to handle large datasets\u2014like fetching class lists without loading everything into memory at once\u2014making the code efficient and scalable. I paired this with type hints and mypy for early error catching, which helped catch bugs before they reached production. That combination of practical patterns and attention to edge cases is what I consider true backend Python proficiency."
+        "text": "In my current project, I created a reusable Python function called `validate_user_input()` that checks incoming JSON payloads before processing them. For example, when a user submits a course enrollment request, the function validates required fields like `student_id`, `course_code`, and `enrollment_date`, ensuring they're present, properly formatted, and within acceptable ranges. I used Pydantic for type checking and custom logic to prevent invalid or malicious data from reaching the backend. This reduced invalid request errors by 70% and helped catch issues early\u2014like a missing student ID\u2014before they hit the database. It also made debugging faster and improved overall system reliability, especially during peak usage times. I now use this pattern across multiple endpoints to keep the system robust and maintainable."
       },
       {
         "role": "interviewer",
-        "text": "Can you walk me through a real-world project where you used Python and a framework to solve a specific problem, and what measurable impact it had?"
+        "text": "Can you walk me through how FastAPI differs from Django in terms of design philosophy and when you'd choose one over the other in a real-world project?"
       },
       {
         "role": "candidate",
-        "text": "I worked on a student scheduling system where we needed to prevent double enrollments and time conflicts in real time. I used FastAPI for the backend, with Python's async support to handle 100+ concurrent requests efficiently. I built a service that validated class times against student schedules using PostgreSQL and optimized queries with indexes to reduce response time from 800ms to under 150ms. We also added rate limiting and logging to prevent abuse. The result? A 40% drop in scheduling errors and a 30% reduction in support tickets related to conflicts. Students reported faster load times, and the team saw a 20% improvement in onboarding speed for new users."
+        "text": "I really appreciate that question\u2014it touches on something I\u2019ve been thinking a lot about lately. FastAPI and Django have very different design philosophies. FastAPI is built around speed, async support, and developer experience, with automatic API documentation (via Swagger/OpenAPI) and built-in type hints. It\u2019s ideal for APIs where performance and scalability matter\u2014like real-time dashboards or microservices. On the other hand, Django is a full-stack framework with a strong emphasis on developer productivity, built-in admin, authentication, and a robust ORM. I\u2019d choose Django when I need a complete, rapidly deployable app with built-in features\u2014like a content management system. But for a high-performance API where I need to handle many concurrent requests, I\u2019d go with FastAPI. In my current project, we're using FastAPI for the core API layer and Django for the admin dashboard, combining the best of both. It\u2019s a great reminder that the right tool depends on the problem, not just the tech stack."
       },
       {
         "role": "interviewer",
-        "text": "How do you define an optimized SQL query in practice, and what specific signs would you look for to know it's performing better in a real-world database?"
+        "text": "Walk me through your minimal viable approach to designing a PostgreSQL schema for a user activity tracking system, including the key tables, their relationships, and how you'd ensure data flow and testability?"
       },
       {
         "role": "candidate",
-        "text": "To me, an optimized SQL query in practice is one that delivers accurate results with minimal latency, resource usage, and scalability\u2014without sacrificing readability. I look for signs like consistent subsecond response times under load, low CPU and memory usage in query execution plans, and no blocking or long-running transactions. In our student scheduling system, I noticed a query was taking 800ms under load\u2014after profiling, I found it was scanning 10M rows without an index. Adding a composite index on (student_id, class_time) cut response time to 120ms and reduced CPU usage by 60%. I also monitored query performance using EXPLAIN ANALYZE and database logs to catch slow queries early. The key is not just speed, but consistency\u2014especially when hundreds of users access the system simultaneously."
+        "text": "For a user activity tracking system, my minimal viable approach starts with just the core tables: `users` (with `user_id`, `email`, `created_at`), `activities` (with `activity_id`, `user_id`, `action`, `timestamp`, `metadata` as JSON), and a simple `user_activity_log` view to aggregate and filter data. I keep it simple\u2014no over-engineering\u2014to ensure clarity and maintainability. The `activities` table links to `users` via a foreign key, and I add a `created_at` index to support efficient time-based queries. To ensure data flow, I use PostgreSQL\u2019s constraints (like `NOT NULL` and `REFERENCES`) and enforce referential integrity. For testability, I write a few SQL scripts to simulate real user actions\u2014like login, course view, or edit\u2014and validate that data flows correctly and is consistent. I also create a basic test suite with pytest to verify that queries return expected results and that no data is duplicated or lost. This keeps the schema lean, reliable, and easy to extend\u2014perfect for a startup or agile team where speed and clarity matter most."
       },
       {
         "role": "interviewer",
-        "text": "How do you define effective schema management in a PostgreSQL environment, and what\u2019s a concrete example where poor schema management had a measurable impact on performance or team velocity?"
+        "text": "Walk me through your minimal viable approach to optimizing a slow-running SQL query for a large dataset, including the key interfaces, data flow, and how you'd validate it with a happy path and a failure case?"
       },
       {
         "role": "candidate",
-        "text": "To me, effective schema management in PostgreSQL means keeping the database aligned with business needs while being flexible enough to evolve\u2014through versioning, documentation, and clear ownership. I believe in using tools like Alembic for schema migrations and maintaining a changelog so we can track changes and roll back safely. In a previous project, we had a poorly managed schema where a critical table (student_enrollments) was updated without indexes or constraints, leading to slow queries and duplicate entries during peak times. Without proper schema versioning, we couldn\u2019t reproduce or fix the issue, and the team spent 3 days debugging instead of shipping features. After implementing a structured migration process and regular schema reviews, we reduced query latency by 70% and cut debugging time by 80%. That experience taught me that schema isn't just about structure\u2014it's about team velocity, reliability, and preventing technical debt from piling up."
+        "text": "My minimal viable approach to optimizing a slow SQL query starts with profiling\u2014using `EXPLAIN ANALYZE` to identify the bottleneck, like full table scans or missing indexes. I\u2019d first check if the query can be rewritten with proper JOINs, filters, or partitioning. For example, if we're fetching user activity logs, I\u2019d add an index on the `timestamp` and `user_id` columns to reduce scan time. I\u2019d then validate the fix with a happy path\u2014running the query on a sample dataset and confirming it runs in under 100ms, with expected results. For the failure case, I\u2019d simulate a missing index or invalid date range and ensure the query gracefully returns no results or an error, without crashing. I\u2019d also run a simple unit test using pytest to verify both success and edge cases\u2014like empty datasets or malformed inputs. This keeps the process transparent, repeatable, and safe for production. I\u2019ve used this in a recent analytics query that reduced runtime from 12 seconds to under 2, and I always double-check with a peer before deploying changes."
       },
       {
         "role": "interviewer",
-        "text": "How would you define relational database design principles, and can you give an example of how they impact real-world data integrity and query performance?"
+        "text": "Walk me through your minimal viable approach to designing a database schema for a user activity tracking system, including the key interfaces, data flow, and how you'd validate it with a happy path and a failure case?"
       },
       {
         "role": "candidate",
-        "text": "To me, relational database design principles come down to three core ideas: normalization to reduce redundancy, proper entity-relationship modeling to reflect real-world logic, and indexing for performance. For example, in our student scheduling system, we normalized course and enrollment data to avoid duplicate student records and ensure consistency. This helped prevent data corruption\u2014like a student being enrolled in the same class twice\u2014and made it easier to audit changes. But we also added a foreign key constraint between students and enrollments, which automatically flagged invalid records during inserts. That directly improved data integrity. On performance, we noticed that without proper indexing on the 'class_time' field, queries to check availability took over a second. After adding a composite index on (course_id, day, start_time), we reduced response time from 800ms to 120ms\u2014critical when 500+ students were checking availability at once. It\u2019s not just about structure\u2014it\u2019s about building a system that\u2019s both reliable and fast in practice."
+        "text": "For a user activity tracking system, my minimal viable approach starts with the core tables: `users`, `activities`, and a lightweight `activity_logs` view. The `users` table holds basic info like `user_id`, `email`, and `created_at`. The `activities` table tracks actions\u2014like login or course view\u2014with fields like `action`, `timestamp`, and `metadata` (as JSON). I link them with a foreign key on `user_id` to ensure clear data flow from user to activity. Key interfaces include a primary key on `activity_id`, indexes on `timestamp` and `user_id` for fast queries, and a simple `created_at` index for time-based filtering. Data flow is straightforward: user actions are inserted in real-time via a Python service, and queries are filtered by user or time range. To validate, I run a happy path\u2014say, fetching all activities for a user in the last 24 hours\u2014and confirm it returns accurate, non-duplicated results. For the failure case, I simulate a missing user ID or invalid timestamp and verify the query returns no results without errors or crashes. I also write a simple pytest test to validate both cases. This keeps the schema simple, reliable, and production-ready\u2014something I\u2019ve used in a recent project where we reduced query latency by 60% and caught edge cases early."
       },
       {
         "role": "interviewer",
-        "text": "How do you define a good unit test, and what makes it different from a test that just verifies a function worked?"
+        "text": "Imagine you're designing a unit test for a function that calculates daily user engagement metrics, but you're constrained to only 100 lines of code and must avoid any external dependencies. How would you approach this, and what are the top risks you'd identify in your test design?"
       },
       {
         "role": "candidate",
-        "text": "To me, a good unit test doesn't just verify that a function returns the right output\u2014it checks that the logic is correct, edge cases are handled, and the code behaves predictably under real-world conditions. For example, in my student scheduling system, I wrote a unit test for a function that checks class time conflicts. The test didn't just confirm it returned True when times overlapped\u2014it also handled edge cases like empty schedules, overlapping with zero-length periods, and time zones. I used pytest with parameterized inputs to cover all scenarios, and added assertions for error messages and exceptions. This helped catch a bug where a null input was being passed silently. What makes it different from a basic 'works' test is that it's intentional, isolated, and helps catch bugs early\u2014before they hit production. It\u2019s not just about passing, it\u2019s about confidence in the code\u2019s behavior."
+        "text": "I\u2019d start by defining a clean, isolated function\u2014like `calculate_daily_engagement(user_activities)`\u2014that takes a list of activity dicts and returns a dict with metrics like total actions, unique users, and active hours. To keep it under 100 lines and dependency-free, I\u2019d use Python\u2019s built-in `unittest` and mock only what\u2019s necessary\u2014like a fake `datetime` for time buckets. I\u2019d write a few key test cases: one for a happy path (e.g., 100 activities from 5 users), one for edge cases (empty list, no activity), and one for invalid data (e.g., malformed timestamps). I\u2019d use `assertEqual` and `assertRaises` to validate outcomes and error handling. Top risks I\u2019d watch for? Over-relying on list assumptions (like order), missing edge cases like time zone boundaries, and not testing for data type mismatches\u2014like if input is a string instead of a list. I\u2019d also avoid mocking too much, since it can hide bugs in the actual logic. My goal is to keep it simple, readable, and catch real-world issues early\u2014without needing databases or APIs."
       },
       {
         "role": "interviewer",
-        "text": "How do you define effective code review participation, and what does it look like in practice to ensure quality without slowing down development?"
+        "text": "Imagine you're reviewing a pull request for a feature that adds a new payment gateway. The team has limited time and must decide whether to merge it now or defer it for further design work. How would you approach this decision, and what are the top risks and assumptions you'd consider before moving forward?"
       },
       {
         "role": "candidate",
-        "text": "To me, effective code review participation is about being constructive, respectful, and focused on improving code quality\u2014not just catching bugs. I look for clarity, correctness, and maintainability, and I always aim to give feedback that\u2019s specific and actionable. For example, in my last project, I\u2019d flag a potential performance issue in a slow query and suggest adding an index\u2014without blocking the PR. I\u2019d also ask clarifying questions if a feature was complex, to ensure the intent was clear. I keep reviews short (under 10 minutes) and use tools like GitHub\u2019s PR comments to keep them focused. I\u2019ve found that by being proactive and empathetic\u2014like saying 'I think this could be faster with an index' instead of 'this is wrong'\u2014I help teammates feel heard while still raising quality concerns. It\u2019s about balancing care and speed: I don\u2019t wait for perfection, but I do ensure the code is robust and easy to maintain. That\u2019s how I keep development moving without sacrificing quality."
+        "text": "I\u2019d approach this by first asking a few key questions: What\u2019s the scope of the payment gateway integration? Is it just a single endpoint, or does it involve webhooks, error handling, or fraud checks? I\u2019d also check if there\u2019s a clear plan for error recovery, retry logic, and audit logging\u2014things that are easy to miss but critical for production. Before merging, I\u2019d want to see at least one test case for success and failure (like a failed transaction), and confirm that the gateway is properly isolated from the rest of the system. Top risks I\u2019d flag: lack of error handling (like silent failures), missing rate limiting, and no fallback if the gateway goes down. Assumptions I\u2019d question: that the gateway is stable, that the team has access to sandbox credentials, and that all edge cases (like expired tokens) are covered. If we merge without these, we risk introducing bugs that could cost users trust or money. So, I\u2019d recommend deferring it for a short design sync\u2014just 30 minutes\u2014to clarify the scope, data flow, and error paths. That way, we ship safe, not just fast."
       },
       {
         "role": "interviewer",
-        "text": "How do you define quality assurance in code, and what specific practices do you use to ensure that changes don\u2019t introduce regressions?"
+        "text": "Imagine you're reviewing a new feature that must pass 90% test coverage and be delivered in under two weeks. How would you prioritize test cases and balance coverage against time constraints, and what would be your top risk if you moved forward with this plan?"
       },
       {
         "role": "candidate",
-        "text": "To me, quality assurance in code means building confidence that changes are reliable, safe, and maintainable\u2014especially that they don\u2019t break existing behavior. I don\u2019t just rely on passing tests\u2014I make it a practice to write tests that cover edge cases, error paths, and real-world usage. For example, in my student scheduling system, I added regression tests for time conflict logic after a recent update. When a new feature was added to check for overlapping classes, I made sure it didn\u2019t break existing enrollment rules. I also use automated linting (like flake8) and static analysis (mypy) to catch issues early, and run integration tests in CI before merging. I personally review at least one PR per week, and I always ask: 'Does this change break anything that\u2019s already working?' That small habit has helped catch three regressions before they reached production. Quality isn\u2019t about perfection\u2014it\u2019s about being proactive, thoughtful, and building trust in the system we\u2019re building together."
+        "text": "I\u2019d start by focusing on the core user flow\u2014like the main path from request to successful payment\u2014and prioritize test cases that cover the critical path, such as input validation, success response, and error handling. I\u2019d use a risk-based approach: high-impact, low-coverage areas (like edge cases or error recovery) get more attention, and I\u2019d avoid over-testing edge cases that don\u2019t affect the main flow. For example, I\u2019d write unit tests for the payment logic first, then add integration tests for the gateway call, and finally a few edge cases like invalid tokens or timeouts. I\u2019d also use pytest\u2019s parametrization to reduce duplication. To balance coverage and time, I\u2019d aim for 80% coverage on the core path and add 10% for key edge cases\u2014just enough to catch major bugs without slowing progress. My top risk? Assuming the gateway is stable and not testing for network failures, timeouts, or fallbacks. If we skip those, we could silently fail in production. So, I\u2019d recommend a quick sprint review to validate the test plan before moving forward\u2014small, focused, and safe."
       }
     ],
     "criterion_results": [
       {
         "competency_id": "1",
         "competency_name": "Python Programming and Frameworks",
-        "criterion_id": "d9e59a51921cb66c9d34a1784c5bbc8bf2132ee0",
-        "criterion_name": "Framework Knowledge",
-        "level": 5,
-        "confidence": 0.95,
-        "notes": "The candidate demonstrated expert knowledge by clearly distinguishing between FastAPI's focus on speed and performance with async support, and Django's comprehensive feature set for complex applications. They provided a concrete example of choosing FastAPI for high-performance needs in a real project, showcasing their ability to apply this understanding effectively."
+        "criterion_id": "6560174d80834ce6504587d00e29347217b87b5c",
+        "criterion_name": "Concept Understanding",
+        "level": 4,
+        "confidence": 0.9,
+        "notes": "The candidate demonstrated a solid understanding of FastAPI's asynchronous nature, clearly explaining the use of `async/await` syntax and its advantages over synchronous frameworks like Django. They provided relevant examples related to performance improvements in high-traffic scenarios."
       },
       {
         "competency_id": "1",
         "competency_name": "Python Programming and Frameworks",
-        "criterion_id": "183d9bd50d6a81662604187355fe1b1236b9f50f",
-        "criterion_name": "Python Proficiency",
-        "level": 4,
-        "confidence": 0.9,
-        "notes": "The candidate demonstrated a deep understanding of Python's advanced features such as context managers, generators, and type hints in the context of backend development. They provided specific examples from their experience that align with production-grade practices."
+        "criterion_id": "2e11f356b8e1615da8d160060d83454c6aa73e2e",
+        "criterion_name": "Practical Application",
+        "level": 5,
+        "confidence": 0.95,
+        "notes": "The candidate demonstrated expert-level practical application by describing a reusable function for data validation using Pydantic, which significantly reduced errors and improved system reliability. The example provided was detailed and relevant to real-world applications."
       },
       {
         "competency_id": "1",
         "competency_name": "Python Programming and Frameworks",
-        "criterion_id": "d80fb0ec0d4dfc769e15715310e4081f1b087cba",
-        "criterion_name": "Real-World Application",
+        "criterion_id": "6fb33bfd7b04bf7a5f36e22cbdd5c20367733db9",
+        "criterion_name": "Framework Proficiency",
         "level": 4,
         "confidence": 0.9,
-        "notes": "The candidate demonstrated innovative use of FastAPI and Python's async capabilities to address real-world scheduling issues, resulting in measurable improvements such as reduced response times and fewer errors."
+        "notes": "The candidate demonstrated strong proficiency in both FastAPI and Django, articulating their design philosophies and practical applications effectively. They provided a clear rationale for choosing one over the other based on project needs, indicating advanced understanding."
       },
       {
         "competency_id": "2",
         "competency_name": "Database Management and SQL Optimization",
-        "criterion_id": "45a14842101e0687c9e65d7ad292d8a9fdf43378",
-        "criterion_name": "SQL Query Optimization",
-        "level": 5,
-        "confidence": 0.95,
-        "notes": "The candidate demonstrated expert-level understanding by providing specific examples of optimization, including the use of indexing to improve performance significantly. They also mentioned using tools like EXPLAIN ANALYZE and database logs for monitoring, indicating a comprehensive approach to SQL query optimization."
-      },
-      {
-        "competency_id": "2",
-        "competency_name": "Database Management and SQL Optimization",
-        "criterion_id": "53de3e34289e669d345f4f2120394e4841d7bae7",
-        "criterion_name": "Schema Management",
+        "criterion_id": "731744a600a1952183b9667b198a4f4259db2783",
+        "criterion_name": "Schema Design",
         "level": 4,
         "confidence": 0.9,
-        "notes": "The candidate demonstrated advanced skills in schema management by discussing version control, documentation, and the use of tools like Alembic. They provided a concrete example of poor schema management impacting performance and team velocity, showing an understanding of both technical and operational aspects."
+        "notes": "The candidate demonstrated a strong understanding of schema design principles, including key tables, relationships, indexing for efficiency, and testability through SQL scripts and pytest. The approach was well-structured and aligned with best practices, though there might be minor areas for further optimization or consideration."
       },
       {
         "competency_id": "2",
         "competency_name": "Database Management and SQL Optimization",
-        "criterion_id": "ca4c0acf56cf28899b7fb01fd96f0841ee103d66",
-        "criterion_name": "Database Design Principles",
+        "criterion_id": "1d84411d3375ac16da9a7f87bffb1bd06b73ab35",
+        "criterion_name": "Query Optimization",
         "level": 5,
         "confidence": 0.95,
-        "notes": "The candidate demonstrated an expert understanding of relational database design principles, effectively applying them to a real-world scenario with clear examples of normalization, entity-relationship modeling, indexing, and data integrity measures."
+        "notes": "The candidate demonstrated an expert-level understanding of query optimization, including profiling with `EXPLAIN ANALYZE`, rewriting queries for efficiency, adding indexes, and validating changes through both happy path and failure case scenarios. The use of unit testing to ensure robustness further supports their proficiency."
+      },
+      {
+        "competency_id": "2",
+        "competency_name": "Database Management and SQL Optimization",
+        "criterion_id": "7e3ddbfc40a8f3ac9589d1e531a2a0d9ff4811d6",
+        "criterion_name": "Complexity Reasoning",
+        "level": 4,
+        "confidence": 0.9,
+        "notes": "The candidate provided a detailed approach to designing the database schema, including key tables, interfaces, data flow, and validation methods. They effectively discussed indexing strategies for performance optimization and outlined both happy path and failure case validations. The response demonstrated a strong understanding of query complexities with minor areas that could be expanded upon, such as deeper reasoning about potential bottlenecks in more complex scenarios."
       },
       {
         "competency_id": "3",
-        "competency_name": "Testing and Code Quality Assurance",
-        "criterion_id": "d9bc8d58f275058c3da9c0a644776472a1f7fd90",
-        "criterion_name": "Test Implementation",
+        "competency_name": "Testing and Code Review Practices",
+        "criterion_id": "0b4ed1f1737a8e0bd6be5fc1902d0c412cef6ffd",
+        "criterion_name": "Test Creation",
         "level": 4,
         "confidence": 0.9,
-        "notes": "The candidate demonstrated advanced skills in test implementation by discussing logic correctness, edge cases, real-world conditions, and the use of pytest with parameterized inputs. The example provided shows a deep understanding of comprehensive testing beyond basic functionality."
+        "notes": "The candidate demonstrated proficiency by outlining a clear approach to writing unit tests, including handling edge cases and potential risks. They effectively used Python's built-in `unittest` framework and considered the constraints of avoiding external dependencies. The plan included key test scenarios and identified significant risks such as list assumptions and time zone boundaries. However, there was room for more detailed discussion on specific implementation details or additional edge cases."
       },
       {
         "competency_id": "3",
-        "competency_name": "Testing and Code Quality Assurance",
+        "competency_name": "Testing and Code Review Practices",
         "criterion_id": "e0ef9d2fe9003b65cf2e16ac8652074cf820def5",
         "criterion_name": "Code Review Participation",
-        "level": 5,
-        "confidence": 0.95,
-        "notes": "The candidate demonstrated expert-level understanding of effective code review participation, providing specific examples and strategies that align with high-quality practices. Their approach to balancing quality assurance with development speed is well-articulated."
+        "level": 4,
+        "confidence": 0.9,
+        "notes": "The candidate demonstrated strong skills by identifying key areas to review, such as scope, error handling, and isolation of the payment gateway. They also highlighted critical risks like lack of error handling and missing rate limiting, which are essential for production readiness. The recommendation to defer for a design sync shows an understanding of balancing speed with safety."
       },
       {
         "competency_id": "3",
-        "competency_name": "Testing and Code Quality Assurance",
-        "criterion_id": "fc845fd88d5d0a23c5b7747a39fc8f68fb8d7056",
-        "criterion_name": "Quality Assurance Practices",
+        "competency_name": "Testing and Code Review Practices",
+        "criterion_id": "0bab5ad43e89c1281feedd331b064d590d18a24e",
+        "criterion_name": "Tradeoff Analysis",
         "level": 4,
         "confidence": 0.9,
-        "notes": "The candidate demonstrated an advanced understanding of quality assurance practices, including writing comprehensive tests, using automated tools for linting and static analysis, and actively reviewing pull requests to catch regressions. The real-world example provided shows practical application of these strategies."
+        "notes": "The candidate effectively prioritized test cases based on risk, focusing on critical paths and high-impact areas while acknowledging time constraints. They demonstrated a clear understanding of balancing coverage with delivery timelines and identified a significant top risk related to network failures. The response was detailed but could have included more specifics about the quick sprint review process."
       }
     ],
     "wrapup_summary": {
-      "closing_statement": "Avery Chen demonstrates strong expertise in Python backend development, with exceptional proficiency in FastAPI, SQL optimization, and database design. Their practical, production-focused examples showcase a deep understanding of real-world engineering challenges and solutions.",
+      "closing_statement": "Avery Chen demonstrates a strong foundation in Python backend development, with exceptional proficiency in FastAPI, database optimization, and testing practices. Their clear, practical, and thoughtful responses across all competencies highlight a high level of technical depth and problem-solving ability.",
       "key_strengths": [
-        "Expert-level knowledge of FastAPI and Django, with clear application in high-performance backend scenarios",
-        "Advanced Python skills including context managers, generators, and type hints in production contexts",
-        "Proven ability to optimize SQL queries and design efficient database schemas with real-world impact",
-        "Strong test implementation and code review practices that ensure high code quality and team velocity"
+        "Demonstrated expert-level practical application of Pydantic for data validation, significantly improving system reliability.",
+        "Proven expertise in query optimization using EXPLAIN ANALYZE and effective indexing strategies for performance gains.",
+        "Strong understanding of database schema design with clear attention to testability and edge cases.",
+        "Effective test creation and risk-aware code review practices, identifying critical production risks like error handling and rate limiting."
       ],
       "risk_flags": [
-        "Limited exposure to distributed systems or microservices beyond FastAPI and database concerns\u2014may require additional onboarding for complex system design",
-        "No explicit mention of experience with containerization (e.g., Docker, Kubernetes) or CI/CD pipelines, which are common in production backend environments"
+        "Potential unaddressed edge cases in test scenarios, such as list assumptions and time zone boundaries.",
+        "Lack of explicit handling for network failures in high-availability scenarios, which could impact system resilience.",
+        "Recommendation to defer for a design sync\u2014suggests a need for further clarification on system-level tradeoffs."
       ],
       "next_steps": [
-        "Conduct a hands-on review of their codebase to assess scalability and integration patterns with existing systems",
-        "Evaluate their experience with CI/CD and containerization to determine readiness for production deployment",
-        "Pair them with a senior engineer for a 2-week onboarding sprint to align on team workflows and tooling"
+        "Conduct a design sync to finalize system architecture and address potential bottlenecks in high-traffic scenarios.",
+        "Review and expand test coverage to include edge cases, particularly around time zones and list manipulation.",
+        "Validate error handling and rate-limiting mechanisms in the payment gateway integration to ensure production readiness."
       ]
     }
   }

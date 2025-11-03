@@ -2,6 +2,7 @@ from __future__ import annotations  # Exposes the styles runtime surface.
 
 from .base import (
     DirectiveSchema,
+    InteractiveQuestion,
     StagePlan,
     StyleDirectiveRequest,
     StyleSpec,
@@ -15,6 +16,7 @@ from .runtime import StyleRuntime
 
 __all__ = [
     "DirectiveSchema",
+    "InteractiveQuestion",
     "StagePlan",
     "StyleDirectiveRequest",
     "StyleSpec",

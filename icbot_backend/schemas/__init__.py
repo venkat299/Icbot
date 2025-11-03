@@ -38,6 +38,7 @@ from .warmup import (  # Re-exports warmup schemas.
 )
 from ..styles.schemas import (  # Re-exports style schemas.
     DirectiveSchema,
+    InteractiveQuestion,
     StagePlan,
     StyleDirectiveRequest,
     StyleSummary,
@@ -84,6 +85,7 @@ __all__ = [
     "WarmupContext",
     "WarmupComfortScore",
     "DirectiveSchema",
+    "InteractiveQuestion",
     "StagePlan",
     "StyleDirectiveRequest",
     "StyleSummary",

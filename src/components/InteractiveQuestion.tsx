@@ -6,48 +6,30 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Code, CheckCircle2, Send } from 'lucide-react';
 import { Badge } from './ui/badge';
-
-export type QuestionType = 'code' | 'multiple-select' | 'yes-no';
-
-interface BaseQuestion {
-  id: string;
-  type: QuestionType;
-  prompt?: string;
-}
-
-interface CodeQuestion extends BaseQuestion {
-  type: 'code';
-  language?: string;
-  initialCode?: string;
-  debugMode?: boolean;
-}
-
-interface MultipleSelectQuestion extends BaseQuestion {
-  type: 'multiple-select';
-  options: string[];
-}
-
-interface YesNoQuestion extends BaseQuestion {
-  type: 'yes-no';
-}
-
-export type Question = CodeQuestion | MultipleSelectQuestion | YesNoQuestion;
+import type {
+  InteractiveQuestionData,
+  InteractiveQuestionAnswer,
+  CodeInteractiveQuestion,
+  MultipleSelectInteractiveQuestion,
+} from '../types/interactiveQuestion';
 
 interface InteractiveQuestionProps {
-  question: Question;
-  onSubmit: (answer: any) => void;
+  question: InteractiveQuestionData;
+  onSubmit: (answer: InteractiveQuestionAnswer) => void;
   isSubmitted?: boolean;
 }
 
 export function InteractiveQuestion({ question, onSubmit, isSubmitted = false }: InteractiveQuestionProps) {
-  const [codeAnswer, setCodeAnswer] = useState((question as CodeQuestion).initialCode || '');
+  const [codeAnswer, setCodeAnswer] = useState(
+    question.type === 'code' ? (question as CodeInteractiveQuestion).initialCode ?? '' : '',
+  );
   const [multipleSelectAnswers, setMultipleSelectAnswers] = useState<string[]>([]);
   const [yesNoAnswer, setYesNoAnswer] = useState<'yes' | 'no' | null>(null);
 
   const handleSubmit = () => {
     switch (question.type) {
       case 'code':
-        onSubmit({ type: 'code', code: codeAnswer, language: (question as CodeQuestion).language });
+        onSubmit({ type: 'code', code: codeAnswer, language: (question as CodeInteractiveQuestion).language });
         break;
       case 'multiple-select':
         onSubmit({ type: 'multiple-select', answers: multipleSelectAnswers });
@@ -72,6 +54,9 @@ export function InteractiveQuestion({ question, onSubmit, isSubmitted = false }:
   };
 
   const toggleMultipleSelect = (option: string) => {
+    if (question.type !== 'multiple-select') {
+      return;
+    }
     setMultipleSelectAnswers(prev =>
       prev.includes(option)
         ? prev.filter(a => a !== option)
@@ -106,12 +91,12 @@ export function InteractiveQuestion({ question, onSubmit, isSubmitted = false }:
                 <div className="flex items-center gap-2">
                   <Code className="w-4 h-4 text-gray-500" />
                   <span className="text-xs text-gray-600">
-                    {(question as CodeQuestion).debugMode ? 'Debug the code' : 'Write your code'}
+                    {(question as CodeInteractiveQuestion).debugMode ? 'Debug the code' : 'Write your code'}
                   </span>
                 </div>
-                {(question as CodeQuestion).language && (
+                {(question as CodeInteractiveQuestion).language && (
                   <Badge variant="outline" className="text-xs">
-                    {(question as CodeQuestion).language}
+                    {(question as CodeInteractiveQuestion).language}
                   </Badge>
                 )}
               </div>
@@ -134,7 +119,7 @@ export function InteractiveQuestion({ question, onSubmit, isSubmitted = false }:
           {question.type === 'multiple-select' && (
             <div className="space-y-3">
               <p className="text-xs text-gray-500">Select all that apply</p>
-              {(question as MultipleSelectQuestion).options.map((option, index) => (
+              {(question as MultipleSelectInteractiveQuestion).options.map((option, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -10 }}

@@ -1,6 +1,6 @@
 from __future__ import annotations  # Defines style contracts and runtime state.
 
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, PositiveInt
 
@@ -75,6 +75,7 @@ class DirectiveSchema(BaseModel):  # Defines the LLM directive contract.
     evidence_focus: list[str] = Field(default_factory=list)
     follow_up_hint: str | None = None
     rubric_reference: str | None = None
+    interactive_question: InteractiveQuestion | None = None
 
 
 class StagePlan(BaseModel):  # Represents a directive plus updated style state.
@@ -96,3 +97,33 @@ class StyleDirectiveRequest(BaseModel):  # Carries inputs needed to fetch a dire
     guidance: list[str] = Field(default_factory=list)
     resume_excerpt: str | None = None
     state: StyleState | None = None
+
+
+class InteractiveQuestionBase(BaseModel):  # Serves as the shared interactive question contract.
+    prompt: str = Field(..., min_length=1)
+    id: str | None = None
+
+
+class CodeInteractiveQuestion(InteractiveQuestionBase):  # Captures code submission interactive metadata.
+    type: Literal["code"]
+    language: str | None = None
+    initial_code: str | None = None
+    debug_mode: bool = False
+
+
+class MultipleSelectInteractiveQuestion(InteractiveQuestionBase):  # Captures multi-select interactive metadata.
+    type: Literal["multiple-select"]
+    options: list[str] = Field(default_factory=list)
+
+
+class YesNoInteractiveQuestion(InteractiveQuestionBase):  # Captures yes/no interactive metadata.
+    type: Literal["yes-no"]
+
+
+InteractiveQuestion = Annotated[
+    CodeInteractiveQuestion | MultipleSelectInteractiveQuestion | YesNoInteractiveQuestion,
+    Field(discriminator="type"),
+]  # Defines the discriminated interactive question union.
+
+
+DirectiveSchema.model_rebuild(_types_namespace={"InteractiveQuestion": InteractiveQuestion})

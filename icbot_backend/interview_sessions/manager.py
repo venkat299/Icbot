@@ -218,6 +218,7 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
                 "criterion_id": criterion.directive.criterion_id,
                 "criterion": criterion.directive.criterion_name,
             },
+            interactive_question=criterion.directive.interactive_question,
         )
         state.transcript.append(TranscriptEntry(role="interviewer", text=message.text))
         _log_waiting_for_reply(state.session_id, "competency", message)
@@ -271,6 +272,7 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
                     "criterion": criterion.directive.criterion_name,
                     "follow_up": "true",
                 },
+                interactive_question=None,
             )
             state.transcript.append(TranscriptEntry(role="interviewer", text=message.text))
             _log_waiting_for_reply(state.session_id, "competency", message)

@@ -179,3 +179,22 @@
 
 ### icbot_backend/reporting/pdf.py
 - Renders interview reports to PDF using `fpdf2` for download support.
+
+### src/components/InteractiveQuestion.tsx
+- Switches to shared interactive question types and submits structured answers back to the chat flow.
+
+### src/components/ChatMessage.tsx
+- Injects interactive question widgets using the new shared types while preserving submission state styling.
+
+### src/components/Chatbot.tsx
+- Maps interactive question payloads from the session API, surfaces them in the timeline, and routes submissions through the existing reply handler.
+- Reordered reply handler hooks so interactive submissions call initialized callbacks without runtime reference errors.
+
+### src/services/interviewSession.ts
+- Normalizes interactive question payloads from the backend into camel-cased data for the chat UI.
+
+### src/types/interactiveQuestion.ts
+- Centralizes interactive question and answer type definitions for reuse across UI modules.
+
+### src/components/ui/dialog.tsx
+- Wraps dialog overlay and content in `forwardRef` to keep Radix slot refs working without console warnings.

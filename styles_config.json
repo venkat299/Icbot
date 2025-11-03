@@ -61,6 +61,216 @@
                     }
                 }
             ]
+        },
+        "objective_check": {
+            "style_id": "objective_check",
+            "label": "Objective Check",
+            "summary": "Elicits reasoning and factual answers that are easy to verify.",
+            "persona": "Neutral examiner who validates statements against data or rules.",
+            "task_catalog": {
+                "fact_probe": {
+                    "task_id": "fact_probe",
+                    "objective": "Ask for a concise factual claim or definition and require a source, formula, or standard.",
+                    "rubric_focus": [
+                        "correctness",
+                        "reference_quality",
+                        "precision"
+                    ],
+                    "evidence_tags": [
+                        "source",
+                        "equation",
+                        "standard"
+                    ],
+                    "interviewer_actions": [
+                        "Request one-sentence claim plus reference or formula.",
+                        "Disallow vague qualifiers.",
+                        "Ask for units and assumptions."
+                    ],
+                    "response_shape": "Claim with citation or formula, units, and assumptions in under 30 seconds."
+                },
+                "calc_check": {
+                    "task_id": "calc_check",
+                    "objective": "Provide small numbers or rules and ask for a worked result the evaluator can recompute.",
+                    "rubric_focus": [
+                        "arithmetic_accuracy",
+                        "rule_application",
+                        "traceability"
+                    ],
+                    "evidence_tags": [
+                        "inputs",
+                        "steps",
+                        "result"
+                    ],
+                    "interviewer_actions": [
+                        "Give exact inputs.",
+                        "Require step-by-step math or rule steps.",
+                        "Ask for a quick self-check."
+                    ],
+                    "response_shape": "Numbered steps with final result and a one-line validation."
+                }
+            },
+            "stages": [
+                {
+                    "stage_id": "verification_round",
+                    "prompt_id": "directive",
+                    "registry_key": "styles.directive",
+                    "goal": "Capture claims and calculations that can be checked quickly.",
+                    "tone": "Exact and impersonal",
+                    "task_sequence": [
+                        "fact_probe",
+                        "calc_check"
+                    ],
+                    "max_directives": 2,
+                    "persona_hint": "Verifier minimizing ambiguity.",
+                    "controls": {
+                        "mode": "probe",
+                        "task_catalog": [
+                            "fact_probe",
+                            "calc_check"
+                        ]
+                    }
+                }
+            ]
+        },
+        "implementation_walkthrough": {
+            "style_id": "implementation_walkthrough",
+            "label": "Implementation Walkthrough",
+            "summary": "Surfaces practical build steps, interfaces, and complexity.",
+            "persona": "Pragmatic builder focused on clarity and correctness.",
+            "task_catalog": {
+                "approach_probe": {
+                    "task_id": "approach_probe",
+                    "objective": "Ask for the minimal viable approach, interfaces, and data flow.",
+                    "rubric_focus": [
+                        "clarity",
+                        "correctness",
+                        "testability"
+                    ],
+                    "evidence_tags": [
+                        "api_shape",
+                        "data_flow",
+                        "tests"
+                    ],
+                    "interviewer_actions": [
+                        "Request function signatures or endpoints.",
+                        "Ask for key invariants and failure handling.",
+                        "Invite a quick test outline."
+                    ],
+                    "response_shape": "Step list, interfaces, and one happy-path plus one failure test."
+                },
+                "complexity_reasoning": {
+                    "task_id": "complexity_reasoning",
+                    "objective": "Have the candidate state time/space costs and main bottleneck.",
+                    "rubric_focus": [
+                        "big_o",
+                        "bottleneck",
+                        "tradeoffs"
+                    ],
+                    "evidence_tags": [
+                        "time",
+                        "space",
+                        "hot_path"
+                    ],
+                    "interviewer_actions": [
+                        "Ask for O() bounds for core operations.",
+                        "Probe the hot path and optimization lever.",
+                        "Request a quick sanity check on inputs."
+                    ],
+                    "response_shape": "Bounds, hot path, and one optimization with expected effect."
+                }
+            },
+            "stages": [
+                {
+                    "stage_id": "build_round",
+                    "prompt_id": "directive",
+                    "registry_key": "styles.directive",
+                    "goal": "Evaluate ability to explain and justify a concrete build plan.",
+                    "tone": "Clear and procedural",
+                    "task_sequence": [
+                        "approach_probe",
+                        "complexity_reasoning"
+                    ],
+                    "max_directives": 2,
+                    "persona_hint": "Builder who values simple, testable steps.",
+                    "controls": {
+                        "mode": "probe",
+                        "task_catalog": [
+                            "approach_probe",
+                            "complexity_reasoning"
+                        ]
+                    }
+                }
+            ]
+        },
+        "scenario_drill": {
+            "style_id": "scenario_drill",
+            "label": "Scenario Drill",
+            "summary": "Tests decision quality under stated constraints.",
+            "persona": "Calm evaluator seeking reasoned trade-offs.",
+            "task_catalog": {
+                "scenario_probe": {
+                    "task_id": "scenario_probe",
+                    "objective": "Give a short scenario with constraints and ask for the chosen plan.",
+                    "rubric_focus": [
+                        "constraint_handling",
+                        "risk_awareness",
+                        "outcome_focus"
+                    ],
+                    "evidence_tags": [
+                        "assumptions",
+                        "risks",
+                        "metrics"
+                    ],
+                    "interviewer_actions": [
+                        "State constraints and success metric.",
+                        "Ask for the plan in three steps.",
+                        "Probe the primary risk and mitigation."
+                    ],
+                    "response_shape": "Chosen plan, top risk, and success check."
+                },
+                "tradeoff_probe": {
+                    "task_id": "tradeoff_probe",
+                    "objective": "Force a choice between two valid options and ask for the decision rule.",
+                    "rubric_focus": [
+                        "criteria_clarity",
+                        "reversibility",
+                        "impact"
+                    ],
+                    "evidence_tags": [
+                        "decision_rule",
+                        "fallback",
+                        "expected_delta"
+                    ],
+                    "interviewer_actions": [
+                        "Present two options and one hard limit.",
+                        "Ask what would flip the choice.",
+                        "Request expected metric movement."
+                    ],
+                    "response_shape": "Option picked, criteria weights, and flip condition."
+                }
+            },
+            "stages": [
+                {
+                    "stage_id": "decision_round",
+                    "prompt_id": "directive",
+                    "registry_key": "styles.directive",
+                    "goal": "Assess structured choices and explicit trade-offs.",
+                    "tone": "Neutral and concise",
+                    "task_sequence": [
+                        "scenario_probe",
+                        "tradeoff_probe"
+                    ],
+                    "max_directives": 2,
+                    "persona_hint": "Evaluator optimizing for clarity and impact.",
+                    "controls": {
+                        "mode": "probe",
+                        "task_catalog": [
+                            "scenario_probe",
+                            "tradeoff_probe"
+                        ]
+                    }
+                }
+            ]
         }
     }
 }

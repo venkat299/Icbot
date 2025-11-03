@@ -1,13 +1,14 @@
 import { motion } from 'motion/react';
-import { InteractiveQuestion, Question } from './InteractiveQuestion';
+import { InteractiveQuestion } from './InteractiveQuestion';
+import type { InteractiveQuestionData, InteractiveQuestionAnswer } from '../types/interactiveQuestion';
 
 interface ChatMessageProps {
   message: string;
   isUser: boolean;
   timestamp: string;
   isLatestAI?: boolean;
-  question?: Question;
-  onQuestionSubmit?: (answer: any) => void;
+  interactiveQuestion?: InteractiveQuestionData;
+  onQuestionSubmit?: (answer: InteractiveQuestionAnswer) => void;
   questionSubmitted?: boolean;
   isLast?: boolean;
 }
@@ -17,7 +18,7 @@ export function ChatMessage({
   isUser, 
   timestamp, 
   isLatestAI = false,
-  question,
+  interactiveQuestion,
   onQuestionSubmit,
   questionSubmitted = false,
   isLast = false
@@ -72,12 +73,8 @@ export function ChatMessage({
           </motion.div>
 
           {/* Interactive Question Component */}
-          {question && onQuestionSubmit && (
-            <InteractiveQuestion
-              question={question}
-              onSubmit={onQuestionSubmit}
-              isSubmitted={questionSubmitted}
-            />
+          {interactiveQuestion && onQuestionSubmit && (
+            <InteractiveQuestion question={interactiveQuestion} onSubmit={onQuestionSubmit} isSubmitted={questionSubmitted} />
           )}
         </div>
       ) : (
@@ -94,10 +91,10 @@ export function ChatMessage({
           </p>
 
           {/* Show interactive question for previous AI messages if present */}
-          {!isUser && question && onQuestionSubmit && !isLatestAI && (
+          {!isUser && interactiveQuestion && onQuestionSubmit && !isLatestAI && (
             <div className="mt-3 opacity-50 pointer-events-none">
               <InteractiveQuestion
-                question={question}
+                question={interactiveQuestion}
                 onSubmit={onQuestionSubmit}
                 isSubmitted={questionSubmitted}
               />

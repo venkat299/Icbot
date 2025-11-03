@@ -1,4 +1,4 @@
-// Declares frontend-facing interview session payload models.
+import type { InteractiveQuestionData } from './interactiveQuestion'; // Declares frontend-facing interview session payload models.
 
 export type SessionMessageRole = 'system' | 'directive' | 'interviewer' | 'candidate';
 
@@ -9,6 +9,7 @@ export interface SessionMessage {
   expectCandidateReply: boolean;
   objective?: string | null;
   metadata?: Record<string, string>;
+  interactiveQuestion?: InteractiveQuestionData | null;
 }
 
 export type SessionStage = 'warmup' | 'competency' | 'wrapup' | 'completed';

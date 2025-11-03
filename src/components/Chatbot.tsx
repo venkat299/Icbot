@@ -14,6 +14,7 @@ import {
 import { startInterviewSession, advanceInterviewSession, completeInterviewSession, extractSidebarSnapshot } from '../services/interviewSession';
 import type { SessionMessage, InterviewSessionResponse, SidebarSnapshot } from '../types/interviewSession';
 import type { ScheduledInterview } from './ScheduledInterviews';
+import type { InteractiveQuestionAnswer, InteractiveQuestionData } from '../types/interactiveQuestion';
 
 interface Message { // Represents a chat transcript entry for the UI.
   id: string;
@@ -23,7 +24,7 @@ interface Message { // Represents a chat transcript entry for the UI.
   expectCandidateReply?: boolean;
   objective?: string;
   kind?: 'directive';
-  question?: any;
+  interactiveQuestion?: InteractiveQuestionData | null;
   questionSubmitted?: boolean;
 }
 
@@ -37,6 +38,7 @@ const mapSessionMessage = (entry: SessionMessage): Message => ({ // Maps backend
   expectCandidateReply: entry.expectCandidateReply,
   objective: entry.objective ?? undefined,
   kind: entry.role === 'directive' ? 'directive' : undefined,
+  interactiveQuestion: entry.interactiveQuestion ?? null,
 });
 
 interface ChatbotProps {
@@ -349,6 +351,40 @@ export function Chatbot({
     [applySessionResponse, patchMessages, sessionId, speak, ttsEnabled],
   ); // Handles candidate responses and advances backend session.
 
+  const formatInteractiveAnswer = useCallback(
+    (answer: InteractiveQuestionAnswer, question: InteractiveQuestionData): string => {
+      if (answer.type === 'code') {
+        const language = answer.language ?? (question.type === 'code' ? question.language ?? null : null);
+        const prefix = language ? `${language} code submission:\n` : 'Code submission:\n';
+        return `${prefix}${answer.code}`.trim();
+      }
+      if (answer.type === 'multiple-select') {
+        const selections = answer.answers.join(', ');
+        return `Selected options: ${selections}`;
+      }
+      if (answer.type === 'yes-no') {
+        return answer.answer === 'yes' ? 'Yes.' : 'No.';
+      }
+      return '';
+    },
+    [],
+  ); // Formats interactive answers into text for backend submission.
+
+  const handleInteractiveSubmit = useCallback(
+    (messageId: string, answer: InteractiveQuestionAnswer, question: InteractiveQuestionData) => {
+      const response = formatInteractiveAnswer(answer, question);
+      patchMessages(prev =>
+        prev.map(entry =>
+          entry.id === messageId ? { ...entry, questionSubmitted: true } : entry,
+        ),
+      );
+      if (response.trim()) {
+        void handleCandidateReply(response);
+      }
+    },
+    [formatInteractiveAnswer, handleCandidateReply, patchMessages],
+  ); // Handles submissions from interactive question widgets.
+
   const handleSendMessage = useCallback(
     async (text: string, options?: { skipAutoReply?: boolean }) => {
       const trimmedText = text.trim();
@@ -590,8 +626,12 @@ export function Chatbot({
                         isUser={message.isUser}
                         timestamp={message.timestamp}
                         isLatestAI={isLatestAI}
-                        question={message.question}
-                        onQuestionSubmit={undefined}
+                        interactiveQuestion={message.interactiveQuestion ?? undefined}
+                        onQuestionSubmit={
+                          message.interactiveQuestion
+                            ? (answer) => handleInteractiveSubmit(message.id, answer, message.interactiveQuestion!)
+                            : undefined
+                        }
                         questionSubmitted={message.questionSubmitted}
                         isLast={index === messages.length - 1}
                       />

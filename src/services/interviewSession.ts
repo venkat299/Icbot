@@ -1,11 +1,22 @@
 // Provides client helpers for interview session orchestration endpoints.
 import { API_BASE_URL } from '../config';
+import type { InteractiveQuestionData } from '../types/interactiveQuestion';
 import type {
   InterviewSessionResponse,
   SessionEventRequest,
   SessionMessage,
   SidebarSnapshot,
 } from '../types/interviewSession';
+
+interface ApiInteractiveQuestion {
+  id?: string | null;
+  type: 'code' | 'multiple-select' | 'yes-no';
+  prompt?: string | null;
+  language?: string | null;
+  initial_code?: string | null;
+  debug_mode?: boolean;
+  options?: string[] | null;
+}
 
 interface ApiSessionMessage {
   message_id: string;
@@ -14,6 +25,7 @@ interface ApiSessionMessage {
   expect_candidate_reply: boolean;
   objective?: string | null;
   metadata?: Record<string, string> | null;
+  interactive_question?: ApiInteractiveQuestion | null;
 }
 
 interface ApiSidebarCriterion {
@@ -49,6 +61,42 @@ interface ApiSessionResponse {
   sidebar?: ApiSidebarSnapshot | null;
 }
 
+const mapInteractiveQuestion = (payload: ApiInteractiveQuestion | null | undefined): InteractiveQuestionData | null => {
+  if (!payload) {
+    return null;
+  }
+  const id = payload.id && payload.id.trim().length > 0
+    ? payload.id
+    : `${payload.type}-${Math.random().toString(36).slice(2)}`;
+  const base = {
+    id,
+    prompt: payload.prompt ?? undefined,
+  };
+  if (payload.type === 'code') {
+    return {
+      ...base,
+      type: 'code',
+      language: payload.language ?? null,
+      initialCode: payload.initial_code ?? null,
+      debugMode: payload.debug_mode ?? false,
+    };
+  }
+  if (payload.type === 'multiple-select') {
+    return {
+      ...base,
+      type: 'multiple-select',
+      options: payload.options ?? [],
+    };
+  }
+  if (payload.type === 'yes-no') {
+    return {
+      ...base,
+      type: 'yes-no',
+    };
+  }
+  return null;
+};
+
 const mapSessionMessage = (payload: ApiSessionMessage): SessionMessage => ({ // Normalizes API message payload.
   messageId: payload.message_id,
   role: payload.role,
@@ -56,6 +104,7 @@ const mapSessionMessage = (payload: ApiSessionMessage): SessionMessage => ({ // 
   expectCandidateReply: payload.expect_candidate_reply,
   objective: payload.objective ?? null,
   metadata: payload.metadata ?? undefined,
+  interactiveQuestion: mapInteractiveQuestion(payload.interactive_question ?? null),
 });
 
 const mapSessionResponse = (payload: ApiSessionResponse): InterviewSessionResponse => ({ // Converts API response to frontend model.

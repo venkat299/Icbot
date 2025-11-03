@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field  # Defines session payload contracts.
 
 from ..schemas.interview import ScheduledInterviewModel  # Interview data schemas.
 from ..schemas.warmup import WarmupState, WarmupTurn  # Warm-up state payloads.
-from ..styles import TranscriptTurn  # Style runtime models.
+from ..styles import InteractiveQuestion, TranscriptTurn  # Style runtime models.
 from ..schemas.criterion import CriterionState  # Criterion runtime models.
 
 
@@ -24,6 +24,7 @@ class SessionMessage(BaseModel):  # Represents a message emitted to the UI.
     expect_candidate_reply: bool = False
     objective: str | None = None
     metadata: dict[str, str] = Field(default_factory=dict)
+    interactive_question: InteractiveQuestion | None = None
 
 
 class SidebarCriterion(BaseModel):  # Describes criterion status for the sidebar snapshot.
