@@ -214,7 +214,7 @@ export function Chatbot({
 
   const applySessionResponse = useCallback(
     (response: InterviewSessionResponse, mode: 'replace' | 'append') => {
-      setSessionId(response.sessionId);
+      setSessionId(response.done ? null : response.sessionId);
       const uiMessages = response.messages.map(mapSessionMessage);
       if (uiMessages.length) {
         if (mode === 'replace') {
@@ -233,6 +233,8 @@ export function Chatbot({
       } else if (response.stage === 'warmup') {
         setCurrentStage('warmup');
         setCompetencyNumber(1);
+      } else if (response.stage === 'completed') {
+        setCurrentStage('wrapup');
       } else {
         setCurrentStage('wrapup');
       }

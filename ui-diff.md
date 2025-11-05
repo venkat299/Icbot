@@ -155,6 +155,8 @@
 - Computes sidebar snapshots from live session state and includes them on every response.
 - Detects candidate uncertainty and injects supportive guidance prompts before re-scoring.
 - Uses the wrap-up LLM closing prompt to deliver the thank-you/feedback message instead of a hardcoded string.
+- Validates rubric/competency alignment during session start, logs precise mismatches, and logs every advance request to trace rejected events; blocks session launch when directives are missing.
+- Emits an explicit error log when an advance arrives for a missing session, including the event type and payload size, so repeated 404s can be diagnosed quickly.
 
 ### icbot_backend/agents/wrapup_agent.py
 - Adds a closing-message chain that reuses the configured LLM route and produces JSON-formatted farewells.
@@ -210,6 +212,7 @@
 
 ### src/components/Chatbot.tsx
 - Ensures the preparation overlay always opens on session load so every user sees the staged warmup before entering chat.
+- Clears the session id when the backend marks a session `done` so the UI stops sending advance events after completion.
 - Maps interactive question payloads from the session API, surfaces them in the timeline, and routes submissions through the existing reply handler.
 - Reordered reply handler hooks so interactive submissions call initialized callbacks without runtime reference errors.
 - Detects expired interview sessions, shows a friendly notice, and automatically reboots the flow so 404s from the backend recover without manual refresh.
@@ -229,3 +232,8 @@
 
 ### src/components/InterviewPrepOverlay.tsx
 - Adds animated prep stages, progress bar, and glassmorphism refinements plus a ready-state system check panel and enhanced start CTA.
+- Tweaks the prep overlay styling so the loading phase carries a blue gradient backdrop and the start button uses the richer blue gradient treatment.
+- Aligns the start button with the reference by applying the provided OKLCH gradient inline and matching the blue icon styling.
+
+### src/index.css
+- Adds explicit blue gradient utility overrides and color tokens so gradient classes resolve to the expected blue tones.

@@ -2,12 +2,11 @@ import { Button } from './ui/button'; // InterviewPrepOverlay.tsx renders the in
 import { Badge } from './ui/badge';
 import {
   Loader2,
-  PlayCircle,
+  CirclePlay,
   CheckCircle2,
   Mic,
   Video,
   MessageSquare,
-  Clock,
   AlertCircle,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -17,7 +16,6 @@ interface InterviewPrepOverlayProps {
   onStart: () => void;
   candidateName?: string;
   positionTitle?: string;
-  estimatedDuration?: number;
 }
 
 const PREP_STEPS = [
@@ -35,7 +33,6 @@ export function InterviewPrepOverlay({
   onStart,
   candidateName = 'Candidate',
   positionTitle = 'Position',
-  estimatedDuration = 30,
 }: InterviewPrepOverlayProps) { // Renders the interview preparation overlay with staged loading and ready states.
   const [progressIndex, setProgressIndex] = useState(0);
 
@@ -56,12 +53,14 @@ export function InterviewPrepOverlay({
   const progressRatio = Math.min(progressIndex / PREP_STEPS.length, 1);
 
   return (
-    <div className="
-      fixed inset-0 z-50
-      bg-gradient-to-br from-gray-50 via-white to-gray-100
-      flex items-center justify-center
-      backdrop-blur-xl
-    ">
+    <div
+      className="
+        fixed inset-0 z-50
+        flex items-center justify-center
+        bg-gradient-to-br from-gray-50 via-white to-gray-100
+        backdrop-blur-xl
+      "
+    >
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-200/20 rounded-full blur-3xl animate-pulse delay-1000" />
@@ -76,22 +75,15 @@ export function InterviewPrepOverlay({
           relative overflow-hidden
         ">
           <div className="text-center mb-8">
-            <div className="relative inline-flex items-center justify-center mb-4">
-              {isReady && (
-                <>
-                  <div className="absolute inset-0 rounded-full border border-green-300/80 animate-[ping_2s_ease-out_infinite]" />
-                  <div className="absolute inset-2 rounded-full border border-green-200/70 animate-[spin_6s_linear_infinite]" />
-                </>
-              )}
-              <div className={`
-                relative flex items-center justify-center
-                w-16 h-16 rounded-full shadow-lg
-                transition-all duration-500
-                ${isReady
-                  ? 'bg-gradient-to-br from-green-500 to-emerald-600'
-                  : 'bg-gradient-to-br from-blue-500 to-blue-600 animate-pulse'
-                }
-              `}>
+            <div className="inline-flex items-center justify-center mb-4">
+              <div
+                className={`
+                  relative flex items-center justify-center
+                  p-4 rounded-2xl shadow-lg transition-all duration-500
+                  bg-gradient-to-br from-blue-500 to-blue-600
+                  ${isReady ? '' : 'animate-pulse'}
+                `}
+              >
                 {isReady ? (
                   <CheckCircle2 className="w-9 h-9 text-white" />
                 ) : (
@@ -124,12 +116,6 @@ export function InterviewPrepOverlay({
               <div>
                 <p className="text-xs text-gray-600 mb-1">Position</p>
                 <p className="text-sm text-gray-900">{positionTitle}</p>
-              </div>
-            </div>
-            <div className="mt-4 pt-4 border-t border-gray-200/50">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Clock className="w-4 h-4" />
-                <span>Estimated duration: {estimatedDuration} minutes</span>
               </div>
             </div>
             {!isReady && (
@@ -275,17 +261,19 @@ export function InterviewPrepOverlay({
                 onClick={onStart}
                 size="lg"
                 className="
-                  bg-gradient-to-br from-blue-600 to-blue-700
-                  hover:from-blue-700 hover:to-blue-800
+                  inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium
                   text-white px-8 py-6
-                  shadow-[0_8px_24px_rgba(37,99,235,0.3)]
-                  hover:shadow-[0_12px_32px_rgba(37,99,235,0.4)]
+                  has-[>svg]:px-4
                   transition-all duration-300
                   border-0
                   group
                 "
+                style={{
+                  backgroundImage: 'linear-gradient(to right bottom, oklch(0.546 0.245 262.881) 0%, oklch(0.488 0.243 264.376) 100%)',
+                  boxShadow: '0 8px 24px rgba(37,99,235,0.38)',
+                }}
               >
-                <PlayCircle className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
+                <CirclePlay className="w-5 h-5 mr-2 transition-transform" />
                 Start Interview
               </Button>
               <p className="text-xs text-gray-500 mt-4">

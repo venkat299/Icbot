@@ -84,6 +84,7 @@
     --color-blue-100: oklch(.932 .032 255.585);
     --color-blue-200: oklch(.882 .059 254.128);
     --color-blue-500: oklch(.623 .214 259.815);
+    --color-blue-600: oklch(.555 .23 262.394);
     --color-blue-700: oklch(.488 .243 264.376);
     --color-blue-800: oklch(.424 .199 265.638);
     --color-purple-500: oklch(.627 .265 303.9);
@@ -3749,6 +3750,47 @@ html {
   syntax: "*";
   inherits: false;
   initial-value: "";
+}
+
+@layer utilities {
+  .from-blue-500 {
+    --tw-gradient-from: var(--color-blue-500);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+}
+
+@layer utilities {
+  .to-blue-600 {
+    --tw-gradient-to: var(--color-blue-600);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+}
+
+@layer utilities {
+  .bg-gradient-to-br {
+    --tw-gradient-position: to bottom right in oklab;
+    background-image: linear-gradient(var(--tw-gradient-stops));
+  }
+}
+
+@layer utilities {
+  .rounded-2xl {
+    border-radius: var(--radius-2xl);
+  }
+}
+
+@layer utilities {
+  .animate-pulse {
+    animation: var(--animate-pulse);
+  }
+}
+
+@layer base {
+  @supports (color: color-mix(in lab, red, red)) {
+    * {
+      outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+    }
+  }
 }
 
 @keyframes spin {
