@@ -346,13 +346,13 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
                     return SessionMessage(
                         role="system",
                         text="Thank you for your time today. If you have any feedback for us, we’d love to hear it.",
-                        expect_candidate_reply=False,
+                        expect_candidate_reply=True,
                     ), summary
                 return None, None
             return SessionMessage(
                 role="system",
                 text=text,
-                expect_candidate_reply=False,
+                expect_candidate_reply=True,
             ), summary
 
         request, results = self._compose_wrapup_payload(state)
@@ -364,7 +364,7 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
                 return SessionMessage(
                     role="system",
                     text="Interview wrap-up complete. You may proceed to evaluation.",
-                    expect_candidate_reply=False,
+                    expect_candidate_reply=True,
                 ), None
             return None, None
 
@@ -393,7 +393,7 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
         return SessionMessage(
             role="system",
             text=text,
-            expect_candidate_reply=False,
+            expect_candidate_reply=True,
             metadata=metadata,
         ), summary
 
