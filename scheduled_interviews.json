@@ -220,7 +220,7 @@
       },
       {
         "role": "candidate",
-        "text": "I worked on a school project where I used Python to build a simple backend that stored and retrieved student grades using a SQLite database. I wrote the code to handle basic CRUD operations and made sure it ran smoothly. I'm not sure if it was production-ready, but it helped me practice working with databases in Python. [FACT]"
+        "text": "I worked on a school project where I used Python to build a simple backend that stored and retrieved student grades using a SQLite database. I wrote the code to handle basic CRUD operations and made sure it ran smoothly. I'm not sure if it was production-ready, but it helped me practice working with databases in Python."
       },
       {
         "role": "interviewer",
@@ -232,7 +232,7 @@
       },
       {
         "role": "candidate",
-        "text": "To define a class, you use the keyword 'class' followed by the class name and a colon. For example: class MyClass: pass. The official Python documentation is the standard source that documents this. [FACT]"
+        "text": "To define a class, you use the keyword 'class' followed by the class name and a colon. For example: class MyClass: pass. The official Python documentation is the standard source that documents this."
       },
       {
         "role": "interviewer",
@@ -240,7 +240,7 @@
       },
       {
         "role": "candidate",
-        "text": "To use inheritance, you write class ChildClass(ParentClass): pass. For example: class Animal: def speak(self): pass class Dog(Animal): def speak(self): return 'Woof!' The official Python docs explain this clearly. [FACT]"
+        "text": "To use inheritance, you write class ChildClass(ParentClass): pass. For example: class Animal: def speak(self): pass class Dog(Animal): def speak(self): return 'Woof!' The official Python docs explain this clearly."
       },
       {
         "role": "interviewer",
@@ -248,7 +248,7 @@
       },
       {
         "role": "candidate",
-        "text": "I'm not sure about the exact formula for standard deviation, but I know it's something with the average and the differences from the mean. I think it needs the data to be normally distributed. [CALC]"
+        "text": "I'm not sure about the exact formula for standard deviation, but I know it's something with the average and the differences from the mean. I think it needs the data to be normally distributed."
       },
       {
         "role": "interviewer",
@@ -256,7 +256,7 @@
       },
       {
         "role": "candidate",
-        "text": "I'd start by finding the average: (4+8+6+5+3)/5 = 5.2. Then subtract each number from 5.2, square them, add up the squares, divide by 5, then take the square root. I'm not sure if it works for small datasets. [CALC]"
+        "text": "I'd start by finding the average: (4+8+6+5+3)/5 = 5.2. Then subtract each number from 5.2, square them, add up the squares, divide by 5, then take the square root. I'm not sure if it works for small datasets."
       },
       {
         "role": "interviewer",
@@ -264,7 +264,7 @@
       },
       {
         "role": "candidate",
-        "text": "The __init__ method runs when you create a new instance of a class. It sets up initial values. For example, in a Student class, I might use it to set name and grade. [FACT]"
+        "text": "The __init__ method runs when you create a new instance of a class. It sets up initial values. For example, in a Student class, I might use it to set name and grade."
       },
       {
         "role": "interviewer",
@@ -272,7 +272,7 @@
       },
       {
         "role": "candidate",
-        "text": "I'd add default values like name='Unknown' and grade=0.0 inside the __init__ method. For example: def __init__(self, name='Unknown',, grade=0.0):. I'm not sure if this works perfectly for all cases. [FACT]"
+        "text": "I'd add default values like name='Unknown' and grade=0.0 inside the __init__ method. For example: def __init__(self, name='Unknown',, grade=0.0):. I'm not sure if this works perfectly for all cases."
       },
       {
         "role": "interviewer",
@@ -280,7 +280,7 @@
       },
       {
         "role": "candidate",
-        "text": "I'd start with a simple table for users and one for activities. Each activity links to a user. I'd use a basic API to add or get data. I'm not sure how services talk to each other in production. [FACT]"
+        "text": "I'd start with a simple table for users and one for activities. Each activity links to a user. I'd use a basic API to add or get data. I'm not sure how services talk to each other in production."
       },
       {
         "role": "interviewer",
@@ -288,7 +288,7 @@
       },
       {
         "role": "candidate",
-        "text": "I'm not sure how an API endpoint handles data flow between services, but I know it probably passes data through requests. I'd test it by sending a simple request and checking if the response comes back correctly. [FACT]"
+        "text": "I'm not sure how an API endpoint handles data flow between services, but I know it probably passes data through requests. I'd test it by sending a simple request and checking if the response comes back correctly."
       },
       {
         "role": "interviewer",
@@ -296,7 +296,7 @@
       },
       {
         "role": "candidate",
-        "text": "I'd start with simple tables for users and activities. I'd use basic queries to add or get data. I don't know how to handle time or space complexity in core operations. [FACT]"
+        "text": "I'd start with simple tables for users and activities. I'd use basic queries to add or get data. I don't know how to handle time or space complexity in core operations."
       },
       {
         "role": "interviewer",
@@ -304,7 +304,7 @@
       },
       {
         "role": "candidate",
-        "text": "I didn't optimize a query in a real project yet. I'm still learning. [FACT]"
+        "text": "I didn't optimize a query in a real project yet. I'm still learning."
       },
       {
         "role": "interviewer",
@@ -312,7 +312,7 @@
       },
       {
         "role": "candidate",
-        "text": "I'd start by checking if indexes exist on used columns. Then I'd simplify the query by removing unnecessary joins. I'm not sure how interfaces or data flow between components work in this context. [FACT]"
+        "text": "I'd start by checking if indexes exist on used columns. Then I'd simplify the query by removing unnecessary joins. I'm not sure how interfaces or data flow between components work in this context."
       },
       {
         "role": "interviewer",
@@ -320,7 +320,7 @@
       },
       {
         "role": "candidate",
-        "text": "I didn't have a chance to optimize a SQL query in a real project yet. I'm still learning. [FACT]"
+        "text": "I didn't have a chance to optimize a SQL query in a real project yet. I'm still learning."
       },
       {
         "role": "interviewer",
@@ -328,7 +328,7 @@
       },
       {
         "role": "candidate",
-        "text": "I'd start with basic unit tests for the core logic using a small set of test data. I'd run them quickly and manually check a few edge cases. I don't know how to test without user data. [FACT]"
+        "text": "I'd start with basic unit tests for the core logic using a small set of test data. I'd run them quickly and manually check a few edge cases. I don't know how to test without user data."
       },
       {
         "role": "interviewer",
@@ -336,7 +336,7 @@
       },
       {
         "role": "candidate",
-        "text": "I didn't have a chance to test under tight deadlines without user data yet. I'm still learning. [FACT]"
+        "text": "I didn't have a chance to test under tight deadlines without user data yet. I'm still learning."
       },
       {
         "role": "interviewer",
@@ -344,7 +344,7 @@
       },
       {
         "role": "candidate",
-        "text": "I'd check the main code path and a few key edge cases. I'd skip deep testing since we don't have time. I'd ask the developer to add a simple test. [FACT]"
+        "text": "I'd check the main code path and a few key edge cases. I'd skip deep testing since we don't have time. I'd ask the developer to add a simple test."
       },
       {
         "role": "interviewer",
@@ -352,7 +352,7 @@
       },
       {
         "role": "candidate",
-        "text": "I didn't have a chance to prioritize a risk in a real scenario yet. I'm still learning. [FACT]"
+        "text": "I didn't have a chance to prioritize a risk in a real scenario yet. I'm still learning."
       },
       {
         "role": "interviewer",
@@ -360,7 +360,7 @@
       },
       {
         "role": "candidate",
-        "text": "I'd check the code for basic logic and make sure it doesn't break existing features. I'd ask the developer to add a simple test. I'm not sure how to handle high risk in time pressure. [FACT]"
+        "text": "I'd check the code for basic logic and make sure it doesn't break existing features. I'd ask the developer to add a simple test. I'm not sure how to handle high risk in time pressure."
       },
       {
         "role": "interviewer",
@@ -368,7 +368,7 @@
       },
       {
         "role": "candidate",
-        "text": "I didn't have a chance to manage a high-risk code review under tight deadlines yet. I'm still learning. [FACT]"
+        "text": "I didn't have a chance to manage a high-risk code review under tight deadlines yet. I'm still learning."
       }
     ],
     "criterion_results": [

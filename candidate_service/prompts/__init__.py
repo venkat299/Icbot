@@ -100,17 +100,6 @@ CANDIDATE_PROMPT_PACKAGE = {
                 },
                 "apply": "Ensure numbers have units. Keep L5 exact with formula when used.",
             },
-            {
-                "name": "verifiability_hooks",
-                "params": {
-                    "enabled_levels": ["L3", "L4", "L5"],
-                    "blocks": {
-                        "FACT": "One checkable claim with a source or standard.",
-                        "CALC": "Inputs -> steps -> result with units.",
-                    },
-                },
-                "apply": "Append '[FACT]' or '[CALC]' blocks for enabled levels to help evaluator verification.",
-            },
         ],
     },
     "generation_notes": {
@@ -121,7 +110,6 @@ CANDIDATE_PROMPT_PACKAGE = {
             "Enforce structure_templates[Lk].",
             "Apply disfluency/hedging and imperfections to target rates.",
             "Enforce metric density and numerical grounding.",
-            "For L3-L5, append a '[FACT]' or '[CALC]' block.",
             "Set tone to persona tone when provided or choose a short lowercase descriptor that matches the reply.",
             "Set confidence to a float between 0 and 1 with two decimals; map low≈0.25, medium≈0.55, high≈0.8 based on certainty.",
             "Keep confidence messaging inside the JSON field, not in the reply text.",
@@ -146,7 +134,7 @@ CANDIDATE_RESPONSE_FORMAT_PROMPT = json.dumps(
     {
         "output_contract": {
             "reply": (
-                "Return the candidate's utterance string, including any '[FACT]' or '[CALC]' segments required by the pipeline."
+                "Return the candidate's utterance string, keeping it natural and free of bracketed verification tokens."
             ),
             "tone": (
                 "Provide a lowercase tone descriptor (e.g., 'warm', 'candid'); prefer the persona's tone when given."
