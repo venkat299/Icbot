@@ -8,7 +8,6 @@ import { API_BASE_URL } from './config';
 import { fetchUiConfig, UiClientConfig } from './services/uiConfig';
 
 type AppView = 'setup' | 'scheduled' | 'interview' | 'report';
-
 interface ApiCompetency {
   id: string;
   name: string;
@@ -358,7 +357,7 @@ export default function App() {
           void fetchScheduledInterviews();
         }}
         onDeleteInterview={handleDeleteInterview}
-        onViewReport={(interviewId) => { void handleViewReport(interviewId); }}
+        onViewReport={(interviewId) => { void handleViewReport(interviewId, 'classic'); }}
       />
     );
   }

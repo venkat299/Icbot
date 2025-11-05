@@ -21,6 +21,7 @@ from ..schemas.warmup import WarmupFollowUpRequest, WarmupRequest, WarmupState, 
 from ..styles import StyleRuntime
 from ..schemas.wrapup_summary import WrapupRequest, WrapupCompetencySummary, WrapupCriterionSummary, WrapupSummary
 from ..interview_store import complete_interview
+from ..confidence import ConfidenceModel
 from .models import (
     InterviewSessionEvent,
     InterviewSessionResponse,
@@ -51,9 +52,11 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
         self._criterion_followup_agent = CriterionFollowUpAgent()
         app_config = load_app_config()
         tuning = app_config.evaluation.criterion_flow
+        self._confidence_model = ConfidenceModel(app_config.evaluation.confidence_model)
         self._criterion_graph = CriterionGraph(
             self._evaluation_agent,
             followup_agent=self._criterion_followup_agent,
+            confidence_model=self._confidence_model,
             confidence_threshold=tuning.confidence_threshold,
             min_attempts=tuning.min_attempts,
             max_attempts=tuning.max_attempts,
@@ -80,7 +83,14 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
             warmup_state=warmup_state,
         )
         directives = await generate_criterion_directives(interview, self._style_runtime)
-        state.criteria = [CriterionState(directive=directive, pending_question=directive.question) for directive in directives]
+        state.criteria = [
+            CriterionState(
+                directive=directive,
+                pending_question=directive.question,
+                confidence_posterior=self._confidence_model.initialize(),
+            )
+            for directive in directives
+        ]
         if not state.criteria:
             logger.warning("No rubric criteria available | session_id=%s interview_id=%s", session_id, interview.id)
         self._store.save(state)
@@ -502,20 +512,21 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
     ) -> InterviewSessionResponse:  # Marks the interview as wrapped up.
         state.stage = "completed"
         wrapup_message, wrapup_summary = await self._build_wrapup_message(state, include_message)
+        final_message: SessionMessage | None = wrapup_message
+        if final_message is None and include_message:
+            final_message = SessionMessage(
+                role="system",
+                text="That concludes our interview. Thank you for spending this time with me today. If you have any feedback or final thoughts you'd like to share, I'm all ears. Thanks again for the great conversation!",
+                expect_candidate_reply=False,
+            )
+        if final_message:
+            state.transcript.append(TranscriptEntry(role=final_message.role, text=final_message.text))
         self._persist_interview_results(state, wrapup_summary)
         self._store.delete(state.session_id)
         logger.info("Interview session completed | session_id=%s", state.session_id)
         messages: list[SessionMessage] = []
-        if wrapup_message:
-            messages.append(wrapup_message)
-        elif include_message:
-            messages.append(
-                SessionMessage(
-                    role="system",
-                    text="That concludes our interview. Thank you for spending this time with me today. If you have any feedback or final thoughts you'd like to share, I'm all ears. Thanks again for the great conversation!",
-                    expect_candidate_reply=False,
-                )
-            )
+        if final_message:
+            messages.append(final_message)
         return InterviewSessionResponse(
             session_id=state.session_id,
             stage="completed",

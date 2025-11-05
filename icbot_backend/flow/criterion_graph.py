@@ -8,6 +8,7 @@ from ..agents.criterion_followup_agent import CriterionFollowUpAgent  # Synthesi
 from ..agents.evaluation_agent import EvaluationAgent  # Scores criterion responses.
 from ..schemas.criterion import CriterionAttempt, CriterionState, EvaluationRequest, EvaluationResult
 from ..schemas.criterion_followup import CriterionFollowUpRequest  # Provides follow-up request payload.
+from ..confidence import ConfidenceModel, ConfidenceObservation  # Aggregates evaluation signals.
 
 
 class _CriterionPayload(TypedDict):  # Payload circulated through the LangGraph.
@@ -25,12 +26,14 @@ class CriterionGraph:  # Executes criterion-level turn taking using LangGraph.
         evaluator: EvaluationAgent,
         *,
         followup_agent: CriterionFollowUpAgent | None = None,
+        confidence_model: ConfidenceModel,
         confidence_threshold: float = 0.7,
         min_attempts: int = 1,
         max_attempts: int = 2,
     ) -> None:  # Initializes the criterion flow controller.
         self._evaluator = evaluator
         self._followup = followup_agent or CriterionFollowUpAgent()
+        self._confidence_model = confidence_model
         if min_attempts < 1:
             raise ValueError("min_attempts must be at least 1.")
         if min_attempts > max_attempts:
@@ -103,7 +106,15 @@ class CriterionGraph:  # Executes criterion-level turn taking using LangGraph.
             confidence=evaluation.confidence,
             notes=evaluation.notes,
         )
-        updated = state.register_attempt(attempt)
+        posterior = state.confidence_posterior or self._confidence_model.initialize()
+        observation = ConfidenceObservation(level=evaluation.level, confidence=evaluation.confidence)
+        updated_posterior = self._confidence_model.observe(posterior, observation)
+        summary = self._confidence_model.summarize(updated_posterior)
+        updated = state.register_attempt(
+            attempt,
+            posterior=updated_posterior,
+            summary=summary,
+        )
         updated.done = evaluation.disposition == "complete"
         payload["state"] = updated
         return payload
@@ -115,7 +126,7 @@ class CriterionGraph:  # Executes criterion-level turn taking using LangGraph.
         attempts = len(state.attempts)
         meets_floor = attempts >= self._min_attempts
         exhausted = attempts >= self._max_attempts
-        high_confidence = evaluation.confidence >= self._confidence_threshold
+        high_confidence = state.confidence >= self._confidence_threshold
         completed = evaluation.disposition == "complete"
         sufficient = exhausted or (meets_floor and (high_confidence or completed))
         if sufficient:
@@ -138,7 +149,7 @@ class CriterionGraph:  # Executes criterion-level turn taking using LangGraph.
             latest_question=payload["question"],
             candidate_answer=payload["answer"],
             evaluation_level=str(evaluation.level),
-            evaluation_confidence=evaluation.confidence,
+            evaluation_confidence=state.confidence,
             evaluation_notes=evaluation.notes,
             candidate_focus=directive.directive.candidate_focus,
             evidence_focus=directive.directive.evidence_focus,

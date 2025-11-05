@@ -4,7 +4,7 @@
 
 - **Baseline (Figma auto-sync)**: `77802800d28e3c6d903ab4a1a6d1fc9dc5b71688`
 - **Current delta owner**: Codex agent
-- **Scope**: `src/components/SetupPage.tsx`, `src/App.tsx`, `src/components/ScheduledInterviews.tsx`, `src/components/Chatbot.tsx`
+- **Scope**: `src/components/SetupPage.tsx`, `src/App.tsx`, `src/components/ScheduledInterviews.tsx`, `src/components/Chatbot.tsx`, `src/components/InterviewReport.tsx`, `src/components/ReportPage.tsx`
 
 ## Summary Of Deviations
 1. Reintroduced backend-powered competency + rubric flow (API calls, schema-safe helpers, clipboard, scoring guidance).
@@ -41,6 +41,8 @@
 32. Introduced an interviewer sidebar toggle for auto candidate responses so facilitators can switch to manual typing on demand.
 33. Loosened concept primer directives to encourage varied question openers and richer rationale prompts in competency interviews.
 34. Wrapped the auto-reply toggle in a bordered, shadowed container to make the control pop within the interviewer sidebar.
+35. Report pages display a scrollable full transcript sourced from the shared transcript turn model.
+36. Retired the modern report theme so the viewer always renders the classic layout.
 22. Auto candidate reply watcher now keys solely on reply expectation so competency directives trigger auto responses even when rendered as interviewer turns.
 35. Relocated the interview progress indicator into the interviewer sidebar so facilitators track flow alongside evaluation context.
 36. Defaulted auto-reply control to off so interviewers opt-in before the assistant speaks for candidates.
@@ -162,20 +164,29 @@
 
 ### src/components/ScheduledInterviews.tsx
 - Adds a View Report button beside Evaluation, triggering the backend report fetch for the selected interview.
+- Criterion directives preview now renders stored directive text without injecting templated phrasing.
+- Reuses the shared transcript turn type so schedule cards and reports stay aligned.
 
 ### src/App.tsx
 - Wires the report view to `/api/interviews/{id}/report`, manages loading/error state, and drops the mock data helper.
 - Threaded the candidate level defaults/options from UI config into the live interview view so the chatbot can render the new dropdown.
+- Removes the modern report toggle so report navigation always displays the classic layout.
 
 ### src/components/InterviewReport.tsx
 - Expands the report UI to surface resume highlights, attachments, stage flow, and LLM metadata.
 - Removes the Recommended Next Step card and tightens the evaluation metric grid.
+- Adds a full transcript card with scrollable turns and shared styling with transcript highlights.
 
 ### src/components/ReportPage.tsx
 - Adds loading/error handling with retry support around the report renderer and wires export controls.
+- Simplifies styling/export hooks now that only the classic report is rendered.
+
+### src/components/ModernInterviewReport.tsx
+- Removed; the report view now relies solely on the classic layout.
 
 ### icbot_backend/api/server.py
 - Exposes `GET /api/interviews/{interview_id}/report` returning structured JSON and `GET /api/interviews/{interview_id}/report.pdf` streaming PDF exports.
+- Accepts a `variant` query toggle so the PDF exporter can render the new modern theme.
 
 ### icbot_backend/schemas/report.py
 - Defines typed interview report models covering candidate, position, session, evaluation, and LLM metadata sections.
@@ -186,9 +197,10 @@
 - Stops deriving recommended next steps, leaving overall evaluation to communicate status, score, and confidence only.
 
 ### icbot_backend/reporting/pdf.py
-- Renders interview reports to PDF using `fpdf2` for download support.
+- Replaces the bespoke FPDF renderer with a WeasyPrint HTML pipeline and themed markup.
 - Drops the printed next-step line to match the streamlined evaluation payload.
 - Applies the glassmorphism-inspired palette with styled headings, accent cards, and success/warning fills so the PDF matches the UI theme.
+- Adds a modern pastel renderer and routes variant selection through a shared helper.
 
 ### src/components/InteractiveQuestion.tsx
 - Switches to shared interactive question types and submits structured answers back to the chat flow.
@@ -207,6 +219,9 @@
 
 ### src/types/interactiveQuestion.ts
 - Centralizes interactive question and answer type definitions for reuse across UI modules.
+
+### src/types/transcript.ts
+- Introduces a shared transcript turn interface consumed by scheduling and reporting views.
 
 ### src/components/ui/dialog.tsx
 - Wraps dialog overlay and content in `forwardRef` to keep Radix slot refs working without console warnings.

@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import FastAPI, HTTPException, Request  # Provides HTTP API surface.
+from fastapi import FastAPI, HTTPException, Query, Request  # Provides HTTP API surface.
 from fastapi.responses import StreamingResponse  # Streams file responses.
 from fastapi.exception_handlers import request_validation_exception_handler  # Reuses default validation response.
 from fastapi.exceptions import RequestValidationError  # Signals request body validation errors.
@@ -238,11 +238,14 @@ async def get_interview_report(interview_id: str) -> InterviewReport:
 
 
 @app.get("/api/interviews/{interview_id}/report.pdf")  # Streams interview report as a PDF document.
-async def export_interview_report_pdf(interview_id: str) -> StreamingResponse:
+async def export_interview_report_pdf(interview_id: str, variant: str = Query("classic")) -> StreamingResponse:
     interview = _get_interview_or_404(interview_id)
     try:
         report = build_interview_report(interview)
-        payload = render_report_pdf(report)
+        selected_variant = variant.lower()
+        if selected_variant not in {"classic", "modern"}:
+            selected_variant = "classic"
+        payload = render_report_pdf(report, variant=selected_variant)
     except Exception as exc:
         logger.exception("Failed to export interview report PDF")
         raise HTTPException(status_code=500, detail=str(exc)) from exc

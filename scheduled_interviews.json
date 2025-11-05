@@ -8,7 +8,7 @@
       {
         "id": "1",
         "name": "Python Programming and Frameworks",
-        "interview_style": "objective_check",
+        "interview_style": "concept_primer",
         "rationale": "The candidate needs a solid understanding of Python programming, particularly with frameworks like FastAPI or Django. A Concept Primer will help assess their foundational knowledge and ability to discuss key concepts."
       },
       {
@@ -32,42 +32,42 @@
           "category": "Python Programming and Frameworks",
           "criteria": [
             {
-              "name": "Objective Check - Fact Probe",
-              "description": "Assess the candidate's ability to provide concise factual claims or definitions with sources.",
+              "name": "Concept Understanding",
+              "description": "Assess the candidate's foundational knowledge of Python programming, particularly with frameworks like FastAPI or Django.",
               "weight": 40,
               "scoring_levels": {
-                "Level 0": "Unable to provide any factual claim or definition.",
-                "Level 1": "Provides vague or incorrect facts without sources.",
-                "Level 2": "Provides correct facts but lacks clarity or source citation.",
-                "Level 3": "Provides clear and accurate facts with some source citation.",
-                "Level 4": "Provides detailed, accurate facts with appropriate source citation.",
-                "Level 5": "Exemplary factual claims with comprehensive sources and explanations."
+                "Level 0": "Candidate cannot define key concepts and lacks understanding of framework basics.",
+                "Level 1": "Candidate provides vague definitions and shows limited practical examples.",
+                "Level 2": "Candidate defines key concepts but struggles to relate them to real-world applications.",
+                "Level 3": "Candidate explains concepts clearly with some relevant examples.",
+                "Level 4": "Candidate demonstrates a solid understanding of concepts with multiple relevant examples.",
+                "Level 5": "Candidate articulates deep insights into Python frameworks, providing comprehensive and practical examples."
               }
             },
             {
-              "name": "Objective Check - Calculation Check",
-              "description": "Evaluate the candidate's ability to perform calculations based on provided rules or numbers.",
+              "name": "Practical Application",
+              "description": "Evaluate the candidate's ability to apply Python programming skills in real-world scenarios.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Unable to perform any calculation correctly.",
-                "Level 1": "Makes significant errors in calculations with no understanding of rules.",
-                "Level 2": "Performs basic calculations but makes minor errors.",
-                "Level 3": "Calculates accurately most of the time, showing good understanding.",
-                "Level 4": "Consistently performs accurate calculations with clear reasoning.",
-                "Level 5": "Demonstrates exceptional calculation skills with advanced problem-solving."
+                "Level 0": "Candidate fails to demonstrate any practical application of Python skills.",
+                "Level 1": "Candidate shows minimal practical application with significant errors.",
+                "Level 2": "Candidate demonstrates basic application but lacks depth and accuracy.",
+                "Level 3": "Candidate applies Python skills effectively in simple scenarios.",
+                "Level 4": "Candidate applies Python skills proficiently in complex scenarios with minor issues.",
+                "Level 5": "Candidate showcases expert-level practical application of Python skills across diverse scenarios."
               }
             },
             {
-              "name": "Concept Primer",
-              "description": "Assess foundational knowledge and ability to discuss key Python concepts.",
+              "name": "Framework Proficiency",
+              "description": "Assess the candidate's proficiency and experience with FastAPI or Django frameworks.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Lacks understanding of basic Python concepts.",
-                "Level 1": "Shows minimal understanding with many inaccuracies.",
-                "Level 2": "Demonstrates basic understanding but lacks depth.",
-                "Level 3": "Provides a solid explanation of key concepts with some detail.",
-                "Level 4": "Explains concepts clearly and accurately with good examples.",
-                "Level 5": "Exemplary discussion of Python concepts with insightful analysis."
+                "Level 0": "Candidate has no knowledge of FastAPI or Django frameworks.",
+                "Level 1": "Candidate shows limited understanding and minimal hands-on experience.",
+                "Level 2": "Candidate demonstrates basic familiarity with framework features.",
+                "Level 3": "Candidate exhibits good proficiency in using the framework for standard tasks.",
+                "Level 4": "Candidate is proficient in advanced framework features and customization.",
+                "Level 5": "Candidate displays expert-level mastery of FastAPI or Django, including innovative uses."
               }
             }
           ]
@@ -76,42 +76,42 @@
           "category": "Database Management and SQL Optimization",
           "criteria": [
             {
-              "name": "Implementation Walkthrough - Approach Probe",
-              "description": "Evaluate the candidate's ability to outline a minimal viable approach for database tasks.",
+              "name": "Schema Design",
+              "description": "Evaluate the candidate's ability to design efficient PostgreSQL schemas.",
               "weight": 40,
               "scoring_levels": {
-                "Level 0": "Unable to propose any viable approach.",
-                "Level 1": "Proposes an unclear or incorrect approach with no justification.",
-                "Level 2": "Outlines a basic approach but lacks detail and justification.",
-                "Level 3": "Provides a clear approach with some interfaces and data flow details.",
-                "Level 4": "Describes a comprehensive approach with well-justified interfaces and data flow.",
-                "Level 5": "Exemplary approach with innovative solutions and thorough justification."
+                "Level 0": "Candidate cannot design a basic schema and lacks understanding of database principles.",
+                "Level 1": "Candidate designs a flawed schema with significant inefficiencies.",
+                "Level 2": "Candidate creates a basic schema but overlooks optimization opportunities.",
+                "Level 3": "Candidate designs an efficient schema with some minor issues.",
+                "Level 4": "Candidate designs a highly optimized schema with minimal errors.",
+                "Level 5": "Candidate demonstrates expert-level proficiency in designing and optimizing schemas."
               }
             },
             {
-              "name": "Implementation Walkthrough - Complexity Reasoning",
-              "description": "Assess the candidate's ability to discuss time/space costs and identify bottlenecks.",
-              "weight": 30,
+              "name": "Query Optimization",
+              "description": "Assess the candidate's ability to write and optimize SQL queries for performance.",
+              "weight": 40,
               "scoring_levels": {
-                "Level 0": "Unable to discuss complexity or identify any bottlenecks.",
-                "Level 1": "Provides incorrect or irrelevant complexity analysis.",
-                "Level 2": "Discusses basic complexity but misses key details.",
-                "Level 3": "Accurately discusses time/space costs with some identification of bottlenecks.",
-                "Level 4": "Thoroughly analyzes complexity and identifies main bottlenecks effectively.",
-                "Level 5": "Exemplary analysis with deep insights into optimization opportunities."
+                "Level 0": "Candidate writes inefficient queries with no optimization attempts.",
+                "Level 1": "Candidate shows minimal understanding of query optimization techniques.",
+                "Level 2": "Candidate applies basic optimization but lacks depth and accuracy.",
+                "Level 3": "Candidate optimizes queries effectively for standard use cases.",
+                "Level 4": "Candidate demonstrates advanced query optimization skills with minor issues.",
+                "Level 5": "Candidate exhibits expert-level mastery in writing highly optimized SQL queries."
               }
             },
             {
-              "name": "SQL Optimization",
-              "description": "Evaluate the candidate's ability to write optimized SQL queries.",
-              "weight": 30,
+              "name": "Complexity Reasoning",
+              "description": "Evaluate the candidate's ability to reason about time/space complexity and identify bottlenecks.",
+              "weight": 20,
               "scoring_levels": {
-                "Level 0": "Unable to write any correct or optimized SQL query.",
-                "Level 1": "Writes incorrect or inefficient SQL queries with no optimization.",
-                "Level 2": "Writes basic SQL queries but lacks optimization techniques.",
-                "Level 3": "Writes correct SQL queries with some optimization efforts.",
-                "Level 4": "Writes efficient and well-optimized SQL queries consistently.",
-                "Level 5": "Exemplary SQL query writing with advanced optimization strategies."
+                "Level 0": "Candidate cannot explain or identify any aspects of query complexity.",
+                "Level 1": "Candidate shows limited understanding of complexity concepts.",
+                "Level 2": "Candidate identifies basic complexities but lacks depth in reasoning.",
+                "Level 3": "Candidate explains time/space complexity effectively for simple queries.",
+                "Level 4": "Candidate provides detailed analysis of query complexities with minor errors.",
+                "Level 5": "Candidate demonstrates expert-level understanding and reasoning about query complexities."
               }
             }
           ]
@@ -120,97 +120,97 @@
           "category": "Testing and Code Review Practices",
           "criteria": [
             {
-              "name": "Scenario Drill - Scenario Probe",
-              "description": "Assess the candidate's ability to plan testing strategies in given scenarios.",
+              "name": "Test Creation",
+              "description": "Assess the candidate's ability to write unit/integration tests.",
               "weight": 40,
               "scoring_levels": {
-                "Level 0": "Unable to propose any testing strategy.",
-                "Level 1": "Proposes an unclear or irrelevant testing strategy.",
-                "Level 2": "Outlines a basic testing strategy but lacks detail and relevance.",
-                "Level 3": "Provides a clear testing plan with some relevant details.",
-                "Level 4": "Describes a comprehensive testing strategy with well-justified steps.",
-                "Level 5": "Exemplary testing strategy with innovative solutions and thorough justification."
-              }
-            },
-            {
-              "name": "Scenario Drill - Tradeoff Probe",
-              "description": "Evaluate the candidate's ability to make reasoned trade-offs in code review scenarios.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Unable to identify or justify any trade-offs.",
-                "Level 1": "Identifies incorrect or irrelevant trade-offs without justification.",
-                "Level 2": "Recognizes basic trade-offs but lacks depth in reasoning.",
-                "Level 3": "Makes clear trade-off decisions with some reasoned justification.",
-                "Level 4": "Consistently makes well-reasoned trade-offs with good explanations.",
-                "Level 5": "Exemplary decision-making with insightful and innovative trade-offs."
+                "Level 0": "Candidate cannot create any meaningful tests.",
+                "Level 1": "Candidate writes minimal tests with significant gaps in coverage.",
+                "Level 2": "Candidate creates basic tests but lacks thoroughness and accuracy.",
+                "Level 3": "Candidate writes effective tests covering most scenarios.",
+                "Level 4": "Candidate demonstrates proficiency in writing comprehensive tests.",
+                "Level 5": "Candidate exhibits expert-level skills in creating robust and efficient test suites."
               }
             },
             {
               "name": "Code Review Participation",
-              "description": "Assess the candidate's ability to effectively participate in code reviews.",
+              "description": "Evaluate the candidate's ability to participate effectively in code reviews.",
               "weight": 30,
               "scoring_levels": {
-                "Level 0": "Unable to contribute meaningfully to code reviews.",
-                "Level 1": "Contributes irrelevant or incorrect feedback without justification.",
-                "Level 2": "Provides basic feedback but lacks depth and relevance.",
-                "Level 3": "Offers clear and relevant feedback with some constructive insights.",
-                "Level 4": "Consistently provides valuable and well-justified feedback.",
-                "Level 5": "Exemplary participation with insightful, innovative, and constructive contributions."
+                "Level 0": "Candidate cannot engage meaningfully in code reviews.",
+                "Level 1": "Candidate shows minimal engagement with little constructive feedback.",
+                "Level 2": "Candidate participates but provides basic and sometimes inaccurate feedback.",
+                "Level 3": "Candidate engages effectively, offering relevant and accurate feedback.",
+                "Level 4": "Candidate demonstrates strong skills in providing insightful code review feedback.",
+                "Level 5": "Candidate exhibits expert-level proficiency in conducting thorough and constructive code reviews."
+              }
+            },
+            {
+              "name": "Tradeoff Analysis",
+              "description": "Assess the candidate's ability to make reasoned trade-offs during testing and review.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Candidate cannot identify or analyze any trade-offs.",
+                "Level 1": "Candidate shows limited understanding of trade-off concepts.",
+                "Level 2": "Candidate identifies basic trade-offs but lacks depth in analysis.",
+                "Level 3": "Candidate analyzes trade-offs effectively for simple scenarios.",
+                "Level 4": "Candidate provides detailed trade-off analysis with minor errors.",
+                "Level 5": "Candidate demonstrates expert-level skills in analyzing and making reasoned trade-offs."
               }
             }
           ]
         }
       ]
     },
-    "id": "5946a8f6775b43d999d86f5687796bd5",
-    "scheduled_date": "2025-11-05T07:47:52.115793Z",
+    "id": "c29dfbc308bf4ff99e6911da4606cc5a",
+    "scheduled_date": "2025-11-05T10:59:00.644427Z",
     "status": "completed",
-    "overall_score": 44,
+    "overall_score": 40,
     "score_details": [
       {
-        "criteria": "Python Programming and Frameworks \u2013 Objective Check - Fact Probe",
-        "score": 80,
-        "feedback": "The candidate provided an accurate example of inheritance in Python, including correct syntax and a reference to the official documentation."
-      },
-      {
-        "criteria": "Python Programming and Frameworks \u2013 Objective Check - Calculation Check",
+        "criteria": "Python Programming and Frameworks \u2013 Concept Understanding",
         "score": 60,
-        "feedback": "The candidate correctly outlined the steps to calculate standard deviation, including finding the mean, squaring differences, summing them up, dividing by the number of data points, and taking the square root. However, they expressed uncertainty about its applicability to small datasets, which indicates a slight lack of confidence in understanding assumptions like sample size impact on variance estimation."
+        "feedback": "The candidate provided a clear explanation of using context managers for resource management in FastAPI, including an example from their learning experience. However, they expressed uncertainty about its use in production environments."
       },
       {
-        "criteria": "Python Programming and Frameworks \u2013 Concept Primer",
+        "criteria": "Python Programming and Frameworks \u2013 Practical Application",
         "score": 60,
-        "feedback": "The candidate correctly identified how to handle optional parameters by providing default values in the __init__ method, which is a key concept for Python classes. However, there was some uncertainty expressed about its universal applicability."
+        "feedback": "The candidate effectively applied Python to automate a task, reducing manual work significantly from 3 hours to 10 minutes. However, specific metrics or team feedback are pending, which limits the ability to fully assess the impact."
       },
       {
-        "criteria": "Database Management and SQL Optimization \u2013 Implementation Walkthrough - Approach Probe",
+        "criteria": "Python Programming and Frameworks \u2013 Framework Proficiency",
         "score": 40,
-        "feedback": "The candidate outlined a basic approach but lacked detail in explaining data flow between services, indicating some understanding but not enough to score higher."
+        "feedback": "The candidate has basic familiarity with FastAPI but lacks experience in handling performance or scalability challenges, which are crucial for higher proficiency levels."
       },
       {
-        "criteria": "Database Management and SQL Optimization \u2013 Implementation Walkthrough - Complexity Reasoning",
-        "score": 0,
-        "feedback": "No additional feedback provided."
-      },
-      {
-        "criteria": "Database Management and SQL Optimization \u2013 SQL Optimization",
+        "criteria": "Database Management and SQL Optimization \u2013 Schema Design",
         "score": 40,
-        "feedback": "The candidate acknowledges their lack of real-world experience in optimizing SQL queries but demonstrates a basic understanding by mentioning indexes and joins, which are fundamental to optimization."
+        "feedback": "The candidate provided a basic approach to schema optimization by suggesting the use of a timestamp index, keeping only essential columns in the log table, and using batch inserts. However, they expressed uncertainty about handling high-volume data ingestion (100k rows per second), indicating a lack of confidence or experience with such scenarios."
       },
       {
-        "criteria": "Testing and Code Review Practices \u2013 Scenario Drill - Scenario Probe",
-        "score": 40,
-        "feedback": "The candidate acknowledges the lack of experience in testing under tight deadlines without user data, which limits their ability to provide a detailed strategy. They mention basic unit tests but do not elaborate on how they would handle the constraints effectively."
+        "criteria": "Database Management and SQL Optimization \u2013 Query Optimization",
+        "score": 20,
+        "feedback": "The candidate shows minimal understanding of query optimization techniques, as evidenced by their lack of experience in optimizing queries for scalability and uncertainty about validating performance across different dataset sizes."
       },
       {
-        "criteria": "Testing and Code Review Practices \u2013 Scenario Drill - Tradeoff Probe",
+        "criteria": "Database Management and SQL Optimization \u2013 Complexity Reasoning",
+        "score": 20,
+        "feedback": "The candidate shows limited understanding of complexity concepts, as evidenced by their lack of experience with scalability issues and uncertainty about handling high-concurrency scenarios."
+      },
+      {
+        "criteria": "Testing and Code Review Practices \u2013 Test Creation",
         "score": 40,
-        "feedback": "The candidate acknowledges the lack of real-world experience in prioritizing risks, indicating an understanding that risk assessment is important but lacks practical application."
+        "feedback": "The candidate demonstrated an understanding of using mock data for testing but lacked knowledge on handling API delays, which is crucial for the given scenario."
       },
       {
         "criteria": "Testing and Code Review Practices \u2013 Code Review Participation",
-        "score": 40,
-        "feedback": "The candidate acknowledges their lack of experience in managing high-risk code reviews under tight deadlines, indicating a basic understanding but lacking depth and relevance in practical application."
+        "score": 20,
+        "feedback": "The candidate shows minimal engagement by acknowledging their current limitations in identifying high-risk changes and deferring to a teammate for review."
+      },
+      {
+        "criteria": "Testing and Code Review Practices \u2013 Tradeoff Analysis",
+        "score": 60,
+        "feedback": "The candidate effectively prioritized critical functionalities under tight deadlines, focusing on the login flow which is a key feature. However, there was some uncertainty about full coverage, indicating room for improvement in ensuring comprehensive testing even when time-constrained."
       }
     ],
     "transcript": [
@@ -220,139 +220,123 @@
       },
       {
         "role": "candidate",
-        "text": "I worked on a school project where I used Python to build a simple backend that stored and retrieved student grades using a SQLite database. I wrote the code to handle basic CRUD operations and made sure it ran smoothly. I'm not sure if it was production-ready, but it helped me practice working with databases in Python."
+        "text": "I worked on a project where I used Python to manage a simple user authentication system with Flask and SQLite. It involved handling login requests and storing user data securely. I'm not sure if it was deployed in production, but it worked locally. I think I used basic SQL queries to check user credentials. Confidence: low"
       },
       {
         "role": "interviewer",
-        "text": "That sounds like a great experience, Avery! It's impressive how you applied your Python skills in a practical project. I'm glad we've had this chance to get comfortable discussing your technical experiences. Let's move on to the next part of our interview.\n\nWe'll move into competency-focused questions now."
+        "text": "That sounds like a great start! It's impressive how you've applied Python with Flask and SQLite for user authentication. Let's move on to the next part of our discussion.\n\nWe'll move into competency-focused questions now."
       },
       {
         "role": "interviewer",
-        "text": "What is the syntax for defining a class in Python, and what is the standard source that documents this?"
+        "text": "What does it mean to have a solid understanding of Python's core concepts like context managers and closures in the context of building a FastAPI service?"
       },
       {
         "role": "candidate",
-        "text": "To define a class, you use the keyword 'class' followed by the class name and a colon. For example: class MyClass: pass. The official Python documentation is the standard source that documents this."
+        "text": "I'm not sure what a solid understanding of context managers and closures means for FastAPI specifically. From what I recall, context managers handle resources like database connections, and closures let you keep variables from outside a function. I think they help with cleanup and data flow, but I haven't used them in a FastAPI project yet. I'm still learning how they fit together in real code. Confidence: 0.35"
       },
       {
         "role": "interviewer",
-        "text": " Can you provide an example of how inheritance is implemented in Python using class definitions, referencing the official documentation?"
+        "text": "Can you describe a scenario where using context managers in FastAPI would improve resource management, perhaps by sharing an example from your learning experience?"
       },
       {
         "role": "candidate",
-        "text": "To use inheritance, you write class ChildClass(ParentClass): pass. For example: class Animal: def speak(self): pass class Dog(Animal): def speak(self): return 'Woof!' The official Python docs explain this clearly."
+        "text": "In my learning, I used a context manager to handle a database connection in a FastAPI endpoint. I made a function that opened a connection and automatically closed it after use, so I didn\u2019t forget to close it. It felt safer and cleaner than manually managing it. I\u2019m not sure if it\u2019s used in production yet. Confidence: 0.4"
       },
       {
         "role": "interviewer",
-        "text": "What is the formula for calculating the standard deviation of a dataset, and what assumptions are required for its validity?"
+        "text": "How do you define practical application of Python in a real-world project, and can you give an example where it made a measurable impact?"
       },
       {
         "role": "candidate",
-        "text": "I'm not sure about the exact formula for standard deviation, but I know it's something with the average and the differences from the mean. I think it needs the data to be normally distributed."
+        "text": "I think practical application means using Python to solve a real problem, like automating a task or fixing a bug. In my last project, I used Python to automate a weekly report that used to take 3 hours. Now it takes 10 minutes. I'm not sure if that's measurable by the team, but it felt like a real improvement. Confidence: 0.55"
       },
       {
         "role": "interviewer",
-        "text": " Can you walk me through how you would calculate the standard deviation for a small dataset like [4, 8, 6, 5, 3], including any assumptions you make during the process?"
+        "text": "Can you share any specific metrics or feedback from your team on how the automation improved efficiency or productivity?"
       },
       {
         "role": "candidate",
-        "text": "I'd start by finding the average: (4+8+6+5+3)/5 = 5.2. Then subtract each number from 5.2, square them, add up the squares, divide by 5, then take the square root. I'm not sure if it works for small datasets."
+        "text": "I don\u2019t have specific metrics from my team yet, but I know the report automation cut manual work from 3 hours to 10 minutes. That\u2019s a big difference. I\u2019m still waiting for feedback. Confidence: 0.55"
       },
       {
         "role": "interviewer",
-        "text": "What is the purpose of the __init__ method in Python classes? Please provide a standard definition and a brief example of its usage in a real-world context?"
+        "text": "What does framework proficiency mean to you in the context of FastAPI or Django, and can you give a concrete example of how you've applied it in a real project?"
       },
       {
         "role": "candidate",
-        "text": "The __init__ method runs when you create a new instance of a class. It sets up initial values. For example, in a Student class, I might use it to set name and grade."
+        "text": "Framework proficiency means knowing how to set up and use FastAPI or Django to build APIs. In a school project, I used FastAPI to create a simple API that fetched student data. I set up routes and used Pydantic models to validate input. I didn\u2019t deploy it, but it worked well for testing. Confidence: 0.4"
       },
       {
         "role": "interviewer",
-        "text": " How would you modify the __init__ method to handle optional parameters in your Student class example?"
+        "text": "Can you describe any challenges you faced during your FastAPI project and how you addressed them, particularly regarding performance or scalability?"
       },
       {
         "role": "candidate",
-        "text": "I'd add default values like name='Unknown' and grade=0.0 inside the __init__ method. For example: def __init__(self, name='Unknown',, grade=0.0):. I'm not sure if this works perfectly for all cases."
+        "text": "I didn\u2019t have a project with real performance or scalability issues. I built a small FastAPI app for a class, and it just handled a few requests. I didn\u2019t test it under load. I think it\u2019s still too small to see any problems."
       },
       {
         "role": "interviewer",
-        "text": "Walk me through your minimal viable approach to designing a database schema for a user activity tracking system, including the key interfaces and data flow between services?"
+        "text": "Walk me through your minimal viable approach to designing a PostgreSQL schema for a user activity tracking system, including the key tables, their relationships, and how data flows from ingestion to reporting?"
       },
       {
         "role": "candidate",
-        "text": "I'd start with a simple table for users and one for activities. Each activity links to a user. I'd use a basic API to add or get data. I'm not sure how services talk to each other in production."
+        "text": "I\u2019d start with a users table and an activity log table. Users have IDs, and activity logs link to them with timestamps. Data comes in from an API, saved to the log table. Then reports run daily to show activity trends. I\u2019m not sure if this works for large data. Confidence: 0.4"
       },
       {
         "role": "interviewer",
-        "text": " Can you describe how the API endpoint would handle data flow between services, and what specific tests you'd implement to verify its functionality?"
+        "text": "Can you provide an example of how you would optimize the activity log table for high-volume data ingestion in PostgreSQL?"
       },
       {
         "role": "candidate",
-        "text": "I'm not sure how an API endpoint handles data flow between services, but I know it probably passes data through requests. I'd test it by sending a simple request and checking if the response comes back correctly."
+        "text": "I\u2019d add a timestamp index and keep only the user ID and event type in the log table to save space. I\u2019d use a batch insert instead of one row at a time. I\u2019m not sure how well it handles 100k rows per second. Confidence: 0.4"
       },
       {
         "role": "interviewer",
-        "text": "Walk me through your minimal viable approach to designing the database schema and query flow, including how you'd handle time and space complexity in the core operations?"
+        "text": "Walk me through your minimal viable approach to optimizing a slow-running SQL query for a large dataset, including the key interfaces, data flow, and how you'd validate correctness with tests?"
       },
       {
         "role": "candidate",
-        "text": "I'd start with simple tables for users and activities. I'd use basic queries to add or get data. I don't know how to handle time or space complexity in core operations."
+        "text": "I'd first check the query with EXPLAIN to see where it's slow. Then I'd add indexes on used columns. Data flows from the app to the query, runs in the DB, and results go to the frontend. I'd test it with a small dataset first. I'm not sure if it scales. Confidence: 0.4"
       },
       {
         "role": "interviewer",
-        "text": " Can you describe a specific instance where you optimized a query to improve performance, detailing the changes made and their impact on time/space complexity?"
+        "text": "Can you describe a specific instance where you optimized an SQL query for scalability, detailing how you validated its performance across different dataset sizes?"
       },
       {
         "role": "candidate",
-        "text": "I didn't optimize a query in a real project yet. I'm still learning."
+        "text": "I didn\u2019t optimize a query for scalability in a real project. I tried a simple SELECT with a small dataset, and it ran fast, but I didn\u2019t test it on larger ones. I\u2019m not sure how to validate performance across sizes."
       },
       {
         "role": "interviewer",
-        "text": "Walk me through your minimal viable approach to optimizing this SQL query for performance, including the key interfaces and data flow between components?"
+        "text": "Walk me through your minimal viable approach to designing a database schema that handles high-concurrency read operations with minimal latency, including the key interfaces and data flow between components?"
       },
       {
         "role": "candidate",
-        "text": "I'd start by checking if indexes exist on used columns. Then I'd simplify the query by removing unnecessary joins. I'm not sure how interfaces or data flow between components work in this context."
+        "text": "I'd start with a simple schema: a users table and a reads table that logs when someone views data. I\u2019d add indexes on the user ID and timestamp. Data flows from the app to the DB, and reads are served quickly. I\u2019d use a read replica to handle the load. I\u2019m not sure how well it scales. Confidence: 0.4"
       },
       {
         "role": "interviewer",
-        "text": " Can you describe a specific instance where optimizing SQL queries improved performance, focusing on changes to indexes or joins?"
+        "text": "Can you describe a specific scenario where your schema faced scalability issues, and how did you analyze and address those bottlenecks?"
       },
       {
         "role": "candidate",
-        "text": "I didn't have a chance to optimize a SQL query in a real project yet. I'm still learning."
+        "text": "I didn\u2019t have a project where the schema had scalability issues. I built small apps with SQLite, and they worked for a few users. I didn\u2019t test under heavy load. I\u2019m not sure what would happen with 1000 users. Confidence: 0.4"
       },
       {
         "role": "interviewer",
-        "text": "How would you design a testing strategy for a new feature that must be deployed in under 48 hours, with limited QA resources and no prior user data?"
+        "text": "How would you design unit tests for a function that calculates daily revenue, given that the function depends on external API calls and you have limited test time?"
       },
       {
         "role": "candidate",
-        "text": "I'd start with basic unit tests for the core logic using a small set of test data. I'd run them quickly and manually check a few edge cases. I don't know how to test without user data."
+        "text": "I'd mock the API call in the test so it doesn't actually hit the outside service. I'd write a simple test that checks if the revenue is calculated correctly with fake data. I don't know how to test with real API delays. Confidence: 0.4"
       },
       {
         "role": "interviewer",
-        "text": " Can you describe a specific instance where you had to test under tight deadlines without user data, and how did you mitigate potential risks?"
+        "text": "Can you provide an example of a test where you handled API delays, and explain how you ensured the test's accuracy?"
       },
       {
         "role": "candidate",
-        "text": "I didn't have a chance to test under tight deadlines without user data yet. I'm still learning."
-      },
-      {
-        "role": "interviewer",
-        "text": "Walk me through how you'd approach reviewing a pull request for a feature that needs to be delivered in 48 hours, given that the codebase is large and the team has limited bandwidth for testing\u2014what trade-offs would you make in terms of coverage, risk, and timeline?"
-      },
-      {
-        "role": "candidate",
-        "text": "I'd check the main code path and a few key edge cases. I'd skip deep testing since we don't have time. I'd ask the developer to add a simple test."
-      },
-      {
-        "role": "interviewer",
-        "text": " Can you give an example of a specific risk you prioritized in this scenario and explain how you determined its importance over other risks?"
-      },
-      {
-        "role": "candidate",
-        "text": "I didn't have a chance to prioritize a risk in a real scenario yet. I'm still learning."
+        "text": "I didn\u2019t write a test that handled API delays. I used mock data in a simple test for a revenue function. I didn\u2019t test with real delays. I\u2019m not sure how to do that. Confidence: 0.4"
       },
       {
         "role": "interviewer",
@@ -360,117 +344,781 @@
       },
       {
         "role": "candidate",
-        "text": "I'd check the code for basic logic and make sure it doesn't break existing features. I'd ask the developer to add a simple test. I'm not sure how to handle high risk in time pressure."
+        "text": "I'd quickly look at the code for obvious bugs, check if it works with a small test, and ask my teammate to confirm it's safe. I'd skip deep testing if time is tight. I'm not sure if it's safe for core stuff. Confidence: 0.4"
       },
       {
         "role": "interviewer",
-        "text": " Can you describe a specific instance where you successfully managed a high-risk code review under tight deadlines? What strategies did you employ to ensure quality and mitigate risks?"
+        "text": "Can you describe a specific instance where you identified a high-risk change during a code review and how you ensured its safety before approving it?"
       },
       {
         "role": "candidate",
-        "text": "I didn't have a chance to manage a high-risk code review under tight deadlines yet. I'm still learning."
+        "text": "I didn\u2019t review a pull request with a high-risk change. I\u2019m still learning how to spot issues like that. I\u2019d probably ask a teammate to check it first."
+      },
+      {
+        "role": "interviewer",
+        "text": "How do you approach balancing test coverage and execution time when the team has limited time and must deliver a feature in two weeks?"
+      },
+      {
+        "role": "candidate",
+        "text": "I'd test the main paths first, like user login and data flow, with simple tests. I'd skip complex edge cases if time is tight. I'm not sure how much that covers. Confidence: 0.4"
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you describe a specific instance where you had to prioritize test cases under tight deadlines, and how did you ensure critical functionalities were not compromised?"
+      },
+      {
+        "role": "candidate",
+        "text": "I once had to fix a login bug before a demo, so I focused on testing the login flow and user auth. I wrote a few quick tests for that path and made sure it worked. I didn\u2019t test everything, but the core login stayed safe. I\u2019m not sure if it was fully covered. Confidence: 0.4"
       }
     ],
     "criterion_results": [
       {
         "competency_id": "1",
         "competency_name": "Python Programming and Frameworks",
-        "criterion_id": "03c6da0e949db6a69a9e331cf7b4dc1957799383",
-        "criterion_name": "Objective Check - Fact Probe",
-        "level": 4,
-        "confidence": 0.98,
-        "notes": "The candidate provided an accurate example of inheritance in Python, including correct syntax and a reference to the official documentation."
+        "criterion_id": "6560174d80834ce6504587d00e29347217b87b5c",
+        "criterion_name": "Concept Understanding",
+        "level": 3,
+        "confidence": 0.8,
+        "notes": "The candidate provided a clear explanation of using context managers for resource management in FastAPI, including an example from their learning experience. However, they expressed uncertainty about its use in production environments."
       },
       {
         "competency_id": "1",
         "competency_name": "Python Programming and Frameworks",
-        "criterion_id": "fa88ca2c5dbc5113fa097224f476c33d5fb07b79",
-        "criterion_name": "Objective Check - Calculation Check",
+        "criterion_id": "2e11f356b8e1615da8d160060d83454c6aa73e2e",
+        "criterion_name": "Practical Application",
         "level": 3,
-        "confidence": 0.9,
-        "notes": "The candidate correctly outlined the steps to calculate standard deviation, including finding the mean, squaring differences, summing them up, dividing by the number of data points, and taking the square root. However, they expressed uncertainty about its applicability to small datasets, which indicates a slight lack of confidence in understanding assumptions like sample size impact on variance estimation."
+        "confidence": 0.7,
+        "notes": "The candidate effectively applied Python to automate a task, reducing manual work significantly from 3 hours to 10 minutes. However, specific metrics or team feedback are pending, which limits the ability to fully assess the impact."
       },
       {
         "competency_id": "1",
         "competency_name": "Python Programming and Frameworks",
-        "criterion_id": "69dc0cfe40ed3c5da64092c7b381fff9fba8b303",
-        "criterion_name": "Concept Primer",
-        "level": 3,
-        "confidence": 0.8,
-        "notes": "The candidate correctly identified how to handle optional parameters by providing default values in the __init__ method, which is a key concept for Python classes. However, there was some uncertainty expressed about its universal applicability."
-      },
-      {
-        "competency_id": "2",
-        "competency_name": "Database Management and SQL Optimization",
-        "criterion_id": "734532d3da638d3e6eb7ca2fd6608d4fd97e38d5",
-        "criterion_name": "Implementation Walkthrough - Approach Probe",
+        "criterion_id": "6fb33bfd7b04bf7a5f36e22cbdd5c20367733db9",
+        "criterion_name": "Framework Proficiency",
         "level": 2,
-        "confidence": 0.8,
-        "notes": "The candidate outlined a basic approach but lacked detail in explaining data flow between services, indicating some understanding but not enough to score higher."
+        "confidence": 0.9,
+        "notes": "The candidate has basic familiarity with FastAPI but lacks experience in handling performance or scalability challenges, which are crucial for higher proficiency levels."
       },
       {
         "competency_id": "2",
         "competency_name": "Database Management and SQL Optimization",
-        "criterion_id": "9d5860955ed242d573be8f24db14b46cf4e60549",
-        "criterion_name": "Implementation Walkthrough - Complexity Reasoning",
-        "level": 0,
-        "confidence": 1.0,
-        "notes": null
-      },
-      {
-        "competency_id": "2",
-        "competency_name": "Database Management and SQL Optimization",
-        "criterion_id": "6149e2e5ab0b4dd1f10a0c38f6b6c9a15c9173eb",
-        "criterion_name": "SQL Optimization",
+        "criterion_id": "731744a600a1952183b9667b198a4f4259db2783",
+        "criterion_name": "Schema Design",
         "level": 2,
-        "confidence": 0.8,
-        "notes": "The candidate acknowledges their lack of real-world experience in optimizing SQL queries but demonstrates a basic understanding by mentioning indexes and joins, which are fundamental to optimization."
+        "confidence": 0.7,
+        "notes": "The candidate provided a basic approach to schema optimization by suggesting the use of a timestamp index, keeping only essential columns in the log table, and using batch inserts. However, they expressed uncertainty about handling high-volume data ingestion (100k rows per second), indicating a lack of confidence or experience with such scenarios."
+      },
+      {
+        "competency_id": "2",
+        "competency_name": "Database Management and SQL Optimization",
+        "criterion_id": "1d84411d3375ac16da9a7f87bffb1bd06b73ab35",
+        "criterion_name": "Query Optimization",
+        "level": 1,
+        "confidence": 0.9,
+        "notes": "The candidate shows minimal understanding of query optimization techniques, as evidenced by their lack of experience in optimizing queries for scalability and uncertainty about validating performance across different dataset sizes."
+      },
+      {
+        "competency_id": "2",
+        "competency_name": "Database Management and SQL Optimization",
+        "criterion_id": "7e3ddbfc40a8f3ac9589d1e531a2a0d9ff4811d6",
+        "criterion_name": "Complexity Reasoning",
+        "level": 1,
+        "confidence": 0.9,
+        "notes": "The candidate shows limited understanding of complexity concepts, as evidenced by their lack of experience with scalability issues and uncertainty about handling high-concurrency scenarios."
       },
       {
         "competency_id": "3",
         "competency_name": "Testing and Code Review Practices",
-        "criterion_id": "45abd57db73528075e6e739224882579bfbd67ea",
-        "criterion_name": "Scenario Drill - Scenario Probe",
+        "criterion_id": "0b4ed1f1737a8e0bd6be5fc1902d0c412cef6ffd",
+        "criterion_name": "Test Creation",
         "level": 2,
-        "confidence": 0.9,
-        "notes": "The candidate acknowledges the lack of experience in testing under tight deadlines without user data, which limits their ability to provide a detailed strategy. They mention basic unit tests but do not elaborate on how they would handle the constraints effectively."
-      },
-      {
-        "competency_id": "3",
-        "competency_name": "Testing and Code Review Practices",
-        "criterion_id": "3560fa3aaedca770e964da3c38649b7391fbde47",
-        "criterion_name": "Scenario Drill - Tradeoff Probe",
-        "level": 2,
-        "confidence": 0.9,
-        "notes": "The candidate acknowledges the lack of real-world experience in prioritizing risks, indicating an understanding that risk assessment is important but lacks practical application."
+        "confidence": 0.7,
+        "notes": "The candidate demonstrated an understanding of using mock data for testing but lacked knowledge on handling API delays, which is crucial for the given scenario."
       },
       {
         "competency_id": "3",
         "competency_name": "Testing and Code Review Practices",
         "criterion_id": "e0ef9d2fe9003b65cf2e16ac8652074cf820def5",
         "criterion_name": "Code Review Participation",
-        "level": 2,
+        "level": 1,
         "confidence": 0.9,
-        "notes": "The candidate acknowledges their lack of experience in managing high-risk code reviews under tight deadlines, indicating a basic understanding but lacking depth and relevance in practical application."
+        "notes": "The candidate shows minimal engagement by acknowledging their current limitations in identifying high-risk changes and deferring to a teammate for review."
+      },
+      {
+        "competency_id": "3",
+        "competency_name": "Testing and Code Review Practices",
+        "criterion_id": "0bab5ad43e89c1281feedd331b064d590d18a24e",
+        "criterion_name": "Tradeoff Analysis",
+        "level": 3,
+        "confidence": 0.7,
+        "notes": "The candidate effectively prioritized critical functionalities under tight deadlines, focusing on the login flow which is a key feature. However, there was some uncertainty about full coverage, indicating room for improvement in ensuring comprehensive testing even when time-constrained."
       }
     ],
     "wrapup_summary": {
-      "closing_statement": "Avery Chen demonstrates a solid foundational understanding of Python programming concepts, including inheritance and default parameters, and shows basic awareness of database fundamentals and testing practices. However, their responses indicate limited experience in real-world implementation, particularly in database optimization, performance tradeoffs, and high-stakes code review scenarios.",
+      "closing_statement": "Avery Chen demonstrates a solid foundation in Python programming and practical problem-solving, with strong tradeoff analysis and clear communication of their approach to automation and resource management. However, they show limited experience with high-performance database scenarios, query optimization, and production-grade testing practices, which are critical for backend engineering at scale.",
       "key_strengths": [
-        "Accurate explanation of Python inheritance and syntax with reference to official documentation",
-        "Correct identification of handling optional parameters using default values in class initialization",
-        "Basic understanding of SQL optimization principles such as indexes and joins"
+        "Clear explanation and practical application of context managers for resource management in FastAPI",
+        "Effective prioritization of critical functionalities under tight deadlines (e.g., login flow)",
+        "Strong ability to automate repetitive tasks, significantly reducing manual effort"
       ],
       "risk_flags": [
-        "Uncertainty in applying statistical methods like standard deviation to small datasets",
-        "Lack of practical experience in optimizing SQL queries or managing complex data flow between services",
-        "Limited exposure to real-world constraints in testing under tight deadlines or high-risk code reviews"
+        "Lack of experience with high-volume data ingestion (e.g., 100k rows per second)",
+        "Minimal understanding of query optimization and scalability in database design",
+        "Limited confidence in handling performance, concurrency, and API delays in testing",
+        "Low engagement in code review and limited ability to identify high-risk changes"
       ],
       "next_steps": [
-        "Engage in hands-on exercises involving real-world database query optimization and performance benchmarking",
-        "Participate in simulated code review scenarios under time pressure to build confidence in risk assessment and decision-making",
-        "Work through case studies involving small dataset statistical analysis to strengthen understanding of edge cases and assumptions"
+        "Conduct a hands-on exercise on optimizing a slow SQL query under varying dataset sizes to assess query performance and scalability understanding",
+        "Simulate a high-volume data ingestion scenario to evaluate readiness for handling large-scale data processing",
+        "Engage in a structured code review session to build confidence in identifying and mitigating high-risk changes",
+        "Review and practice performance testing with API delays and edge cases to strengthen testing rigor"
       ]
     }
+  },
+  {
+    "job_title": "Entry-Level Data Scientist",
+    "candidate_name": "NOAH RIVERA",
+    "job_description": "Entry-Level Data Scientist\n\nWe are looking for a junior data scientist to help prototype and productionize ML models that drive personalization and risk mitigation.\n\nResponsibilities:\n\u2022 Explore datasets, engineer features, and prototype models (classification/regression) in Python.\n\u2022 Evaluate models with appropriate metrics; document trade-offs and limitations.\n\u2022 Collaborate with engineering to deploy models via APIs or batch jobs.\n\u2022 Monitor model performance, data drift, and retraining pipelines.\n\u2022 Present insights and experiment results to cross-functional partners.\n\nRequirements:\n\u2022 M.S./B.S. in Computer Science, Data Science, or related quantitative field.\n\u2022 0-1 years of applied ML experience (internships welcome).\n\u2022 Strong Python skills (pandas, scikit-learn) and familiarity with TensorFlow or PyTorch.\n\u2022 Solid grasp of statistics, experimentation, and version control.\n\nNice to have:\n\u2022 Experience with MLflow, SageMaker, or Kubeflow.\n\u2022 Knowledge of cloud services (AWS/GCP/Azure) and containerization.",
+    "resume": "NOAH RIVERA\nData Scientist\nEmail: noah.rivera@example.com | LinkedIn: linkedin.com/in/noahrivera | Seattle, WA\n\nSUMMARY\nEntry-level data scientist focused on building and deploying predictive models; experienced with scikit-learn, TensorFlow, and ML Ops fundamentals.\n\nEXPERIENCE\nData Science Intern | Horizon HealthTech | Jun 2023 \u2013 Dec 2023\n\u2022 Engineered patient risk features and trained gradient-boosted models (AUC 0.86).\n\u2022 Implemented model monitoring dashboards tracking drift and alerting care teams.\n\u2022 Collaborated with platform engineers to serve models via Flask and AWS ECS.\n\nPROJECTS\nDelivery ETA Predictor \u2013 XGBoost model with MLflow tracking, deployed on AWS Lambda.\nImage Triage CNN \u2013 TensorFlow model triaging dermatology cases; documented bias checks.\n\nEDUCATION\nM.S. Data Science | University of Washington | 2024\nB.S. Applied Mathematics | University of Washington | 2022\n\nSKILLS\nPython, pandas, scikit-learn, TensorFlow, PyTorch, SQL, MLflow, AWS, Docker, statistics, experimentation, storytelling",
+    "competencies": [
+      {
+        "id": "1",
+        "name": "Model Prototyping and Evaluation",
+        "interview_style": "implementation_walkthrough",
+        "rationale": "The candidate needs to demonstrate their ability to prototype models using Python libraries like scikit-learn, evaluate them with appropriate metrics, and document trade-offs. An implementation walkthrough is suitable as it allows the candidate to walk through a specific example of model prototyping and evaluation."
+      },
+      {
+        "id": "2",
+        "name": "Model Deployment and Monitoring",
+        "interview_style": "scenario_drill",
+        "rationale": "The role requires collaboration with engineering teams for deploying models and monitoring their performance. A scenario drill is appropriate to simulate a real-world situation where the candidate must deploy a model via APIs or batch jobs and set up monitoring systems."
+      },
+      {
+        "id": "3",
+        "name": "Data Exploration and Feature Engineering",
+        "interview_style": "concept_primer",
+        "rationale": "The job description emphasizes exploring datasets and engineering features. A concept primer is suitable to assess the candidate's understanding of data exploration techniques and feature engineering principles."
+      }
+    ],
+    "rubric": {
+      "candidate_name": "NOAH RIVERA",
+      "position": "Entry-Level Data Scientist",
+      "evaluation_criteria": [
+        {
+          "category": "Model Prototyping and Evaluation",
+          "criteria": [
+            {
+              "name": "Implementation Walkthrough",
+              "description": "Ability to explain and justify a concrete build plan for model prototyping.",
+              "weight": 50,
+              "scoring_levels": {
+                "Level 0": "Unable to articulate any approach or justification.",
+                "Level 1": "Provides vague or incomplete explanation with little justification.",
+                "Level 2": "Explains the approach but lacks depth in justification and detail.",
+                "Level 3": "Clearly explains the approach with some justification, though not fully detailed.",
+                "Level 4": "Thoroughly explains the approach with strong justification and attention to detail.",
+                "Level 5": "Expertly articulates a comprehensive build plan with exceptional clarity and correctness."
+              }
+            },
+            {
+              "name": "Approach Probe",
+              "description": "Ability to state minimal viable approach, interfaces, and data flow for model prototyping.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Cannot identify any components of the approach or data flow.",
+                "Level 1": "Identifies some components but with significant gaps in understanding.",
+                "Level 2": "Identifies most components but lacks clarity on interfaces and data flow.",
+                "Level 3": "Clearly identifies all components with reasonable explanation of interfaces and data flow.",
+                "Level 4": "Expertly details the approach, interfaces, and data flow with precision.",
+                "Level 5": "Demonstrates exceptional insight into optimizing approach, interfaces, and data flow."
+              }
+            },
+            {
+              "name": "Complexity Reasoning",
+              "description": "Ability to state time/space costs and main bottleneck in model prototyping.",
+              "weight": 20,
+              "scoring_levels": {
+                "Level 0": "Unable to discuss any aspects of complexity or bottlenecks.",
+                "Level 1": "Mentions complexity but with little understanding of its impact.",
+                "Level 2": "Identifies some costs and bottlenecks, though not comprehensively.",
+                "Level 3": "Reasonably discusses time/space costs and identifies main bottleneck.",
+                "Level 4": "Thoroughly analyzes complexity with clear identification of bottlenecks.",
+                "Level 5": "Expertly evaluates all aspects of complexity with strategic insights into optimization."
+              }
+            }
+          ]
+        },
+        {
+          "category": "Model Deployment and Monitoring",
+          "criteria": [
+            {
+              "name": "Scenario Drill",
+              "description": "Ability to assess structured choices and explicit trade-offs in model deployment.",
+              "weight": 60,
+              "scoring_levels": {
+                "Level 0": "Unable to make any decisions or articulate trade-offs.",
+                "Level 1": "Makes some decisions but with poor understanding of trade-offs.",
+                "Level 2": "Identifies choices and trade-offs, though not effectively structured.",
+                "Level 3": "Reasonably assesses choices and articulates clear trade-offs.",
+                "Level 4": "Effectively evaluates structured choices with well-articulated trade-offs.",
+                "Level 5": "Expertly navigates complex scenarios with strategic decision-making."
+              }
+            },
+            {
+              "name": "Scenario Probe",
+              "description": "Ability to choose a plan given constraints in model deployment.",
+              "weight": 25,
+              "scoring_levels": {
+                "Level 0": "Cannot propose any viable plan under constraints.",
+                "Level 1": "Proposes a plan but with significant flaws and misunderstandings.",
+                "Level 2": "Proposes a mostly viable plan, though not fully optimized for constraints.",
+                "Level 3": "Chooses a reasonable plan that addresses most constraints effectively.",
+                "Level 4": "Selects an optimal plan well-suited to the given constraints.",
+                "Level 5": "Innovatively devises a superior plan with exceptional consideration of constraints."
+              }
+            },
+            {
+              "name": "Tradeoff Probe",
+              "description": "Ability to make reasoned choices between valid deployment options.",
+              "weight": 15,
+              "scoring_levels": {
+                "Level 0": "Unable to differentiate or choose between options.",
+                "Level 1": "Chooses an option but with poor reasoning and understanding of trade-offs.",
+                "Level 2": "Makes a choice with some understanding, though not fully reasoned.",
+                "Level 3": "Reasonably chooses between options with clear rationale for decision.",
+                "Level 4": "Effectively selects the best option with strong justification.",
+                "Level 5": "Expertly evaluates and chooses the optimal option with strategic insight."
+              }
+            }
+          ]
+        },
+        {
+          "category": "Data Exploration and Feature Engineering",
+          "criteria": [
+            {
+              "name": "Concept Primer",
+              "description": "Understanding of data exploration techniques and feature engineering principles.",
+              "weight": 40,
+              "scoring_levels": {
+                "Level 0": "Lacks understanding of basic concepts in data exploration or feature engineering.",
+                "Level 1": "Shows minimal understanding with significant gaps in knowledge.",
+                "Level 2": "Demonstrates some understanding but lacks depth and application.",
+                "Level 3": "Clearly understands key concepts with reasonable application ability.",
+                "Level 4": "Thoroughly grasps concepts with strong practical application skills.",
+                "Level 5": "Expertly applies advanced techniques in data exploration and feature engineering."
+              }
+            },
+            {
+              "name": "Criterion Probe",
+              "description": "Ability to explore datasets and engineer features effectively.",
+              "weight": 35,
+              "scoring_levels": {
+                "Level 0": "Unable to perform any meaningful data exploration or feature engineering.",
+                "Level 1": "Attempts exploration/engineering but with poor results and understanding.",
+                "Level 2": "Performs basic tasks with some success, though not consistently effective.",
+                "Level 3": "Effectively explores datasets and engineers features with reasonable skill.",
+                "Level 4": "Consistently performs high-quality data exploration and feature engineering.",
+                "Level 5": "Innovatively applies advanced techniques to achieve exceptional results."
+              }
+            },
+            {
+              "name": "Reasoning Probe",
+              "description": "Ability to explain cause-and-effect, calculations, or decision logic in data tasks.",
+              "weight": 25,
+              "scoring_levels": {
+                "Level 0": "Unable to provide any logical reasoning for decisions made.",
+                "Level 1": "Provides minimal reasoning with little clarity or accuracy.",
+                "Level 2": "Offers some reasoning but lacks depth and precision.",
+                "Level 3": "Reasonably explains cause-and-effect with clear logic.",
+                "Level 4": "Thoroughly articulates decision logic with strong analytical skills.",
+                "Level 5": "Expertly demonstrates advanced reasoning with strategic insights."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "id": "0c085c0285134efeb683abff9ea8bb5f",
+    "scheduled_date": "2025-11-05T16:15:04.892442Z",
+    "status": "completed",
+    "overall_score": 48,
+    "score_details": [
+      {
+        "criteria": "Model Prototyping and Evaluation \u2013 Implementation Walkthrough",
+        "score": 60,
+        "feedback": "The candidate clearly explains the approach by using a specific test case involving customer data, which shows an understanding of validation processes. They also address potential data flow issues with practical steps, indicating some depth in their justification. However, the explanation lacks full detail on how they would handle broader scenarios or more complex data flows."
+      },
+      {
+        "criteria": "Model Prototyping and Evaluation \u2013 Approach Probe",
+        "score": 40,
+        "feedback": "The candidate identified an unexpected input type issue but lacked clarity on how it fits into the overall data flow and interfaces for model prototyping."
+      },
+      {
+        "criteria": "Model Prototyping and Evaluation \u2013 Complexity Reasoning",
+        "score": 60,
+        "feedback": "The candidate identifies a specific time/space constraint related to memory usage, which is relevant to the criterion of complexity reasoning. They also describe how they would detect this issue through system logs and performance indicators like crashes or slowdowns. This demonstrates a reasonable understanding of identifying bottlenecks in model prototyping."
+      },
+      {
+        "criteria": "Model Deployment and Monitoring \u2013 Scenario Drill",
+        "score": 40,
+        "feedback": "The candidate identifies the trade-off between model size reduction and performance but lacks effective structuring in their approach, especially under limited monitoring resources."
+      },
+      {
+        "criteria": "Model Deployment and Monitoring \u2013 Scenario Probe",
+        "score": 40,
+        "feedback": "The candidate proposed a basic monitoring strategy post-deployment, focusing on logging latency issues when response times exceeded 200ms. This approach is practical but not fully optimized for balancing latency and monitoring overhead. The plan lacks sophistication in terms of early issue detection and does not address the trade-offs comprehensively."
+      },
+      {
+        "criteria": "Model Deployment and Monitoring \u2013 Tradeoff Probe",
+        "score": 40,
+        "feedback": "The candidate shows some understanding of the trade-off by suggesting model simplification to improve speed, but lacks specific strategies or tools for maintaining accuracy."
+      },
+      {
+        "criteria": "Data Exploration and Feature Engineering \u2013 Concept Primer",
+        "score": 60,
+        "feedback": "The candidate demonstrated a clear understanding of the concepts by providing specific examples from their experience, such as creating 'account age in years' and 'income level group'. The improvement in model accuracy was quantified, showing practical application. However, there is room for more detailed explanation on how these features were engineered and why they were chosen."
+      },
+      {
+        "criteria": "Data Exploration and Feature Engineering \u2013 Criterion Probe",
+        "score": 60,
+        "feedback": "The candidate demonstrated effective data exploration by identifying missing income values and creating a meaningful feature ('no income' flag) that improved model performance. This aligns with Level 3, as they effectively explored the dataset and engineered features with reasonable skill."
+      },
+      {
+        "criteria": "Data Exploration and Feature Engineering \u2013 Reasoning Probe",
+        "score": 40,
+        "feedback": "The candidate provided some reasoning by comparing churn rates between customers with and without income, but lacked depth in ruling out other factors like age or location. The analysis was not thorough enough to confidently attribute the cause of churn solely to the 'no income' feature."
+      }
+    ],
+    "transcript": [
+      {
+        "role": "interviewer",
+        "text": "Can you tell me about a project where you had to adapt your approach due to unexpected data challenges?"
+      },
+      {
+        "role": "candidate",
+        "text": "I worked on a project where we were supposed to predict customer churn using a dataset, but later we found the data had missing values in key fields like income and account age. I realized we couldn\u2019t just drop rows, so I tried imputing with the median. It helped a bit, but the model still didn\u2019t perform well. I\u2019m not sure what else to do now. Um, I think I need more help on that."
+      },
+      {
+        "role": "interviewer",
+        "text": "Noah, it's great to hear about your proactive approach in handling the missing data challenge. It sounds like you're already thinking critically about potential solutions. Let's move on to discussing other aspects of your experience and thought processes.\n\nWe'll move into competency-focused questions now."
+      },
+      {
+        "role": "interviewer",
+        "text": "Walk me through your minimal viable approach to building the model interface, including the key data flows and how you'd validate it with a simple test case?"
+      },
+      {
+        "role": "candidate",
+        "text": "I\u2019d start by making a simple interface that just shows the model\u2019s prediction and the input data. Data flows from the user\u2019s input to the model, then to the output. I\u2019d test it with one example, like predicting churn for a single customer, to make sure it shows the right result. I\u2019m not sure if that\u2019s enough, but it\u2019s a start."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you describe a specific test case where you would validate the accuracy of predictions and how you'd handle potential data flow issues?"
+      },
+      {
+        "role": "candidate",
+        "text": "I\u2019d test the model with one customer\u2019s data, like a person with low income and old account. I\u2019d check if the prediction matches what we expect. If data doesn\u2019t flow from input to model, I\u2019d double-check the connection and make sure the data isn\u2019t getting cut off. I\u2019m not sure if that\u2019s solid, but it\u2019s what I\u2019d try first."
+      },
+      {
+        "role": "interviewer",
+        "text": "Walk me through your minimal viable approach to prototyping the model, including the key interfaces, data flow, and how you'd validate it with a happy path and a failure case?"
+      },
+      {
+        "role": "candidate",
+        "text": "I\u2019d make a simple interface with just input fields and a prediction button. Data goes from input to model, then to output. For happy path: user enters data, model runs, result shows. For failure: if input is missing, it shows an error. I\u2019m not sure if that covers all cases, but it\u2019s a start."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you describe a specific instance where you handled an unexpected input type during model prototyping, and how it was resolved?"
+      },
+      {
+        "role": "candidate",
+        "text": "I once got a text input instead of a number in the age field. I didn\u2019t know how to handle it, so I added a simple check that says if it\u2019s not a number, show an error and ask for a number. I\u2019m not sure if that\u2019s the best way, but it worked for the first test."
+      },
+      {
+        "role": "interviewer",
+        "text": "Walk me through your minimal viable approach to building this model, including the key interfaces, data flow, and how you'd validate it with a happy path and a failure case?"
+      },
+      {
+        "role": "candidate",
+        "text": "I\u2019d make a simple interface with input fields and a predict button. Data flows from input to model, then to output. Happy path: user enters data, model runs, result shows. Failure case: if input is wrong type, like text instead of number, it shows error. I\u2019m not sure if that\u2019s enough, but it\u2019s what I\u2019d try first."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you give an example of a time or space constraint you might encounter in this model's prototyping, and how would you identify it?"
+      },
+      {
+        "role": "candidate",
+        "text": "I might run out of memory if I load too much data at once. I\u2019d notice it when the model crashes or slows down a lot. I\u2019d check the system logs to see if memory usage spikes. I\u2019m not sure if that\u2019s the only issue, but it\u2019s something I\u2019d see early on."
+      },
+      {
+        "role": "interviewer",
+        "text": "Walk me through how you'd deploy a new language model in production, given that latency must stay under 200ms and we have limited monitoring resources?"
+      },
+      {
+        "role": "candidate",
+        "text": "I\u2019d start by testing the model in a small environment with a few users. I\u2019d make sure it responds in under 200ms by running simple tests. If it\u2019s too slow, I\u2019d try caching or reducing the model size. I\u2019m not sure if that\u2019s enough, but it\u2019s what I\u2019d do first."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you describe a specific instance where you had to balance model size reduction with performance, particularly under limited monitoring resources?"
+      },
+      {
+        "role": "candidate",
+        "text": "I once tried to make a model smaller by removing some features, but it didn\u2019t predict well. I didn\u2019t have enough monitoring to know if it was working, so I just kept the original. I\u2019m not sure if that\u2019s the best way, but it was the only thing I could do."
+      },
+      {
+        "role": "interviewer",
+        "text": "Walk me through how you'd choose a model deployment plan when you have to balance latency requirements with monitoring overhead, and what specific trade-offs you'd make?"
+      },
+      {
+        "role": "candidate",
+        "text": "I\u2019d start with a simple setup: just run the model in a small, fast environment. If it\u2019s under 200ms, good. I\u2019d skip fancy monitoring at first and just check logs for errors. Trade-off is I can\u2019t catch issues early, but it\u2019s cheap and fast. I\u2019m not sure if that\u2019s safe, but it\u2019s what I\u2019d try."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you describe a specific instance where you adjusted your monitoring strategy post-deployment to better balance latency and early issue detection?"
+      },
+      {
+        "role": "candidate",
+        "text": "After deployment, I noticed the response time was too slow, so I added a simple check to see if it took more than 200ms. I didn\u2019t have fancy tools, so I just logged the time and watched the logs. It helped catch slow requests early. I\u2019m not sure if it\u2019s enough, but it worked for now."
+      },
+      {
+        "role": "interviewer",
+        "text": "How would you decide between deploying a model with higher accuracy but slower inference time versus one with lower accuracy but faster response, given that the system must handle 10k requests per second and latency is critical for user experience?"
+      },
+      {
+        "role": "candidate",
+        "text": "I\u2019d pick the faster one because latency is critical and 10k requests per second need to respond in under 200ms. The slower one might time out. I\u2019m not sure if that\u2019s the best choice, but it\u2019s what I\u2019d try first."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you describe a specific strategy or tool you've used to mitigate accuracy loss while maintaining low latency in a similar deployment scenario?"
+      },
+      {
+        "role": "candidate",
+        "text": "I didn\u2019t have a specific tool for that. I\u2019d probably try simplifying the model a bit, like removing less important features, to make it faster. I\u2019m not sure if it keeps accuracy, but I\u2019d test it with a few cases first."
+      },
+      {
+        "role": "interviewer",
+        "text": "Walk me through how you'd define data exploration versus feature engineering in practice, and give a concrete example of when each step was critical to a project's outcome?"
+      },
+      {
+        "role": "candidate",
+        "text": "Data exploration is just looking at the data to see what\u2019s there \u2014 like checking for missing values or weird patterns. Feature engineering is taking that data and making new features, like turning age into age groups. In one project, we had a dataset with missing income values. Exploring showed that, so we knew to impute it. That helped the model work better. I\u2019m not sure if that\u2019s the only time, but it was a start."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you describe another project where feature engineering significantly improved model performance, detailing the specific features created and their impact?"
+      },
+      {
+        "role": "candidate",
+        "text": "I worked on a project where we were predicting customer churn. We created new features like 'account age in years' and 'income level group'. These helped the model see patterns better. It went from 60% to 75% accuracy. I\u2019m not sure if that\u2019s the best, but it worked for the first test."
+      },
+      {
+        "role": "interviewer",
+        "text": "How do you define effective data exploration and feature engineering, and what does that look like in practice when solving a real-world data problem?"
+      },
+      {
+        "role": "candidate",
+        "text": "Data exploration is just looking at the data to see what\u2019s there \u2014 like checking for missing values or weird patterns. Feature engineering is making new features from the data, like turning age into age groups. In one project, we had missing income values, so we explored and saw that, then made a new feature for income level. It helped the model work better. I\u2019m not sure if that\u2019s the only time, but it was a start."
+      },
+      {
+        "role": "interviewer",
+        "text": "Can you describe an instance where your advanced data exploration techniques led to significant insights or improvements in model performance?"
+      },
+      {
+        "role": "candidate",
+        "text": "I worked on a project where we were predicting churn. I looked at the data and saw missing income values, so I explored more and found a pattern \u2014 people with no income were more likely to leave. I made a new feature for 'no income' flag. It helped the model see that pattern and accuracy went up. I\u2019m not sure if that\u2019s the best, but it worked for the first test."
+      },
+      {
+        "role": "interviewer",
+        "text": "How do you define cause-and-effect in a data exploration task, and can you walk me through a specific example where that reasoning led to a measurable impact?"
+      },
+      {
+        "role": "candidate",
+        "text": "Cause-and-effect means finding if one thing changes when another changes. In one project, I saw that missing income values were linked to churn. I made a new feature for 'no income' and the model\u2019s accuracy went up from 60% to 75%. I\u2019m not sure if that\u2019s the only case, but it was a clear one."
+      },
+      {
+        "role": "interviewer",
+        "text": "What specific methods or analyses did you use to verify that the 'no income' feature was directly influencing churn, and how did you rule out other potential factors?"
+      },
+      {
+        "role": "candidate",
+        "text": "I checked if customers with no income had higher churn by comparing their numbers to others. I made a table and saw the pattern. I didn\u2019t test other factors like age or location, so I\u2019m not sure if it\u2019s the only cause. I\u2019m not sure if that\u2019s solid."
+      }
+    ],
+    "criterion_results": [
+      {
+        "competency_id": "1",
+        "competency_name": "Model Prototyping and Evaluation",
+        "criterion_id": "f3457c94f947d49866dee5b6bfc808d018da3a27",
+        "criterion_name": "Implementation Walkthrough",
+        "level": 3,
+        "confidence": 0.9,
+        "notes": "The candidate clearly explains the approach by using a specific test case involving customer data, which shows an understanding of validation processes. They also address potential data flow issues with practical steps, indicating some depth in their justification. However, the explanation lacks full detail on how they would handle broader scenarios or more complex data flows."
+      },
+      {
+        "competency_id": "1",
+        "competency_name": "Model Prototyping and Evaluation",
+        "criterion_id": "38cf4fc190d3b1197f52d569fdd0958d90f798c0",
+        "criterion_name": "Approach Probe",
+        "level": 2,
+        "confidence": 0.8,
+        "notes": "The candidate identified an unexpected input type issue but lacked clarity on how it fits into the overall data flow and interfaces for model prototyping."
+      },
+      {
+        "competency_id": "1",
+        "competency_name": "Model Prototyping and Evaluation",
+        "criterion_id": "c63814bd6f8b98babe93eefa8efefe2c8a603742",
+        "criterion_name": "Complexity Reasoning",
+        "level": 3,
+        "confidence": 0.9,
+        "notes": "The candidate identifies a specific time/space constraint related to memory usage, which is relevant to the criterion of complexity reasoning. They also describe how they would detect this issue through system logs and performance indicators like crashes or slowdowns. This demonstrates a reasonable understanding of identifying bottlenecks in model prototyping."
+      },
+      {
+        "competency_id": "2",
+        "competency_name": "Model Deployment and Monitoring",
+        "criterion_id": "005b2fb59cb9e10a9423d78f58cfa01acb74f6cb",
+        "criterion_name": "Scenario Drill",
+        "level": 2,
+        "confidence": 0.9,
+        "notes": "The candidate identifies the trade-off between model size reduction and performance but lacks effective structuring in their approach, especially under limited monitoring resources."
+      },
+      {
+        "competency_id": "2",
+        "competency_name": "Model Deployment and Monitoring",
+        "criterion_id": "90b4f45eb5e8c54b0bcceea931c388ede9f453fa",
+        "criterion_name": "Scenario Probe",
+        "level": 2,
+        "confidence": 0.9,
+        "notes": "The candidate proposed a basic monitoring strategy post-deployment, focusing on logging latency issues when response times exceeded 200ms. This approach is practical but not fully optimized for balancing latency and monitoring overhead. The plan lacks sophistication in terms of early issue detection and does not address the trade-offs comprehensively."
+      },
+      {
+        "competency_id": "2",
+        "competency_name": "Model Deployment and Monitoring",
+        "criterion_id": "0f7e56bca31fee0b4ae31db3875ee5719863d03e",
+        "criterion_name": "Tradeoff Probe",
+        "level": 2,
+        "confidence": 0.8,
+        "notes": "The candidate shows some understanding of the trade-off by suggesting model simplification to improve speed, but lacks specific strategies or tools for maintaining accuracy."
+      },
+      {
+        "competency_id": "3",
+        "competency_name": "Data Exploration and Feature Engineering",
+        "criterion_id": "7bd7b904b7289ab6342abadf4d6f715573fd6c68",
+        "criterion_name": "Concept Primer",
+        "level": 3,
+        "confidence": 0.85,
+        "notes": "The candidate demonstrated a clear understanding of the concepts by providing specific examples from their experience, such as creating 'account age in years' and 'income level group'. The improvement in model accuracy was quantified, showing practical application. However, there is room for more detailed explanation on how these features were engineered and why they were chosen."
+      },
+      {
+        "competency_id": "3",
+        "competency_name": "Data Exploration and Feature Engineering",
+        "criterion_id": "7ecc5cd8766d1a26c69197c1a8878739138aed6f",
+        "criterion_name": "Criterion Probe",
+        "level": 3,
+        "confidence": 0.9,
+        "notes": "The candidate demonstrated effective data exploration by identifying missing income values and creating a meaningful feature ('no income' flag) that improved model performance. This aligns with Level 3, as they effectively explored the dataset and engineered features with reasonable skill."
+      },
+      {
+        "competency_id": "3",
+        "competency_name": "Data Exploration and Feature Engineering",
+        "criterion_id": "7625f2ed1d5bd51dd618ae6e748b40c4e00ecd86",
+        "criterion_name": "Reasoning Probe",
+        "level": 2,
+        "confidence": 0.8,
+        "notes": "The candidate provided some reasoning by comparing churn rates between customers with and without income, but lacked depth in ruling out other factors like age or location. The analysis was not thorough enough to confidently attribute the cause of churn solely to the 'no income' feature."
+      }
+    ],
+    "wrapup_summary": {
+      "closing_statement": "Noah Rivera demonstrates a solid foundation in data exploration and feature engineering, with clear practical examples and a good understanding of model prototyping constraints. They show competence in identifying and addressing data quality issues and have a reasonable grasp of trade-offs in model deployment. However, their approach to broader data flow scenarios and model monitoring lacks depth and structure, and their reasoning in causal analysis requires further refinement.",
+      "key_strengths": [
+        "Strong understanding of data exploration and feature engineering with practical, quantifiable examples (e.g., 'account age in years', 'no income' flag).",
+        "Clear identification of missing data and its impact on model performance, leading to actionable feature improvements.",
+        "Demonstrated awareness of memory and performance constraints in model prototyping, with practical methods for detecting bottlenecks."
+      ],
+      "risk_flags": [
+        "Lacks depth in explaining how data flow and system interfaces would be handled in broader or more complex scenarios.",
+        "Monitoring strategy is basic and does not effectively balance latency concerns with operational overhead or early warning capabilities.",
+        "Analysis of churn drivers is limited; insufficient consideration of confounding factors like age or location."
+      ],
+      "next_steps": [
+        "Conduct a deeper dive into end-to-end data flow design to ensure robustness under varied input conditions.",
+        "Refine the monitoring strategy to include proactive anomaly detection and automated alerting based on performance metrics.",
+        "Perform a more comprehensive causal analysis by controlling for potential confounders in feature selection and model evaluation."
+      ]
+    }
+  },
+  {
+    "job_title": "Entry-Level Backend Engineer (Python)",
+    "candidate_name": "AVERY CHEN",
+    "job_description": "Entry-Level Backend Engineer (Python)\n\nWe are hiring a junior Python engineer to support API and data-pipeline delivery for our SaaS analytics platform.\n\nResponsibilities:\n\u2022 Implement REST endpoints with FastAPI or Django.\n\u2022 Maintain PostgreSQL schemas and write optimized SQL queries.\n\u2022 Build background jobs using Celery and Redis queues.\n\u2022 Write unit/integration tests and participate in code reviews.\n\u2022 Document services and deploy through our GitHub Actions pipeline.\n\nRequirements:\n\u2022 B.S. in Computer Science or related field (or equivalent internship experience).\n\u2022 0-1 years of professional software experience with Python.\n\u2022 Familiarity with REST APIs, relational databases, and Git workflows.\n\u2022 Understanding of containerization (Docker) and cloud fundamentals.\n\nNice to have:\n\u2022 Exposure to AWS services (Lambda, RDS, ECS).\n\u2022 Experience with observability tooling (Prometheus, Grafana, Sentry).",
+    "resume": "AVERY CHEN\nPython Backend Engineer\nEmail: avery.chen@example.com | GitHub: github.com/averychen | Boston, MA\n\nSUMMARY\nEntry-level backend engineer with internship experience building REST APIs, automating ETL jobs, and writing tests in FastAPI/Django environments.\n\nEXPERIENCE\nBackend Engineering Intern | Nimbus Analytics | Jan 2024 \u2013 Jun 2024\n\u2022 Built FastAPI endpoints for usage metrics, reducing response time by 25%.\n\u2022 Added Celery task for nightly data reconciliation across PostgreSQL and S3.\n\u2022 Authored pytest suite with >85% coverage integrated into GitHub Actions CI.\n\nPROJECTS\nFleetWatch API \u2013 Containerized microservice exposing telemetry via FastAPI, SQLAlchemy, and Redis caching.\nKnowledge Base Sync \u2013 Automated Confluence to Markdown sync using Python and AWS Lambda.\n\nEDUCATION\nB.S. Computer Science | Northeastern University | 2024\n\nSKILLS\nPython, FastAPI, Django, PostgreSQL, SQLAlchemy, Celery, Redis, Docker, Git, REST, pytest, CI/CD",
+    "competencies": [
+      {
+        "id": "C1",
+        "name": "REST API Development with FastAPI/Django",
+        "interview_style": "implementation_walkthrough",
+        "rationale": "The candidate should demonstrate practical experience in implementing REST endpoints using FastAPI or Django, as this is a core responsibility. An implementation walkthrough allows the interviewer to assess their hands-on skills and understanding of best practices."
+      },
+      {
+        "id": "C2",
+        "name": "Database Management with PostgreSQL",
+        "interview_style": "scenario_drill",
+        "rationale": "Given the requirement to maintain PostgreSQL schemas and write optimized SQL queries, a scenario drill can effectively evaluate the candidate's ability to handle real-world database challenges and optimize performance."
+      },
+      {
+        "id": "C3",
+        "name": "Testing and Code Quality Assurance",
+        "interview_style": "objective_check",
+        "rationale": "The role emphasizes writing unit/integration tests and participating in code reviews. An objective check can verify the candidate's proficiency in testing methodologies and their commitment to maintaining high code quality."
+      }
+    ],
+    "rubric": {
+      "candidate_name": "AVERY CHEN",
+      "position": "Entry-Level Backend Engineer (Python)",
+      "evaluation_criteria": [
+        {
+          "category": "REST API Development with FastAPI/Django",
+          "criteria": [
+            {
+              "name": "Implementation Walkthrough",
+              "description": "Ability to explain and justify a concrete build plan for REST endpoints.",
+              "weight": 40,
+              "scoring_levels": {
+                "Level 0": "Unable to articulate any approach or justification.",
+                "Level 1": "Provides vague or incomplete explanations with little detail.",
+                "Level 2": "Explains basic approach but lacks depth in interfaces and data flow.",
+                "Level 3": "Describes a clear plan, including interfaces and data flow, but misses some details.",
+                "Level 4": "Articulates a comprehensive build plan with detailed interfaces and data flow.",
+                "Level 5": "Provides an exceptional explanation with thorough justification, anticipating potential issues."
+              }
+            },
+            {
+              "name": "Complexity Reasoning",
+              "description": "Ability to state time/space costs and identify main bottlenecks.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Fails to recognize or discuss any complexity issues.",
+                "Level 1": "Identifies basic complexity but lacks depth in analysis.",
+                "Level 2": "Recognizes some time/space costs and bottlenecks with limited accuracy.",
+                "Level 3": "Accurately identifies key complexities and main bottlenecks.",
+                "Level 4": "Provides a detailed analysis of time/space costs and potential optimizations.",
+                "Level 5": "Delivers an outstanding complexity analysis, suggesting innovative solutions."
+              }
+            },
+            {
+              "name": "Approach Probe",
+              "description": "Ability to propose a minimal viable approach for REST API development.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Cannot propose any viable approach.",
+                "Level 1": "Proposes an overly simplistic or impractical approach.",
+                "Level 2": "Suggests a basic approach with some practical elements.",
+                "Level 3": "Presents a reasonable minimal viable approach with clear interfaces.",
+                "Level 4": "Develops a well-thought-out minimal viable approach, considering constraints.",
+                "Level 5": "Proposes an innovative and highly efficient minimal viable approach."
+              }
+            }
+          ]
+        },
+        {
+          "category": "Database Management with PostgreSQL",
+          "criteria": [
+            {
+              "name": "Scenario Drill",
+              "description": "Ability to handle real-world database challenges and optimize performance.",
+              "weight": 50,
+              "scoring_levels": {
+                "Level 0": "Unable to address the scenario or make reasoned trade-offs.",
+                "Level 1": "Addresses the scenario with minimal understanding of constraints.",
+                "Level 2": "Makes some reasonable choices but lacks depth in trade-off analysis.",
+                "Level 3": "Handles the scenario well, making clear and logical trade-offs.",
+                "Level 4": "Effectively manages the scenario with insightful optimization strategies.",
+                "Level 5": "Delivers an exceptional solution with innovative optimizations."
+              }
+            },
+            {
+              "name": "Tradeoff Probe",
+              "description": "Ability to choose between two valid options and justify the decision.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Fails to make a choice or provide justification.",
+                "Level 1": "Makes an arbitrary choice with little reasoning.",
+                "Level 2": "Chooses one option but provides weak justification.",
+                "Level 3": "Selects a reasonable option and justifies the decision adequately.",
+                "Level 4": "Makes a well-reasoned choice with strong justification.",
+                "Level 5": "Delivers an outstanding analysis, choosing the best option with compelling reasoning."
+              }
+            },
+            {
+              "name": "Scenario Probe",
+              "description": "Ability to propose a plan given constraints in a database scenario.",
+              "weight": 20,
+              "scoring_levels": {
+                "Level 0": "Cannot propose any viable plan.",
+                "Level 1": "Proposes an impractical or incomplete plan.",
+                "Level 2": "Suggests a basic plan with some practical elements.",
+                "Level 3": "Presents a reasonable plan considering the constraints.",
+                "Level 4": "Develops a well-thought-out plan, addressing most constraints.",
+                "Level 5": "Proposes an innovative and highly effective plan."
+              }
+            }
+          ]
+        },
+        {
+          "category": "Testing and Code Quality Assurance",
+          "criteria": [
+            {
+              "name": "Fact Probe",
+              "description": "Ability to provide factual claims or definitions with sources.",
+              "weight": 40,
+              "scoring_levels": {
+                "Level 0": "Fails to provide any factual information or source.",
+                "Level 1": "Provides incorrect or irrelevant facts without sources.",
+                "Level 2": "Offers some correct facts but lacks proper sourcing.",
+                "Level 3": "Delivers accurate facts with adequate sourcing.",
+                "Level 4": "Provides precise and well-sourced factual claims.",
+                "Level 5": "Delivers exceptional, thoroughly sourced factual information."
+              }
+            },
+            {
+              "name": "Calc Check",
+              "description": "Ability to perform calculations or checks quickly and accurately.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Unable to perform any calculations or checks.",
+                "Level 1": "Performs calculations with significant errors.",
+                "Level 2": "Completes basic calculations but with some inaccuracies.",
+                "Level 3": "Accurately performs most calculations and checks.",
+                "Level 4": "Executes calculations quickly and accurately, showing proficiency.",
+                "Level 5": "Delivers flawless and rapid calculations with exceptional accuracy."
+              }
+            },
+            {
+              "name": "Objective Check",
+              "description": "Ability to validate statements against data or rules.",
+              "weight": 30,
+              "scoring_levels": {
+                "Level 0": "Fails to validate any statements.",
+                "Level 1": "Validates statements incorrectly or incompletely.",
+                "Level 2": "Partially validates statements with some errors.",
+                "Level 3": "Accurately validates most statements against data/rules.",
+                "Level 4": "Effectively and accurately validates statements.",
+                "Level 5": "Delivers exceptional validation of statements, demonstrating deep understanding."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "id": "1ad463b4978f475d980b9cc7587f5f51",
+    "scheduled_date": "2025-11-05T19:15:33.648168Z",
+    "status": "scheduled",
+    "overall_score": null,
+    "score_details": null,
+    "transcript": [],
+    "criterion_results": [],
+    "wrapup_summary": null
   }
 ]

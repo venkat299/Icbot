@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { Button } from './ui/button';
 import { ArrowLeft, FileDown, Loader2, AlertTriangle } from 'lucide-react';
 import { API_BASE_URL } from '../config';
-import { InterviewReport } from './InterviewReport';
+import { InterviewReport } from './InterviewReport'; // Renders report wrapper with export controls.
 import type { InterviewReportData } from './InterviewReport';
 
 interface ReportPageProps {
@@ -48,18 +48,14 @@ export function ReportPage({ reportData, onBack, isLoading, error, onRetry }: Re
   }, [reportData]);
 
   return (
-    <div className="h-screen w-screen overflow-auto bg-gradient-to-br from-gray-50 to-white">
+    <div
+      className="h-screen w-screen overflow-auto bg-gradient-to-br from-gray-50 to-white"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Header */}
-        <div className="
-          backdrop-blur-xl bg-white/80 border border-gray-200/50
-          rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-6
-          shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)]
-          relative
-          before:absolute before:inset-0 before:rounded-2xl sm:before:rounded-3xl
-          before:bg-gradient-to-br before:from-white/40 before:to-transparent
-          before:pointer-events-none
-        ">
+        <div
+          className="backdrop-blur-xl border rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-6 shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] relative before:absolute before:inset-0 before:rounded-2xl sm:before:rounded-3xl before:bg-gradient-to-br before:from-white/40 before:to-transparent before:pointer-events-none bg-white/80 border-gray-200/50"
+        >
           <div className="relative z-10 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Button
@@ -75,21 +71,18 @@ export function ReportPage({ reportData, onBack, isLoading, error, onRetry }: Re
                 Back to Interviews
               </Button>
             </div>
-            <Button
-              variant="outline"
-              onClick={handleExport}
-              className="
-                bg-white/80 border-gray-300/50 text-gray-700
-                hover:bg-gray-50 hover:border-gray-400/50
-                shadow-[0_2px_8px_rgba(0,0,0,0.06)]
-                hidden sm:flex
-                disabled:opacity-60
-              "
-              disabled={isLoading || !reportData || isExporting}
-            >
-              {isExporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileDown className="w-4 h-4 mr-2" />}
-              {isExporting ? 'Exporting...' : 'Export PDF'}
-            </Button>
+            <div className="flex items-center gap-2">
+              <span className="text-xs uppercase tracking-[0.4em] text-gray-500 hidden sm:block">Standard report</span>
+              <Button
+                variant="outline"
+                onClick={handleExport}
+                className="bg-white/80 border-gray-300/50 text-gray-700 hover:bg-gray-50 hover:border-gray-400/50 shadow-[0_2px_8px_rgba(0,0,0,0.06)] hidden sm:flex disabled:opacity-60"
+                disabled={isLoading || !reportData || isExporting}
+              >
+                {isExporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileDown className="w-4 h-4 mr-2" />}
+                {isExporting ? 'Exporting...' : 'Export PDF'}
+              </Button>
+            </div>
           </div>
           {exportError && (
             <div className="relative z-10 mt-3 text-xs text-red-600">
@@ -104,13 +97,7 @@ export function ReportPage({ reportData, onBack, isLoading, error, onRetry }: Re
             <Button
               variant="outline"
               onClick={handleExport}
-              className="
-                bg-white/80 border-gray-300/50 text-gray-700
-                hover:bg-gray-50 hover:border-gray-400/50
-                shadow-[0_2px_8px_rgba(0,0,0,0.06)]
-                w-full
-                disabled:opacity-60
-              "
+              className="bg-white/80 border-gray-300/50 text-gray-700 hover:bg-gray-50 hover:border-gray-400/50 shadow-[0_2px_8px_rgba(0,0,0,0.06)] w-full disabled:opacity-60"
               disabled={isLoading || !reportData || isExporting}
             >
               {isExporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileDown className="w-4 h-4 mr-2" />}
@@ -118,15 +105,9 @@ export function ReportPage({ reportData, onBack, isLoading, error, onRetry }: Re
             </Button>
           </div>
         )}
-        <div className="
-          backdrop-blur-xl bg-white/80 border border-gray-200/50
-          rounded-2xl sm:rounded-3xl p-6 sm:p-8
-          shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)]
-          relative
-          before:absolute before:inset-0 before:rounded-2xl sm:before:rounded-3xl
-          before:bg-gradient-to-br before:from-white/40 before:to-transparent
-          before:pointer-events-none
-        ">
+        <div
+          className="backdrop-blur-xl rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] relative before:absolute before:inset-0 before:rounded-2xl sm:before:rounded-3xl before:pointer-events-none bg-white/80 border border-gray-200/50 before:bg-gradient-to-br before:from-white/40 before:to-transparent"
+        >
           <div className="relative z-10">
             {isLoading && (
               <div className="flex flex-col items-center justify-center py-16 text-sm text-gray-600 gap-3">
@@ -151,7 +132,9 @@ export function ReportPage({ reportData, onBack, isLoading, error, onRetry }: Re
                 )}
               </div>
             )}
-            {!isLoading && !error && reportData && <InterviewReport data={reportData} />}
+            {!isLoading && !error && reportData && (
+              <InterviewReport data={reportData} />
+            )}
           </div>
         </div>
       </div>

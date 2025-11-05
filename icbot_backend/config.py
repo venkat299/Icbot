@@ -105,11 +105,25 @@ class CriterionFlowTuning(BaseModel):  # Configures probe thresholds for criteri
         return values
 
 
+class ConfidenceModelConfig(BaseModel):  # Shapes Bayesian confidence aggregation defaults.
+    prior: list[PositiveFloat] = Field(default_factory=lambda: [0.5] * 6, min_length=6, max_length=6)
+    min_increment: float = Field(default=0.1, ge=0.0, le=1.0)
+    weight_scale: PositiveFloat = Field(default=4.0)
+    sharpness: PositiveFloat = Field(default=1.2)
+
+    @model_validator(mode="after")
+    def _validate_prior(cls, values: "ConfidenceModelConfig") -> "ConfidenceModelConfig":  # Ensures prior spans six levels.
+        if len(values.prior) != 6:
+            raise ValueError("confidence_model.prior must include six level weights for levels 0-5.")
+        return values
+
+
 class EvaluationConfig(BaseModel):  # Holds evaluation stage wiring.
     routes: dict[str, str] = Field(default_factory=dict)
     schema_registry: dict[str, str] = Field(default_factory=dict)
     weights: dict[str, float] = Field(default_factory=dict)
     criterion_flow: CriterionFlowTuning = Field(default_factory=CriterionFlowTuning)
+    confidence_model: ConfidenceModelConfig = Field(default_factory=ConfidenceModelConfig)
 
 
 class UiConfig(BaseModel):  # Exposes UI-facing defaults.

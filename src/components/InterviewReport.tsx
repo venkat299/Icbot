@@ -1,6 +1,7 @@
-import { Badge } from './ui/badge';
+import { Badge } from './ui/badge'; // Renders structured interview report view.
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Separator } from './ui/separator';
+import { ScrollArea } from './ui/scroll-area';
 import {
   Award,
   Calendar,
@@ -20,6 +21,7 @@ import {
   Link as LinkIcon,
   Database,
 } from 'lucide-react';
+import type { TranscriptTurn } from '../types/transcript';
 
 interface ResumeEducation {
   institution: string;
@@ -136,6 +138,7 @@ export interface InterviewReportData {
     excerpt: string;
     timestamp: string;
   }[];
+  transcript_full: TranscriptTurn[];
   recommendations: string[];
   attachments?: {
     full_transcript_path: string;
@@ -186,6 +189,7 @@ export function InterviewReport({ data }: InterviewReportProps) {
   );
   const formatKey = (value: string) =>
     value.replace(/[_-]/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+  const hasFullTranscript = data.transcript_full.length > 0;
 
   return (
     <div className="space-y-6">
@@ -543,6 +547,49 @@ export function InterviewReport({ data }: InterviewReportProps) {
             ))}
           </CardContent>
         </Card>
+
+        {hasFullTranscript && (
+          <Card className="
+            backdrop-blur-xl bg-white/80 border border-gray-200/50
+            rounded-2xl
+            shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)]
+          ">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MessageSquare className="w-5 h-5 text-gray-600" />
+                Full Transcript
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-80 pr-4">
+                <div className="space-y-3">
+                  {data.transcript_full.map((turn, idx) => (
+                    <div
+                      key={`${turn.role}-${idx}`}
+                      className="
+                        backdrop-blur-xl bg-gradient-to-br from-white to-gray-50/50
+                        border border-gray-200/50 rounded-xl p-4
+                        shadow-[0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)]
+                      "
+                    >
+                      <Badge
+                        variant="outline"
+                        className={
+                          turn.role === 'candidate'
+                            ? 'bg-blue-50 text-blue-700 border-blue-200 capitalize'
+                            : 'bg-purple-50 text-purple-700 border-purple-200 capitalize'
+                        }
+                      >
+                        {turn.role}
+                      </Badge>
+                      <p className="text-sm text-gray-700 mt-2 whitespace-pre-wrap">{turn.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Recommendations */}
         <Card className="

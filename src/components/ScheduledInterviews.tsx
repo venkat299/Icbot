@@ -5,6 +5,7 @@ import { Card } from './ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { ScrollArea } from './ui/scroll-area';
 import { Calendar, FileText, FileUser, Play, RotateCcw, Eye, Award, Sparkles, Plus, Loader2, AlertTriangle, Trash, MessageSquare } from 'lucide-react';
+import type { TranscriptTurn } from '../types/transcript';
 
 export interface Competency {
   id: string;
@@ -13,10 +14,7 @@ export interface Competency {
   rationale?: string;
 }
 
-export interface TranscriptEntry {
-  role: 'interviewer' | 'candidate';
-  text: string;
-}
+export type TranscriptEntry = TranscriptTurn; // Maps scheduled interview transcripts to shared turn model.
 
 export interface CriterionResult {
   competencyId: string;
@@ -98,14 +96,12 @@ export function ScheduledInterviews({
     }
   };
 
-  const buildCriterionDirective = (category: string, criterionName: string, description: string) => {
-    const trimmedName = criterionName.trim();
-    const trimmedCategory = category.trim();
-    const base = `Could you walk me through ${trimmedName.toLowerCase()} as it applies to ${trimmedCategory}?`;
-    if (!description.trim()) {
-      return base;
-    }
-    return `${base} Please connect it to this focus: ${description.trim()}`;
+  const buildCriterionDirective = (_category: string, criterionName: string, description: string) => {
+    const trimmedDescription = description.trim();
+    // if (trimmedDescription) {
+    //   return trimmedDescription;
+    // }
+    return `Skill Domain : ${_category.trim()}; Connect it to this focus: ${description.trim()}`;
   };
 
   return (

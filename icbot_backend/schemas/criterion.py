@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field  # Defines criterion-level runtime models.
 
 from ..styles import DirectiveSchema, InteractiveQuestion  # Reuses directive schema for stored prompts.
+from ..confidence import ConfidencePosterior, ConfidenceSummary  # Reuses Bayesian confidence models.
 
 
 class CriterionDirective(BaseModel):  # Stores the directive and metadata for a rubric criterion.
@@ -34,12 +35,20 @@ class CriterionState(BaseModel):  # Tracks runtime progress for a criterion.
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
     done: bool = False
     pending_question: str | None = None
+    confidence_posterior: ConfidencePosterior | None = None
 
-    def register_attempt(self, attempt: CriterionAttempt) -> "CriterionState":
+    def register_attempt(
+        self,
+        attempt: CriterionAttempt,
+        *,
+        posterior: ConfidencePosterior,
+        summary: ConfidenceSummary,
+    ) -> "CriterionState":  # Adds attempt and updates aggregated confidence.
         updated = self.model_copy(deep=True)
         updated.attempts.append(attempt)
-        updated.level = attempt.level
-        updated.confidence = attempt.confidence or 0.0
+        updated.level = summary.level
+        updated.confidence = summary.confidence
+        updated.confidence_posterior = posterior
         return updated
 
 

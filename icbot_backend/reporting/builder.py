@@ -77,6 +77,7 @@ def build_interview_report(interview: ScheduledInterviewModel) -> InterviewRepor
         overall_evaluation=evaluation,
         competency_results=competency_results,
         transcript_digest=transcript_digest,
+        transcript_full=interview.transcript,
         recommendations=recommendations,
         attachments=attachments,
         llm_metadata=llm_metadata,
