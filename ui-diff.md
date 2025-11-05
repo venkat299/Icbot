@@ -209,6 +209,7 @@
 - Injects interactive question widgets using the new shared types while preserving submission state styling.
 
 ### src/components/Chatbot.tsx
+- Ensures the preparation overlay always opens on session load so every user sees the staged warmup before entering chat.
 - Maps interactive question payloads from the session API, surfaces them in the timeline, and routes submissions through the existing reply handler.
 - Reordered reply handler hooks so interactive submissions call initialized callbacks without runtime reference errors.
 - Detects expired interview sessions, shows a friendly notice, and automatically reboots the flow so 404s from the backend recover without manual refresh.
@@ -225,3 +226,6 @@
 
 ### src/components/ui/dialog.tsx
 - Wraps dialog overlay and content in `forwardRef` to keep Radix slot refs working without console warnings.
+
+### src/components/InterviewPrepOverlay.tsx
+- Adds animated prep stages, progress bar, and glassmorphism refinements plus a ready-state system check panel and enhanced start CTA.

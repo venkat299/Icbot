@@ -4,6 +4,7 @@ import { Volume2, VolumeX, Bot, Circle } from 'lucide-react';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { InterviewProgress, InterviewStage } from './InterviewProgress';
+import { InterviewPrepOverlay } from './InterviewPrepOverlay';
 import { InterviewerSidebar } from './InterviewerSidebar';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './ui/resizable';
 import {
@@ -87,6 +88,8 @@ export function Chatbot({
   const [isLoadingSession, setIsLoadingSession] = useState(false); // Indicates session bootstrap.
   const [isEnding, setIsEnding] = useState(false); // Tracks manual end processing state.
   const [candidateLevel, setCandidateLevel] = useState<CandidateLevelId>(initialCandidateLevel); // Tracks candidate proficiency level.
+  const [isPrepOverlayOpen, setIsPrepOverlayOpen] = useState(true); // Controls prep overlay visibility.
+  const [isPrepReady, setIsPrepReady] = useState(false); // Tracks prep overlay readiness state.
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<Message[]>([]);
   const autoReplyInFlightRef = useRef(false);
@@ -251,6 +254,8 @@ export function Chatbot({
     autoReplyInFlightRef.current = false;
     stopSpeaking();
     setSidebarSnapshot(null);
+    setIsPrepOverlayOpen(true);
+    setIsPrepReady(false);
   }, [replaceMessages, stopSpeaking]); // Clears state when interview changes or session ends.
 
   const bootstrapSession = useCallback(async (preserveError = false) => {
@@ -265,6 +270,7 @@ export function Chatbot({
       const response = await startInterviewSession(interview.id);
       applySessionResponse(response, 'replace');
       setSessionError(null);
+      setIsPrepReady(true);
     } catch (error) {
       console.error('Failed to start interview session', error);
       setSessionError('Unable to load interview session. Please try again.');
@@ -579,6 +585,14 @@ export function Chatbot({
         overflow-hidden relative
       "
     >
+      {isPrepOverlayOpen && (
+        <InterviewPrepOverlay
+          isReady={isPrepReady && !isLoadingSession}
+          onStart={() => setIsPrepOverlayOpen(false)}
+          candidateName={interview?.candidateName ?? undefined}
+          positionTitle={interview?.jobTitle ?? undefined}
+        />
+      )}
       <ResizablePanelGroup direction="horizontal" className="h-full">
         <ResizablePanel defaultSize={isInterviewerView ? 70 : 100} minSize={40}>
           <div className="relative z-10 flex flex-col h-full">
