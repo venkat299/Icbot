@@ -4,8 +4,10 @@ from typing import TypedDict
 
 from langgraph.graph import END, StateGraph  # Provides LangGraph orchestration.
 
+from ..agents.criterion_followup_agent import CriterionFollowUpAgent  # Synthesizes follow-up questions.
 from ..agents.evaluation_agent import EvaluationAgent  # Scores criterion responses.
 from ..schemas.criterion import CriterionAttempt, CriterionState, EvaluationRequest, EvaluationResult
+from ..schemas.criterion_followup import CriterionFollowUpRequest  # Provides follow-up request payload.
 
 
 class _CriterionPayload(TypedDict):  # Payload circulated through the LangGraph.
@@ -22,11 +24,13 @@ class CriterionGraph:  # Executes criterion-level turn taking using LangGraph.
         self,
         evaluator: EvaluationAgent,
         *,
+        followup_agent: CriterionFollowUpAgent | None = None,
         confidence_threshold: float = 0.7,
         min_attempts: int = 1,
         max_attempts: int = 2,
     ) -> None:  # Initializes the criterion flow controller.
         self._evaluator = evaluator
+        self._followup = followup_agent or CriterionFollowUpAgent()
         if min_attempts < 1:
             raise ValueError("min_attempts must be at least 1.")
         if min_attempts > max_attempts:
@@ -122,18 +126,30 @@ class CriterionGraph:  # Executes criterion-level turn taking using LangGraph.
             state.done = False
         return payload
 
-    def _compose_followup(self, payload: _CriterionPayload) -> _CriterionPayload:  # Crafts a follow-up prompt when confidence is low.
+    async def _compose_followup(self, payload: _CriterionPayload) -> _CriterionPayload:  # Crafts a follow-up prompt when confidence is low.
         state = payload["state"]
         evaluation = payload["evaluation"]
         assert evaluation is not None
         directive = state.directive
-        hint = (directive.directive.follow_up_hint or "").strip()
-        if not hint:
-            hint = f"Could you walk through a concrete example that shows strong {directive.criterion_name}?"
-        question = hint if hint.endswith("?") else f"{hint.rstrip('.')}?"
-        if directive.criterion_name.lower() not in question.lower():
-            stem = question.rstrip("?")
-            question = f"{stem} focusing on {directive.criterion_name}?"
+        request = CriterionFollowUpRequest(
+            competency_name=directive.competency_name,
+            criterion_name=directive.criterion_name,
+            criterion_description=directive.description,
+            latest_question=payload["question"],
+            candidate_answer=payload["answer"],
+            evaluation_level=str(evaluation.level),
+            evaluation_confidence=evaluation.confidence,
+            evaluation_notes=evaluation.notes,
+            candidate_focus=directive.directive.candidate_focus,
+            evidence_focus=directive.directive.evidence_focus,
+            attempt_count=len(state.attempts),
+        )
+        follow_up_model = await self._followup.generate(request)
+        question = follow_up_model.question.strip()
+        if not question:
+            question = f"Could you share another concrete example for {directive.criterion_name}?"
+        if not question.endswith("?"):
+            question = f"{question.rstrip('.')}?"
         follow_up = f"Thanks for the context so far. {question}"
         state.pending_question = follow_up
         payload["follow_up"] = follow_up

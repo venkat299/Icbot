@@ -61,6 +61,10 @@
         "route": "phi-4",
         "schema_path": "icbot_backend.schemas.criterion.EvaluationResult"
       },
+      "criterion.followup": {
+        "route": "phi-4",
+        "schema_path": "icbot_backend.schemas.criterion_followup.CriterionFollowUp"
+      },
       "wrapup.summary": {
         "route": "qwen3-4b-local",
         "schema_path": "icbot_backend.schemas.wrapup_summary.WrapupSummary"

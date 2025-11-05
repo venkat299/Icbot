@@ -162,227 +162,55 @@
         }
       ]
     },
-    "id": "1cf1bf34d88a4249b081bf5a1bad748b",
-    "scheduled_date": "2025-11-03T02:52:43.776834Z",
-    "status": "scheduled",
-    "overall_score": null,
-    "score_details": null,
-    "transcript": [],
-    "criterion_results": [],
-    "wrapup_summary": null
-  },
-  {
-    "job_title": "Entry-Level Backend Engineer (Python)",
-    "candidate_name": "AVERY CHEN",
-    "job_description": "Entry-Level Backend Engineer (Python)\n\nWe are hiring a junior Python engineer to support API and data-pipeline delivery for our SaaS analytics platform.\n\nResponsibilities:\n\u2022 Implement REST endpoints with FastAPI or Django.\n\u2022 Maintain PostgreSQL schemas and write optimized SQL queries.\n\u2022 Build background jobs using Celery and Redis queues.\n\u2022 Write unit/integration tests and participate in code reviews.\n\u2022 Document services and deploy through our GitHub Actions pipeline.\n\nRequirements:\n\u2022 B.S. in Computer Science or related field (or equivalent internship experience).\n\u2022 0-1 years of professional software experience with Python.\n\u2022 Familiarity with REST APIs, relational databases, and Git workflows.\n\u2022 Understanding of containerization (Docker) and cloud fundamentals.\n\nNice to have:\n\u2022 Exposure to AWS services (Lambda, RDS, ECS).\n\u2022 Experience with observability tooling (Prometheus, Grafana, Sentry).",
-    "resume": "AVERY CHEN\nPython Backend Engineer\nEmail: avery.chen@example.com | GitHub: github.com/averychen | Boston, MA\n\nSUMMARY\nEntry-level backend engineer with internship experience building REST APIs, automating ETL jobs, and writing tests in FastAPI/Django environments.\n\nEXPERIENCE\nBackend Engineering Intern | Nimbus Analytics | Jan 2024 \u2013 Jun 2024\n\u2022 Built FastAPI endpoints for usage metrics, reducing response time by 25%.\n\u2022 Added Celery task for nightly data reconciliation across PostgreSQL and S3.\n\u2022 Authored pytest suite with >85% coverage integrated into GitHub Actions CI.\n\nPROJECTS\nFleetWatch API \u2013 Containerized microservice exposing telemetry via FastAPI, SQLAlchemy, and Redis caching.\nKnowledge Base Sync \u2013 Automated Confluence to Markdown sync using Python and AWS Lambda.\n\nEDUCATION\nB.S. Computer Science | Northeastern University | 2024\n\nSKILLS\nPython, FastAPI, Django, PostgreSQL, SQLAlchemy, Celery, Redis, Docker, Git, REST, pytest, CI/CD",
-    "competencies": [
-      {
-        "id": "1",
-        "name": "Python Programming and Frameworks",
-        "interview_style": "concept_primer",
-        "rationale": "The candidate needs a solid understanding of Python programming, particularly with frameworks like FastAPI or Django. A Concept Primer will help assess their foundational knowledge and ability to discuss key concepts."
-      },
-      {
-        "id": "2",
-        "name": "Database Management and SQL Optimization",
-        "interview_style": "implementation_walkthrough",
-        "rationale": "Given the requirement to maintain PostgreSQL schemas and write optimized queries, an Implementation Walkthrough will allow candidates to demonstrate their practical skills in database management."
-      },
-      {
-        "id": "3",
-        "name": "Testing and Code Review Practices",
-        "interview_style": "scenario_drill",
-        "rationale": "The candidate must be able to write tests and participate in code reviews. A Scenario Drill will simulate real-world situations, testing their ability to apply these practices effectively."
-      }
-    ],
-    "rubric": {
-      "candidate_name": "AVERY CHEN",
-      "position": "Entry-Level Backend Engineer (Python)",
-      "evaluation_criteria": [
-        {
-          "category": "Python Programming and Frameworks",
-          "criteria": [
-            {
-              "name": "Concept Understanding",
-              "description": "Assess the candidate's foundational knowledge of Python programming, particularly with frameworks like FastAPI or Django.",
-              "weight": 40,
-              "scoring_levels": {
-                "Level 0": "Candidate cannot define key concepts and lacks understanding of framework basics.",
-                "Level 1": "Candidate provides vague definitions and shows limited practical examples.",
-                "Level 2": "Candidate defines key concepts but struggles to relate them to real-world applications.",
-                "Level 3": "Candidate explains concepts clearly with some relevant examples.",
-                "Level 4": "Candidate demonstrates a solid understanding of concepts with multiple relevant examples.",
-                "Level 5": "Candidate articulates deep insights into Python frameworks, providing comprehensive and practical examples."
-              }
-            },
-            {
-              "name": "Practical Application",
-              "description": "Evaluate the candidate's ability to apply Python programming skills in real-world scenarios.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Candidate fails to demonstrate any practical application of Python skills.",
-                "Level 1": "Candidate shows minimal practical application with significant errors.",
-                "Level 2": "Candidate demonstrates basic application but lacks depth and accuracy.",
-                "Level 3": "Candidate applies Python skills effectively in simple scenarios.",
-                "Level 4": "Candidate applies Python skills proficiently in complex scenarios with minor issues.",
-                "Level 5": "Candidate showcases expert-level practical application of Python skills across diverse scenarios."
-              }
-            },
-            {
-              "name": "Framework Proficiency",
-              "description": "Assess the candidate's proficiency and experience with FastAPI or Django frameworks.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Candidate has no knowledge of FastAPI or Django frameworks.",
-                "Level 1": "Candidate shows limited understanding and minimal hands-on experience.",
-                "Level 2": "Candidate demonstrates basic familiarity with framework features.",
-                "Level 3": "Candidate exhibits good proficiency in using the framework for standard tasks.",
-                "Level 4": "Candidate is proficient in advanced framework features and customization.",
-                "Level 5": "Candidate displays expert-level mastery of FastAPI or Django, including innovative uses."
-              }
-            }
-          ]
-        },
-        {
-          "category": "Database Management and SQL Optimization",
-          "criteria": [
-            {
-              "name": "Schema Design",
-              "description": "Evaluate the candidate's ability to design efficient PostgreSQL schemas.",
-              "weight": 40,
-              "scoring_levels": {
-                "Level 0": "Candidate cannot design a basic schema and lacks understanding of database principles.",
-                "Level 1": "Candidate designs a flawed schema with significant inefficiencies.",
-                "Level 2": "Candidate creates a basic schema but overlooks optimization opportunities.",
-                "Level 3": "Candidate designs an efficient schema with some minor issues.",
-                "Level 4": "Candidate designs a highly optimized schema with minimal errors.",
-                "Level 5": "Candidate demonstrates expert-level proficiency in designing and optimizing schemas."
-              }
-            },
-            {
-              "name": "Query Optimization",
-              "description": "Assess the candidate's ability to write and optimize SQL queries for performance.",
-              "weight": 40,
-              "scoring_levels": {
-                "Level 0": "Candidate writes inefficient queries with no optimization attempts.",
-                "Level 1": "Candidate shows minimal understanding of query optimization techniques.",
-                "Level 2": "Candidate applies basic optimization but lacks depth and accuracy.",
-                "Level 3": "Candidate optimizes queries effectively for standard use cases.",
-                "Level 4": "Candidate demonstrates advanced query optimization skills with minor issues.",
-                "Level 5": "Candidate exhibits expert-level mastery in writing highly optimized SQL queries."
-              }
-            },
-            {
-              "name": "Complexity Reasoning",
-              "description": "Evaluate the candidate's ability to reason about time/space complexity and identify bottlenecks.",
-              "weight": 20,
-              "scoring_levels": {
-                "Level 0": "Candidate cannot explain or identify any aspects of query complexity.",
-                "Level 1": "Candidate shows limited understanding of complexity concepts.",
-                "Level 2": "Candidate identifies basic complexities but lacks depth in reasoning.",
-                "Level 3": "Candidate explains time/space complexity effectively for simple queries.",
-                "Level 4": "Candidate provides detailed analysis of query complexities with minor errors.",
-                "Level 5": "Candidate demonstrates expert-level understanding and reasoning about query complexities."
-              }
-            }
-          ]
-        },
-        {
-          "category": "Testing and Code Review Practices",
-          "criteria": [
-            {
-              "name": "Test Creation",
-              "description": "Assess the candidate's ability to write unit/integration tests.",
-              "weight": 40,
-              "scoring_levels": {
-                "Level 0": "Candidate cannot create any meaningful tests.",
-                "Level 1": "Candidate writes minimal tests with significant gaps in coverage.",
-                "Level 2": "Candidate creates basic tests but lacks thoroughness and accuracy.",
-                "Level 3": "Candidate writes effective tests covering most scenarios.",
-                "Level 4": "Candidate demonstrates proficiency in writing comprehensive tests.",
-                "Level 5": "Candidate exhibits expert-level skills in creating robust and efficient test suites."
-              }
-            },
-            {
-              "name": "Code Review Participation",
-              "description": "Evaluate the candidate's ability to participate effectively in code reviews.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Candidate cannot engage meaningfully in code reviews.",
-                "Level 1": "Candidate shows minimal engagement with little constructive feedback.",
-                "Level 2": "Candidate participates but provides basic and sometimes inaccurate feedback.",
-                "Level 3": "Candidate engages effectively, offering relevant and accurate feedback.",
-                "Level 4": "Candidate demonstrates strong skills in providing insightful code review feedback.",
-                "Level 5": "Candidate exhibits expert-level proficiency in conducting thorough and constructive code reviews."
-              }
-            },
-            {
-              "name": "Tradeoff Analysis",
-              "description": "Assess the candidate's ability to make reasoned trade-offs during testing and review.",
-              "weight": 30,
-              "scoring_levels": {
-                "Level 0": "Candidate cannot identify or analyze any trade-offs.",
-                "Level 1": "Candidate shows limited understanding of trade-off concepts.",
-                "Level 2": "Candidate identifies basic trade-offs but lacks depth in analysis.",
-                "Level 3": "Candidate analyzes trade-offs effectively for simple scenarios.",
-                "Level 4": "Candidate provides detailed trade-off analysis with minor errors.",
-                "Level 5": "Candidate demonstrates expert-level skills in analyzing and making reasoned trade-offs."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    "id": "965890bff98746558a1244a46bb85e1b",
-    "scheduled_date": "2025-11-03T03:02:46.440933Z",
+    "id": "5946a8f6775b43d999d86f5687796bd5",
+    "scheduled_date": "2025-11-05T07:47:52.115793Z",
     "status": "completed",
-    "overall_score": 51,
+    "overall_score": 44,
     "score_details": [
       {
-        "criteria": "Python Programming and Frameworks \u2013 Concept Understanding",
-        "score": 60,
-        "feedback": "The candidate clearly explained the asynchronous nature of FastAPI using async/await, contrasting it effectively with Django's synchronous approach. They provided a relevant example regarding handling multiple requests simultaneously. However, they expressed uncertainty about real-world performance metrics."
+        "criteria": "Python Programming and Frameworks \u2013 Objective Check - Fact Probe",
+        "score": 80,
+        "feedback": "The candidate provided an accurate example of inheritance in Python, including correct syntax and a reference to the official documentation."
       },
       {
-        "criteria": "Python Programming and Frameworks \u2013 Practical Application",
+        "criteria": "Python Programming and Frameworks \u2013 Objective Check - Calculation Check",
         "score": 60,
-        "feedback": "The candidate effectively described a practical application of Python for data validation, providing an example that demonstrates understanding of error reduction in simple scenarios. However, the impact on system reliability was not deeply explored."
+        "feedback": "The candidate correctly outlined the steps to calculate standard deviation, including finding the mean, squaring differences, summing them up, dividing by the number of data points, and taking the square root. However, they expressed uncertainty about its applicability to small datasets, which indicates a slight lack of confidence in understanding assumptions like sample size impact on variance estimation."
       },
       {
-        "criteria": "Python Programming and Frameworks \u2013 Framework Proficiency",
+        "criteria": "Python Programming and Frameworks \u2013 Concept Primer",
         "score": 60,
-        "feedback": "The candidate demonstrates good proficiency by correctly identifying the core design differences between FastAPI and Django, as well as appropriate use cases for each framework. However, there is some uncertainty about performance in practice."
+        "feedback": "The candidate correctly identified how to handle optional parameters by providing default values in the __init__ method, which is a key concept for Python classes. However, there was some uncertainty expressed about its universal applicability."
       },
       {
-        "criteria": "Database Management and SQL Optimization \u2013 Schema Design",
+        "criteria": "Database Management and SQL Optimization \u2013 Implementation Walkthrough - Approach Probe",
         "score": 40,
-        "feedback": "The candidate proposed a basic schema with `users` and `activities` tables, which is appropriate for a minimal viable approach. They correctly identified the need for indexing on `user_id` in the activities table to improve query performance. However, they expressed uncertainty about covering all cases and acknowledged that their solution might be more suitable for small applications. This indicates an awareness of potential limitations but also suggests some oversight regarding optimization opportunities."
+        "feedback": "The candidate outlined a basic approach but lacked detail in explaining data flow between services, indicating some understanding but not enough to score higher."
       },
       {
-        "criteria": "Database Management and SQL Optimization \u2013 Query Optimization",
+        "criteria": "Database Management and SQL Optimization \u2013 Implementation Walkthrough - Complexity Reasoning",
+        "score": 0,
+        "feedback": "No additional feedback provided."
+      },
+      {
+        "criteria": "Database Management and SQL Optimization \u2013 SQL Optimization",
         "score": 40,
-        "feedback": "The candidate demonstrates basic understanding of query optimization by suggesting indexing on frequently filtered columns, which is a common technique. However, the response lacks depth in addressing complex scenarios or advanced techniques for large datasets. The candidate also expresses uncertainty about the effectiveness of their approach on larger scales."
+        "feedback": "The candidate acknowledges their lack of real-world experience in optimizing SQL queries but demonstrates a basic understanding by mentioning indexes and joins, which are fundamental to optimization."
       },
       {
-        "criteria": "Database Management and SQL Optimization \u2013 Complexity Reasoning",
+        "criteria": "Testing and Code Review Practices \u2013 Scenario Drill - Scenario Probe",
         "score": 40,
-        "feedback": "The candidate identifies basic components of the schema but lacks depth in reasoning about time/space complexity or identifying bottlenecks. The answer is straightforward for a small-scale application, but does not address potential scalability issues."
+        "feedback": "The candidate acknowledges the lack of experience in testing under tight deadlines without user data, which limits their ability to provide a detailed strategy. They mention basic unit tests but do not elaborate on how they would handle the constraints effectively."
       },
       {
-        "criteria": "Testing and Code Review Practices \u2013 Test Creation",
-        "score": 60,
-        "feedback": "The candidate demonstrated an understanding of the need to create fake user data, test for correct daily counts, and consider edge cases like no data or duplicate dates. However, they expressed uncertainty about handling missing dates and acknowledged low confidence due to lack of testing with real data."
+        "criteria": "Testing and Code Review Practices \u2013 Scenario Drill - Tradeoff Probe",
+        "score": 40,
+        "feedback": "The candidate acknowledges the lack of real-world experience in prioritizing risks, indicating an understanding that risk assessment is important but lacks practical application."
       },
       {
         "criteria": "Testing and Code Review Practices \u2013 Code Review Participation",
         "score": 40,
-        "feedback": "The candidate shows basic engagement by identifying key areas such as database connection, error handling, and potential bugs. However, the feedback is somewhat general and lacks depth in terms of specific risks or assumptions related to production readiness."
-      },
-      {
-        "criteria": "Testing and Code Review Practices \u2013 Tradeoff Analysis",
-        "score": 60,
-        "feedback": "The candidate effectively prioritizes high-traffic paths, which is a sound strategy for balancing coverage against time constraints. However, the acknowledgment of uncertainty about meeting the 90% target indicates some lack of confidence in managing tight deadlines."
+        "feedback": "The candidate acknowledges their lack of experience in managing high-risk code reviews under tight deadlines, indicating a basic understanding but lacking depth and relevance in practical application."
       }
     ],
     "transcript": [
@@ -392,148 +220,229 @@
       },
       {
         "role": "candidate",
-        "text": "I'm not sure about a recent project where I used Python in a backend role. I'm still getting familiar with backend systems and real-world applications. From what I recall, I worked on a small script to manage student data using Python and SQLite, but it was more of a learning exercise than a full project. I think I might have done it during a university course. I'm still learning the details. Confidence: low because I haven't worked on a full backend project yet."
+        "text": "I worked on a school project where I used Python to build a simple backend that stored and retrieved student grades using a SQLite database. I wrote the code to handle basic CRUD operations and made sure it ran smoothly. I'm not sure if it was production-ready, but it helped me practice working with databases in Python. [FACT]"
       },
       {
         "role": "interviewer",
-        "text": "That's perfectly fine, Avery! It's great that you're actively learning and applying your Python skills in different contexts. As we move forward, feel free to share any other experiences or projects where you've used Python, even if they were small exercises. This will help us get a better sense of your growing expertise.\n\nWe'll move into competency-focused questions now."
+        "text": "That sounds like a great experience, Avery! It's impressive how you applied your Python skills in a practical project. I'm glad we've had this chance to get comfortable discussing your technical experiences. Let's move on to the next part of our interview.\n\nWe'll move into competency-focused questions now."
       },
       {
         "role": "interviewer",
-        "text": "Can you walk me through the core concept of FastAPI's asynchronous nature and how it differs from traditional synchronous Python web frameworks like Django in terms of performance and resource usage?"
+        "text": "What is the syntax for defining a class in Python, and what is the standard source that documents this?"
       },
       {
         "role": "candidate",
-        "text": "FastAPI uses async/await to handle requests without blocking, so it can process multiple requests at once. In Django, each request waits for the next one, which uses more memory and time. For example, if 10 users request data, FastAPI can handle them faster because it doesn\u2019t wait. I think it\u2019s better for handling many small requests. (I\u2019m not sure how much faster it is in real use.) [FACT] FastAPI uses async for handling I/O-bound tasks like database calls, while Django uses sync by default. Confidence: low because I haven\u2019t measured performance in production."
+        "text": "To define a class, you use the keyword 'class' followed by the class name and a colon. For example: class MyClass: pass. The official Python documentation is the standard source that documents this. [FACT]"
       },
       {
         "role": "interviewer",
-        "text": "Can you walk me through how you'd define a practical Python function for data validation in a real-world application, and give an example of how it impacts error reduction or system reliability?"
+        "text": "Thanks for the context so far. Can you provide an example of how inheritance is implemented in Python using class definitions, referencing the official documentation?"
       },
       {
         "role": "candidate",
-        "text": "I'd define a practical validation function as one that checks input data before processing, like ensuring a user's email has '@' and a dot. For example, I made a simple function that checks if an email has '@' and a dot. If it fails, it shows a clear error. This helps catch bad data early, so users don't get errors later. I think it reduces mistakes in forms. (I'm not sure how much it cuts errors in practice.) [FACT] A simple email validator can reduce invalid submissions by 80% in small apps. Confidence: low because I haven\u2019t measured it in a large system."
+        "text": "To use inheritance, you write class ChildClass(ParentClass): pass. For example: class Animal: def speak(self): pass class Dog(Animal): def speak(self): return 'Woof!' The official Python docs explain this clearly. [FACT]"
       },
       {
         "role": "interviewer",
-        "text": "Can you walk me through how FastAPI differs from Django in terms of design philosophy and when you'd choose one over the other in a real-world project?"
+        "text": "What is the formula for calculating the standard deviation of a dataset, and what assumptions are required for its validity?"
       },
       {
         "role": "candidate",
-        "text": "FastAPI is built for fast APIs using async/await, while Django is full-featured with built-in admin and auth. I'd pick FastAPI for a real-time app like a chat. I'd pick Django for a website with login and content. I'm not sure how much faster it is in practice. [FACT] FastAPI handles async requests more efficiently than sync frameworks. Confidence: low because I haven't used both in a real project."
+        "text": "I'm not sure about the exact formula for standard deviation, but I know it's something with the average and the differences from the mean. I think it needs the data to be normally distributed. [CALC]"
       },
       {
         "role": "interviewer",
-        "text": "Walk me through your minimal viable approach to designing a PostgreSQL schema for a user activity tracking system, including the key tables, their relationships, and how you'd ensure data flow and testability?"
+        "text": "Thanks for the context so far. Can you walk me through how you would calculate the standard deviation for a small dataset like [4, 8, 6, 5, 3], including any assumptions you make during the process?"
       },
       {
         "role": "candidate",
-        "text": "I'd start with `users` and `activities` tables. Users have `user_id`, activities link to them with `user_id` and `timestamp`. I'd add an index on `user_id` in activities. For testability, I'd write a few test queries to check data flow. I'm not sure if this covers all cases. (I think it's basic but works for small apps.) [CALC] 1000 test inserts \u2192 1000 rows with user_id \u2192 1000 valid records. Confidence: low because I haven't built a full system."
+        "text": "I'd start by finding the average: (4+8+6+5+3)/5 = 5.2. Then subtract each number from 5.2, square them, add up the squares, divide by 5, then take the square root. I'm not sure if it works for small datasets. [CALC]"
       },
       {
         "role": "interviewer",
-        "text": "Walk me through your minimal viable approach to optimizing a slow-running SQL query for a large dataset, including the key interfaces, data flow, and how you'd validate it with a happy path and a failure case?"
+        "text": "What is the purpose of the __init__ method in Python classes? Please provide a standard definition and a brief example of its usage in a real-world context?"
       },
       {
         "role": "candidate",
-        "text": "I'd start by checking the query plan in PostgreSQL to see where it's slow\u2014like full table scans. I'd add indexes on used columns, like `user_id` or `timestamp`. Key interfaces: the query runs through the app, hits the DB, returns results. I'd test with a happy path: normal user data. For failure, I'd test with no data or bad input. I'm not sure if it fixes everything. (I think it works for small cases.) [FACT] Indexing on frequently filtered columns can reduce query time from 10s to under 1s. Confidence: low because I haven\u2019t tested on large datasets."
+        "text": "The __init__ method runs when you create a new instance of a class. It sets up initial values. For example, in a Student class, I might use it to set name and grade. [FACT]"
       },
       {
         "role": "interviewer",
-        "text": "Walk me through your minimal viable approach to designing a database schema for a user activity tracking system, including the key interfaces, data flow, and how you'd validate it with a happy path and a failure case?"
+        "text": "Thanks for the context so far. How would you modify the __init__ method to handle optional parameters in your Student class example?"
       },
       {
         "role": "candidate",
-        "text": "I'd start with two tables: `users` and `activities`. Each activity links to a user via `user_id`. The key interface is a user ID input that triggers activity logging. Data flows from app \u2192 DB, storing timestamp and action. For happy path: user logs in, activity saved. For failure: if user ID is invalid, it logs an error. I'm not sure if this covers edge cases. (I think it's simple and works for small apps.) [CALC] 1000 valid entries \u2192 1000 stored with timestamp \u2192 1000 records in DB. Confidence: low because I haven't tested with real volume."
+        "text": "I'd add default values like name='Unknown' and grade=0.0 inside the __init__ method. For example: def __init__(self, name='Unknown',, grade=0.0):. I'm not sure if this works perfectly for all cases. [FACT]"
       },
       {
         "role": "interviewer",
-        "text": "Imagine you're designing a unit test for a function that calculates daily user engagement metrics, but you're constrained to only 100 lines of code and must avoid any external dependencies. How would you approach this, and what are the top risks you'd identify in your test design?"
+        "text": "Walk me through your minimal viable approach to designing a database schema for a user activity tracking system, including the key interfaces and data flow between services?"
       },
       {
         "role": "candidate",
-        "text": "I'd create fake user data with activity dates and pass it to the function. I'd test if it returns correct daily counts. I'd check edge cases like no data or duplicate dates. I'm not sure if it handles missing dates well. (I think it works for small cases.) [CALC] 10 users, 3 days \u2192 5 active days \u2192 5 records. Confidence: low because I haven't tested with real data."
+        "text": "I'd start with a simple table for users and one for activities. Each activity links to a user. I'd use a basic API to add or get data. I'm not sure how services talk to each other in production. [FACT]"
       },
       {
         "role": "interviewer",
-        "text": "Imagine you're reviewing a pull request for a feature that adds a new payment gateway. The team has limited time and must decide whether to merge it now or defer it for further design work. How would you approach this decision, and what are the top risks and assumptions you'd consider before moving forward?"
+        "text": "Thanks for the context so far. Can you describe how the API endpoint would handle data flow between services, and what specific tests you'd implement to verify its functionality?"
       },
       {
         "role": "candidate",
-        "text": "I'd check if the payment gateway connects to the database and if it handles errors. I'd look at the code for bugs, like missing error checks. I'm not sure if it's safe for production. (I think it's risky without more testing.) [FACT] Adding a new payment gateway without full error handling can cause data loss. Confidence: low because I haven't seen it in practice."
+        "text": "I'm not sure how an API endpoint handles data flow between services, but I know it probably passes data through requests. I'd test it by sending a simple request and checking if the response comes back correctly. [FACT]"
       },
       {
         "role": "interviewer",
-        "text": "Imagine you're reviewing a new feature that must pass 90% test coverage and be delivered in under two weeks. How would you prioritize test cases and balance coverage against time constraints, and what would be your top risk if you moved forward with this plan?"
+        "text": "Walk me through your minimal viable approach to designing the database schema and query flow, including how you'd handle time and space complexity in the core operations?"
       },
       {
         "role": "candidate",
-        "text": "I'd focus on the most used parts of the code, like user login and data saving. I'd write tests for those first. I'm not sure if 90% is possible in two weeks. (I think it's tight.) [FACT] Testing high-traffic paths first can catch 80% of bugs early. Confidence: low because I haven't managed a tight deadline."
+        "text": "I'd start with simple tables for users and activities. I'd use basic queries to add or get data. I don't know how to handle time or space complexity in core operations. [FACT]"
+      },
+      {
+        "role": "interviewer",
+        "text": "Thanks for the context so far. Can you describe a specific instance where you optimized a query to improve performance, detailing the changes made and their impact on time/space complexity?"
+      },
+      {
+        "role": "candidate",
+        "text": "I didn't optimize a query in a real project yet. I'm still learning. [FACT]"
+      },
+      {
+        "role": "interviewer",
+        "text": "Walk me through your minimal viable approach to optimizing this SQL query for performance, including the key interfaces and data flow between components?"
+      },
+      {
+        "role": "candidate",
+        "text": "I'd start by checking if indexes exist on used columns. Then I'd simplify the query by removing unnecessary joins. I'm not sure how interfaces or data flow between components work in this context. [FACT]"
+      },
+      {
+        "role": "interviewer",
+        "text": "Thanks for the context so far. Can you describe a specific instance where optimizing SQL queries improved performance, focusing on changes to indexes or joins?"
+      },
+      {
+        "role": "candidate",
+        "text": "I didn't have a chance to optimize a SQL query in a real project yet. I'm still learning. [FACT]"
+      },
+      {
+        "role": "interviewer",
+        "text": "How would you design a testing strategy for a new feature that must be deployed in under 48 hours, with limited QA resources and no prior user data?"
+      },
+      {
+        "role": "candidate",
+        "text": "I'd start with basic unit tests for the core logic using a small set of test data. I'd run them quickly and manually check a few edge cases. I don't know how to test without user data. [FACT]"
+      },
+      {
+        "role": "interviewer",
+        "text": "Thanks for the context so far. Can you describe a specific instance where you had to test under tight deadlines without user data, and how did you mitigate potential risks?"
+      },
+      {
+        "role": "candidate",
+        "text": "I didn't have a chance to test under tight deadlines without user data yet. I'm still learning. [FACT]"
+      },
+      {
+        "role": "interviewer",
+        "text": "Walk me through how you'd approach reviewing a pull request for a feature that needs to be delivered in 48 hours, given that the codebase is large and the team has limited bandwidth for testing\u2014what trade-offs would you make in terms of coverage, risk, and timeline?"
+      },
+      {
+        "role": "candidate",
+        "text": "I'd check the main code path and a few key edge cases. I'd skip deep testing since we don't have time. I'd ask the developer to add a simple test. [FACT]"
+      },
+      {
+        "role": "interviewer",
+        "text": "Thanks for the context so far. Can you give an example of a specific risk you prioritized in this scenario and explain how you determined its importance over other risks?"
+      },
+      {
+        "role": "candidate",
+        "text": "I didn't have a chance to prioritize a risk in a real scenario yet. I'm still learning. [FACT]"
+      },
+      {
+        "role": "interviewer",
+        "text": "Walk me through how you'd approach reviewing a pull request with a tight deadline and a high-risk change that impacts core functionality?"
+      },
+      {
+        "role": "candidate",
+        "text": "I'd check the code for basic logic and make sure it doesn't break existing features. I'd ask the developer to add a simple test. I'm not sure how to handle high risk in time pressure. [FACT]"
+      },
+      {
+        "role": "interviewer",
+        "text": "Thanks for the context so far. Can you describe a specific instance where you successfully managed a high-risk code review under tight deadlines? What strategies did you employ to ensure quality and mitigate risks?"
+      },
+      {
+        "role": "candidate",
+        "text": "I didn't have a chance to manage a high-risk code review under tight deadlines yet. I'm still learning. [FACT]"
       }
     ],
     "criterion_results": [
       {
         "competency_id": "1",
         "competency_name": "Python Programming and Frameworks",
-        "criterion_id": "6560174d80834ce6504587d00e29347217b87b5c",
-        "criterion_name": "Concept Understanding",
-        "level": 3,
-        "confidence": 0.8,
-        "notes": "The candidate clearly explained the asynchronous nature of FastAPI using async/await, contrasting it effectively with Django's synchronous approach. They provided a relevant example regarding handling multiple requests simultaneously. However, they expressed uncertainty about real-world performance metrics."
+        "criterion_id": "03c6da0e949db6a69a9e331cf7b4dc1957799383",
+        "criterion_name": "Objective Check - Fact Probe",
+        "level": 4,
+        "confidence": 0.98,
+        "notes": "The candidate provided an accurate example of inheritance in Python, including correct syntax and a reference to the official documentation."
       },
       {
         "competency_id": "1",
         "competency_name": "Python Programming and Frameworks",
-        "criterion_id": "2e11f356b8e1615da8d160060d83454c6aa73e2e",
-        "criterion_name": "Practical Application",
+        "criterion_id": "fa88ca2c5dbc5113fa097224f476c33d5fb07b79",
+        "criterion_name": "Objective Check - Calculation Check",
         "level": 3,
-        "confidence": 0.8,
-        "notes": "The candidate effectively described a practical application of Python for data validation, providing an example that demonstrates understanding of error reduction in simple scenarios. However, the impact on system reliability was not deeply explored."
+        "confidence": 0.9,
+        "notes": "The candidate correctly outlined the steps to calculate standard deviation, including finding the mean, squaring differences, summing them up, dividing by the number of data points, and taking the square root. However, they expressed uncertainty about its applicability to small datasets, which indicates a slight lack of confidence in understanding assumptions like sample size impact on variance estimation."
       },
       {
         "competency_id": "1",
         "competency_name": "Python Programming and Frameworks",
-        "criterion_id": "6fb33bfd7b04bf7a5f36e22cbdd5c20367733db9",
-        "criterion_name": "Framework Proficiency",
+        "criterion_id": "69dc0cfe40ed3c5da64092c7b381fff9fba8b303",
+        "criterion_name": "Concept Primer",
         "level": 3,
         "confidence": 0.8,
-        "notes": "The candidate demonstrates good proficiency by correctly identifying the core design differences between FastAPI and Django, as well as appropriate use cases for each framework. However, there is some uncertainty about performance in practice."
+        "notes": "The candidate correctly identified how to handle optional parameters by providing default values in the __init__ method, which is a key concept for Python classes. However, there was some uncertainty expressed about its universal applicability."
       },
       {
         "competency_id": "2",
         "competency_name": "Database Management and SQL Optimization",
-        "criterion_id": "731744a600a1952183b9667b198a4f4259db2783",
-        "criterion_name": "Schema Design",
+        "criterion_id": "734532d3da638d3e6eb7ca2fd6608d4fd97e38d5",
+        "criterion_name": "Implementation Walkthrough - Approach Probe",
         "level": 2,
         "confidence": 0.8,
-        "notes": "The candidate proposed a basic schema with `users` and `activities` tables, which is appropriate for a minimal viable approach. They correctly identified the need for indexing on `user_id` in the activities table to improve query performance. However, they expressed uncertainty about covering all cases and acknowledged that their solution might be more suitable for small applications. This indicates an awareness of potential limitations but also suggests some oversight regarding optimization opportunities."
+        "notes": "The candidate outlined a basic approach but lacked detail in explaining data flow between services, indicating some understanding but not enough to score higher."
       },
       {
         "competency_id": "2",
         "competency_name": "Database Management and SQL Optimization",
-        "criterion_id": "1d84411d3375ac16da9a7f87bffb1bd06b73ab35",
-        "criterion_name": "Query Optimization",
-        "level": 2,
-        "confidence": 0.8,
-        "notes": "The candidate demonstrates basic understanding of query optimization by suggesting indexing on frequently filtered columns, which is a common technique. However, the response lacks depth in addressing complex scenarios or advanced techniques for large datasets. The candidate also expresses uncertainty about the effectiveness of their approach on larger scales."
+        "criterion_id": "9d5860955ed242d573be8f24db14b46cf4e60549",
+        "criterion_name": "Implementation Walkthrough - Complexity Reasoning",
+        "level": 0,
+        "confidence": 1.0,
+        "notes": null
       },
       {
         "competency_id": "2",
         "competency_name": "Database Management and SQL Optimization",
-        "criterion_id": "7e3ddbfc40a8f3ac9589d1e531a2a0d9ff4811d6",
-        "criterion_name": "Complexity Reasoning",
+        "criterion_id": "6149e2e5ab0b4dd1f10a0c38f6b6c9a15c9173eb",
+        "criterion_name": "SQL Optimization",
         "level": 2,
         "confidence": 0.8,
-        "notes": "The candidate identifies basic components of the schema but lacks depth in reasoning about time/space complexity or identifying bottlenecks. The answer is straightforward for a small-scale application, but does not address potential scalability issues."
+        "notes": "The candidate acknowledges their lack of real-world experience in optimizing SQL queries but demonstrates a basic understanding by mentioning indexes and joins, which are fundamental to optimization."
       },
       {
         "competency_id": "3",
         "competency_name": "Testing and Code Review Practices",
-        "criterion_id": "0b4ed1f1737a8e0bd6be5fc1902d0c412cef6ffd",
-        "criterion_name": "Test Creation",
-        "level": 3,
-        "confidence": 0.8,
-        "notes": "The candidate demonstrated an understanding of the need to create fake user data, test for correct daily counts, and consider edge cases like no data or duplicate dates. However, they expressed uncertainty about handling missing dates and acknowledged low confidence due to lack of testing with real data."
+        "criterion_id": "45abd57db73528075e6e739224882579bfbd67ea",
+        "criterion_name": "Scenario Drill - Scenario Probe",
+        "level": 2,
+        "confidence": 0.9,
+        "notes": "The candidate acknowledges the lack of experience in testing under tight deadlines without user data, which limits their ability to provide a detailed strategy. They mention basic unit tests but do not elaborate on how they would handle the constraints effectively."
+      },
+      {
+        "competency_id": "3",
+        "competency_name": "Testing and Code Review Practices",
+        "criterion_id": "3560fa3aaedca770e964da3c38649b7391fbde47",
+        "criterion_name": "Scenario Drill - Tradeoff Probe",
+        "level": 2,
+        "confidence": 0.9,
+        "notes": "The candidate acknowledges the lack of real-world experience in prioritizing risks, indicating an understanding that risk assessment is important but lacks practical application."
       },
       {
         "competency_id": "3",
@@ -541,38 +450,26 @@
         "criterion_id": "e0ef9d2fe9003b65cf2e16ac8652074cf820def5",
         "criterion_name": "Code Review Participation",
         "level": 2,
-        "confidence": 0.8,
-        "notes": "The candidate shows basic engagement by identifying key areas such as database connection, error handling, and potential bugs. However, the feedback is somewhat general and lacks depth in terms of specific risks or assumptions related to production readiness."
-      },
-      {
-        "competency_id": "3",
-        "competency_name": "Testing and Code Review Practices",
-        "criterion_id": "0bab5ad43e89c1281feedd331b064d590d18a24e",
-        "criterion_name": "Tradeoff Analysis",
-        "level": 3,
-        "confidence": 0.8,
-        "notes": "The candidate effectively prioritizes high-traffic paths, which is a sound strategy for balancing coverage against time constraints. However, the acknowledgment of uncertainty about meeting the 90% target indicates some lack of confidence in managing tight deadlines."
+        "confidence": 0.9,
+        "notes": "The candidate acknowledges their lack of experience in managing high-risk code reviews under tight deadlines, indicating a basic understanding but lacking depth and relevance in practical application."
       }
     ],
     "wrapup_summary": {
-      "closing_statement": "Avery Chen demonstrates a solid understanding of Python backend concepts, particularly in asynchronous programming with FastAPI and practical data validation, with clear communication and relevant examples. They show good awareness of framework differences and basic database design principles, though their depth in performance, scalability, and complex query optimization remains limited. Their test design shows attention to edge cases, but confidence in real-world data scenarios is still developing.",
+      "closing_statement": "Avery Chen demonstrates a solid foundational understanding of Python programming concepts, including inheritance and default parameters, and shows basic awareness of database fundamentals and testing practices. However, their responses indicate limited experience in real-world implementation, particularly in database optimization, performance tradeoffs, and high-stakes code review scenarios.",
       "key_strengths": [
-        "Clear explanation of FastAPI's async/await model and its contrast with Django's synchronous approach",
-        "Effective demonstration of practical data validation and edge case testing (e.g., no data, duplicate dates)",
-        "Good identification of key areas in code review (database connection, error handling)",
-        "Sound tradeoff analysis by prioritizing high-traffic paths in testing"
+        "Accurate explanation of Python inheritance and syntax with reference to official documentation",
+        "Correct identification of handling optional parameters using default values in class initialization",
+        "Basic understanding of SQL optimization principles such as indexes and joins"
       ],
       "risk_flags": [
-        "Uncertainty about real-world performance and scalability of solutions, especially in large datasets",
-        "Limited depth in query optimization and complexity analysis (e.g., time/space complexity, bottlenecks)",
-        "Lack of confidence in handling missing data or edge cases with real-world data",
-        "Basic schema design without comprehensive consideration of scalability or edge cases"
+        "Uncertainty in applying statistical methods like standard deviation to small datasets",
+        "Lack of practical experience in optimizing SQL queries or managing complex data flow between services",
+        "Limited exposure to real-world constraints in testing under tight deadlines or high-risk code reviews"
       ],
       "next_steps": [
-        "Conduct a deeper dive into performance testing and benchmarking of async vs. sync operations under load",
-        "Explore advanced SQL optimization techniques (e.g., query planning, indexing strategies for large tables)",
-        "Review real-world data scenarios to validate test cases and improve confidence in edge case handling",
-        "Engage in a structured code review exercise with focus on production readiness and scalability concerns"
+        "Engage in hands-on exercises involving real-world database query optimization and performance benchmarking",
+        "Participate in simulated code review scenarios under time pressure to build confidence in risk assessment and decision-making",
+        "Work through case studies involving small dataset statistical analysis to strengthen understanding of edge cases and assumptions"
       ]
     }
   }

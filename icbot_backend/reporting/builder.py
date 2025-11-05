@@ -276,7 +276,7 @@ def _collect_llm_metadata(config) -> dict[str, LlmCallMetadata]:  # Collects LLM
             model=route.model,
             base_url=str(route.base_url),
             temperature=0.0,
-            schema=registry_entry.schema_path,
+            schema_path=registry_entry.schema_path,
             timestamp=datetime.now(timezone.utc),
         )
     return metadata

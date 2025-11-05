@@ -126,13 +126,13 @@ class Attachments(BaseModel):  # References persisted artifacts.
     rubric_snapshot_path: str = Field(..., min_length=1)
 
 
-class LlmCallMetadata(BaseModel):  # Captures metadata for LLM calls contributing to the report.
+class LlmCallMetadata(BaseModel):  # Captures metadata for LLM routed calls contributing to the report.
     registry_key: str = Field(..., min_length=1)
     route: str = Field(..., min_length=1)
     model: str = Field(..., min_length=1)
     base_url: str = Field(..., min_length=1)
     temperature: float = Field(ge=0.0)
-    schema: str = Field(..., min_length=1)
+    schema_path: str = Field(..., min_length=1)
     timestamp: datetime
 
 

@@ -38,7 +38,7 @@ interface LlmCallMetadata {
   model: string;
   base_url: string;
   temperature: number;
-  schema: string;
+  schema_path: string;
   timestamp: string;
 }
 
@@ -667,7 +667,7 @@ export function InterviewReport({ data }: InterviewReportProps) {
                         <p className="text-gray-900 font-medium">{formatKey(key)}</p>
                         <p>Route: {meta.route}</p>
                         <p>Model: {meta.model}</p>
-                        <p>Schema: {meta.schema}</p>
+                        <p>Schema: {meta.schema_path}</p>
                         <p>Timestamp: {formatDate(meta.timestamp)}</p>
                       </div>
                     ))}

@@ -1,10 +1,21 @@
 from __future__ import annotations
 
 from io import BytesIO
-
-from fpdf import FPDF  # Generates PDF exports.
-from fpdf.errors import FPDFException  # Handles rendering exceptions.
+import logging
 import re
+
+try:
+    from fpdf import FPDF  # type: ignore[attr-defined]  # Generates PDF exports.
+    from fpdf.errors import FPDFException  # Handles rendering exceptions.
+except Exception:  # pragma: no cover - triggered when fpdf2 is unavailable.
+    FPDF = None
+
+    class FPDFException(RuntimeError):
+        """Raised when PDF rendering fails due to missing fpdf2."""
+
+    logging.getLogger(__name__).warning(
+        "fpdf2 is not available; PDF export endpoints will raise RuntimeError until the dependency is installed."
+    )
 
 from ..schemas.report import InterviewReport  # Leverages structured report payload.
 
@@ -22,34 +33,41 @@ PAGE_GLOW = (249, 250, 251)
 CARD_FILL = (255, 255, 255)
 
 
-class _ReportPdf(FPDF):  # Minimal PDF helper to render interview report sections.
-    def header(self) -> None:  # Renders persistent header.
-        self.set_fill_color(*PAGE_GLOW)
-        self.set_draw_color(*BORDER_COLOR)
-        self.set_line_width(0.3)
-        self.rect(self.l_margin, 8, self.epw, 16, "F")
-        self.set_y(10)
-        self.set_text_color(*TEXT_PRIMARY)
-        self.set_font("Helvetica", "B", 16)
-        self.cell(0, 8, "Interview Report", new_x="LMARGIN", new_y="NEXT")
-        self.set_text_color(*TEXT_MUTED)
-        self.set_font("Helvetica", "", 10)
-        self.cell(0, 5, "AI Interview Chatbot", new_x="LMARGIN", new_y="NEXT")
-        self.ln(2)
+if FPDF is not None:
+    class _ReportPdf(FPDF):  # Minimal PDF helper to render interview report sections.
+        def header(self) -> None:  # Renders persistent header.
+            self.set_fill_color(*PAGE_GLOW)
+            self.set_draw_color(*BORDER_COLOR)
+            self.set_line_width(0.3)
+            self.rect(self.l_margin, 8, self.epw, 16, "F")
+            self.set_y(10)
+            self.set_text_color(*TEXT_PRIMARY)
+            self.set_font("Helvetica", "B", 16)
+            self.cell(0, 8, "Interview Report", new_x="LMARGIN", new_y="NEXT")
+            self.set_text_color(*TEXT_MUTED)
+            self.set_font("Helvetica", "", 10)
+            self.cell(0, 5, "AI Interview Chatbot", new_x="LMARGIN", new_y="NEXT")
+            self.ln(2)
 
-    def footer(self) -> None:  # Renders footer with pagination.
-        self.set_y(-15)
-        self.set_draw_color(*BORDER_COLOR)
-        self.set_line_width(0.2)
-        self.line(self.l_margin, self.get_y(), self.w - self.r_margin, self.get_y())
-        self.set_y(-12)
-        self.set_font("Helvetica", "", 8)
-        self.set_text_color(*TEXT_MUTED)
-        page_label = f"Page {self.page_no()}"
-        self.cell(0, 8, page_label, align="C")
+        def footer(self) -> None:  # Renders footer with pagination.
+            self.set_y(-15)
+            self.set_draw_color(*BORDER_COLOR)
+            self.set_line_width(0.2)
+            self.line(self.l_margin, self.get_y(), self.w - self.r_margin, self.get_y())
+            self.set_y(-12)
+            self.set_font("Helvetica", "", 8)
+            self.set_text_color(*TEXT_MUTED)
+            page_label = f"Page {self.page_no()}"
+            self.cell(0, 8, page_label, align="C")
+else:
+    class _ReportPdf:  # Provides a guard when fpdf2 is missing.
+        def __init__(self, *args, **kwargs) -> None:
+            raise FPDFException("fpdf2 is required to generate interview report PDFs.")
 
 
 def render_report_pdf(report: InterviewReport) -> bytes:  # Builds a PDF for the provided report payload.
+    if FPDF is None:
+        raise RuntimeError("PDF rendering is unavailable. Install fpdf2 to enable this feature.")
     pdf = _ReportPdf()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
