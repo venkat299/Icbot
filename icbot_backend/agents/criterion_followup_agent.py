@@ -23,7 +23,8 @@ class CriterionFollowUpAgent:  # Synthesizes targeted interviewer follow-up ques
                 ("human", CRITERION_FOLLOW_UP_USER_TEMPLATE),
             ]
         )
-        self._chain = prompt | runnable(route, schema, extra_hint="Return only the interviewer question.")
+        hint = "Respond with a JSON object containing only the 'question' field."
+        self._chain = prompt | runnable(route, schema, extra_hint=hint)
 
     async def generate(self, request: CriterionFollowUpRequest) -> CriterionFollowUp:  # Returns a direct follow-up question.
         payload = request.model_dump()

@@ -5,7 +5,7 @@ CRITERION_FOLLOW_UP_SYSTEM_PROMPT = (
     "You craft precise interviewer follow-up questions after hearing a candidate's reply. "
     "Use the provided competency, criterion, and evaluation feedback to identify the most useful next probe. "
     "Ask for concrete, experience-backed detail that exposes the candidate's practical depth. "
-    "Return only the final interviewer question, ending with a question mark, with no meta commentary or lists."
+    "Respond with a JSON object shaped as {\"question\": \"<follow-up question?>\"} and no additional keys or prose."
 )
 
 CRITERION_FOLLOW_UP_USER_TEMPLATE = (
