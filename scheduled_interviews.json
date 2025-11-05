@@ -236,7 +236,7 @@
       },
       {
         "role": "interviewer",
-        "text": "Thanks for the context so far. Can you provide an example of how inheritance is implemented in Python using class definitions, referencing the official documentation?"
+        "text": " Can you provide an example of how inheritance is implemented in Python using class definitions, referencing the official documentation?"
       },
       {
         "role": "candidate",
@@ -252,7 +252,7 @@
       },
       {
         "role": "interviewer",
-        "text": "Thanks for the context so far. Can you walk me through how you would calculate the standard deviation for a small dataset like [4, 8, 6, 5, 3], including any assumptions you make during the process?"
+        "text": " Can you walk me through how you would calculate the standard deviation for a small dataset like [4, 8, 6, 5, 3], including any assumptions you make during the process?"
       },
       {
         "role": "candidate",
@@ -268,7 +268,7 @@
       },
       {
         "role": "interviewer",
-        "text": "Thanks for the context so far. How would you modify the __init__ method to handle optional parameters in your Student class example?"
+        "text": " How would you modify the __init__ method to handle optional parameters in your Student class example?"
       },
       {
         "role": "candidate",
@@ -284,7 +284,7 @@
       },
       {
         "role": "interviewer",
-        "text": "Thanks for the context so far. Can you describe how the API endpoint would handle data flow between services, and what specific tests you'd implement to verify its functionality?"
+        "text": " Can you describe how the API endpoint would handle data flow between services, and what specific tests you'd implement to verify its functionality?"
       },
       {
         "role": "candidate",
@@ -300,7 +300,7 @@
       },
       {
         "role": "interviewer",
-        "text": "Thanks for the context so far. Can you describe a specific instance where you optimized a query to improve performance, detailing the changes made and their impact on time/space complexity?"
+        "text": " Can you describe a specific instance where you optimized a query to improve performance, detailing the changes made and their impact on time/space complexity?"
       },
       {
         "role": "candidate",
@@ -316,7 +316,7 @@
       },
       {
         "role": "interviewer",
-        "text": "Thanks for the context so far. Can you describe a specific instance where optimizing SQL queries improved performance, focusing on changes to indexes or joins?"
+        "text": " Can you describe a specific instance where optimizing SQL queries improved performance, focusing on changes to indexes or joins?"
       },
       {
         "role": "candidate",
@@ -332,7 +332,7 @@
       },
       {
         "role": "interviewer",
-        "text": "Thanks for the context so far. Can you describe a specific instance where you had to test under tight deadlines without user data, and how did you mitigate potential risks?"
+        "text": " Can you describe a specific instance where you had to test under tight deadlines without user data, and how did you mitigate potential risks?"
       },
       {
         "role": "candidate",
@@ -348,7 +348,7 @@
       },
       {
         "role": "interviewer",
-        "text": "Thanks for the context so far. Can you give an example of a specific risk you prioritized in this scenario and explain how you determined its importance over other risks?"
+        "text": " Can you give an example of a specific risk you prioritized in this scenario and explain how you determined its importance over other risks?"
       },
       {
         "role": "candidate",
@@ -364,7 +364,7 @@
       },
       {
         "role": "interviewer",
-        "text": "Thanks for the context so far. Can you describe a specific instance where you successfully managed a high-risk code review under tight deadlines? What strategies did you employ to ensure quality and mitigate risks?"
+        "text": " Can you describe a specific instance where you successfully managed a high-risk code review under tight deadlines? What strategies did you employ to ensure quality and mitigate risks?"
       },
       {
         "role": "candidate",

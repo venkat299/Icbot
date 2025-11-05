@@ -150,7 +150,7 @@ class CriterionGraph:  # Executes criterion-level turn taking using LangGraph.
             question = f"Could you share another concrete example for {directive.criterion_name}?"
         if not question.endswith("?"):
             question = f"{question.rstrip('.')}?"
-        follow_up = f"Thanks for the context so far. {question}"
+        follow_up = question
         state.pending_question = follow_up
         payload["follow_up"] = follow_up
         return payload
