@@ -214,6 +214,12 @@ export function Chatbot({
 
   const applySessionResponse = useCallback(
     (response: InterviewSessionResponse, mode: 'replace' | 'append') => {
+      console.info('applySessionResponse <- response', {
+        sessionId: response.sessionId,
+        stage: response.stage,
+        done: response.done,
+        messageCount: response.messages.length,
+      });
       setSessionId(response.done ? null : response.sessionId);
       const uiMessages = response.messages.map(mapSessionMessage);
       if (uiMessages.length) {
@@ -365,6 +371,7 @@ export function Chatbot({
       }
       setStatus('thinking');
       try {
+        console.info('candidate reply -> advance', { sessionId, textLength: text.length });
         const response = await advanceInterviewSession(sessionId, { event: 'candidate_reply', text });
         applySessionResponse(response, 'append');
       } catch (error) {
@@ -448,6 +455,7 @@ export function Chatbot({
       setStatus('thinking');
       if (sessionId) {
         try {
+          console.info('interviewer message -> advance', { sessionId, textLength: trimmedText.length });
           await advanceInterviewSession(sessionId, { event: 'interviewer_message', text: trimmedText });
         } catch (error) {
           console.error('Failed to record interviewer message', error);
@@ -529,6 +537,12 @@ export function Chatbot({
       return;
     }
     const prompt = [...messages].reverse().find(message => message.expectCandidateReply);
+    console.info('auto reply scheduler detected prompt', {
+      sessionId,
+      promptId: prompt?.id,
+      autoReplyInFlight: autoReplyInFlightRef.current,
+      lastPromptId: lastAutoReplyPromptRef.current,
+    });
     if (!prompt) {
       return;
     }

@@ -81,7 +81,7 @@ CANDIDATE_PROMPT_PACKAGE = {
                         "L5": "high_with_citations",
                     }
                 },
-                "apply": "Append a one-line confidence tag: 'Confidence: low/medium/high' with a brief reason for L3-L5.",
+                "apply": "Map certainty to the confidence float only; never append a 'Confidence:' tag to the spoken reply.",
             },
             {
                 "name": "minor_imperfections",

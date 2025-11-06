@@ -84,9 +84,15 @@
 ### app_config.json
 - Consolidates UI behavior under the `ui` block (TTS default off per request) and removes the redundant `features` object so there is a single source of truth for auto-reply toggles.
 - Registers `wrapup.closing` so the wrap-up agent can generate LLM-driven farewell messages.
+- Adds a dedicated `qwen3-4b-directive` route with elevated temperature and points `styles.directive` at it so question prompts get more variation without affecting other flows.
+- Maps `competency.transition` to the same directive route so the new transition agent can reuse the higher-temperature model.
 
 ### icbot_backend/config.py
 - Drops the unused `FeatureFlags` model and surfaces the UI defaults exclusively through `UiConfig`, keeping the runtime schema aligned with `app_config.json`.
+- Extends `LlmRoute` with an optional `temperature` field so individual routes can override the default zero-temperature behavior.
+
+### icbot_backend/llm_gateway.py
+- Pipes the new per-route temperature through to the `ChatOpenAI` client instead of hardcoding zero, enabling warmer question generation when configured.
 
 ### src/components/Chatbot.tsx
 - Replaces seeded warm-up transcript with an async fetch to `/api/warmup/opening`, rendering greeting/objective/question from the backend.
@@ -157,12 +163,27 @@
 - Uses the wrap-up LLM closing prompt to deliver the thank-you/feedback message instead of a hardcoded string.
 - Validates rubric/competency alignment during session start, logs precise mismatches, and logs every advance request to trace rejected events; blocks session launch when directives are missing.
 - Emits an explicit error log when an advance arrives for a missing session, including the event type and payload size, so repeated 404s can be diagnosed quickly.
+- Runs a new transition agent so the first directive question per competency now starts with an LLM-crafted focus shift before the prompt.
+- Only appends the competency transition notice when the warm-up agent returns an empty string, avoiding awkward auto-generated sign-offs.
 
 ### icbot_backend/agents/wrapup_agent.py
 - Adds a closing-message chain that reuses the configured LLM route and produces JSON-formatted farewells.
 
 ### icbot_backend/prompts/wrapup.py
 - Adds dedicated closing message prompts that instruct the LLM to thank the candidate and invite feedback.
+
+### icbot_backend/prompts/criterion_followup.py
+- Escapes the JSON braces in the follow-up system prompt so LangChain stops interpreting `"question"` as a templated variable.
+- Refines the follow-up instructions so the LLM references the candidate's prior answer and probes the most critical missing evidence.
+
+### icbot_backend/prompts/competency_transition.py
+- Adds prompt assets that produce concise competency handoff sentences for the interviewer.
+
+### icbot_backend/agents/competency_transition_agent.py
+- Introduces the transition agent that calls the new prompt to generate focus-shift messaging.
+
+### icbot_backend/schemas/transition.py
+- Declares the transition response schema consumed by the transition agent.
 
 ### src/components/ScheduledInterviews.tsx
 - Adds a View Report button beside Evaluation, triggering the backend report fetch for the selected interview.
@@ -178,6 +199,7 @@
 - Expands the report UI to surface resume highlights, attachments, stage flow, and LLM metadata.
 - Removes the Recommended Next Step card and tightens the evaluation metric grid.
 - Adds a full transcript card with scrollable turns and shared styling with transcript highlights.
+- Removes the key transcript excerpts card now that digest data is no longer provided.
 
 ### src/components/ReportPage.tsx
 - Adds loading/error handling with retry support around the report renderer and wires export controls.
@@ -193,16 +215,19 @@
 ### icbot_backend/schemas/report.py
 - Defines typed interview report models covering candidate, position, session, evaluation, and LLM metadata sections.
 - Removes the `recommended_next_step` field from overall evaluation so downstream surfaces can omit it cleanly.
+- Drops the unused transcript digest model now that excerpts are no longer surfaced.
 
 ### icbot_backend/reporting/builder.py
 - Builds the interview report from stored interview data, deriving summaries, evaluations, and attachments.
 - Stops deriving recommended next steps, leaving overall evaluation to communicate status, score, and confidence only.
+- Stops emitting transcript digest slices so reports rely on the full transcript instead.
 
 ### icbot_backend/reporting/pdf.py
 - Replaces the bespoke FPDF renderer with a WeasyPrint HTML pipeline and themed markup.
 - Drops the printed next-step line to match the streamlined evaluation payload.
 - Applies the glassmorphism-inspired palette with styled headings, accent cards, and success/warning fills so the PDF matches the UI theme.
 - Adds a modern pastel renderer and routes variant selection through a shared helper.
+- Removes the transcript excerpt card so the PDF links straight to the full transcript section.
 
 ### src/components/InteractiveQuestion.tsx
 - Switches to shared interactive question types and submits structured answers back to the chat flow.
@@ -213,6 +238,7 @@
 ### src/components/Chatbot.tsx
 - Ensures the preparation overlay always opens on session load so every user sees the staged warmup before entering chat.
 - Clears the session id when the backend marks a session `done` so the UI stops sending advance events after completion.
+- Sprinkles detailed console logging around session responses, auto-reply scheduling, and `/advance` requests to trace interview flow regressions.
 - Maps interactive question payloads from the session API, surfaces them in the timeline, and routes submissions through the existing reply handler.
 - Reordered reply handler hooks so interactive submissions call initialized callbacks without runtime reference errors.
 - Detects expired interview sessions, shows a friendly notice, and automatically reboots the flow so 404s from the backend recover without manual refresh.
@@ -220,6 +246,7 @@
 ### src/services/interviewSession.ts
 - Normalizes interactive question payloads from the backend into camel-cased data for the chat UI.
 - Attaches HTTP status metadata to thrown errors and provides clearer messaging for expired sessions.
+- Emits console diagnostics (session id, event, payload preview) before calling `/advance` to help chase 404 loops during interview flows.
 
 ### src/types/interactiveQuestion.ts
 - Centralizes interactive question and answer type definitions for reuse across UI modules.
@@ -237,3 +264,15 @@
 
 ### src/index.css
 - Adds explicit blue gradient utility overrides and color tokens so gradient classes resolve to the expected blue tones.
+
+### candidate_service/prompts/__init__.py
+- Stops appending textual confidence tags to candidate replies so confidence stays in the JSON metadata only.
+
+### scheduled_interviews.json
+- Softens the Python competency rationale and criterion language to avoid repeating “solid understanding” while keeping the service-focused emphasis.
+
+### styles_config.json
+- Updates the Concept Primer directive objective and actions to lead with definition-first prompts, offer varied openers, and request concrete examples for more natural interviewer questions.
+
+### icbot_backend/interview_sessions/manager.py
+- Only appends the competency transition notice when the warm-up agent returns an empty string, avoiding awkward auto-generated sign-offs.

@@ -269,29 +269,20 @@ def _append_competencies(builder: list[str], report: InterviewReport) -> None:  
 def _append_transcript(builder: list[str], report: InterviewReport) -> None:  # Adds transcript digest and full log.
     builder.append("<section class='section'>")
     builder.append("<h2>Transcript</h2>")
-    if not report.transcript_digest and not report.transcript_full:
+    if not report.transcript_full:
         builder.append("<p class='muted'>Transcript excerpts are not available.</p>")
         builder.append("</section>")
         return
-    if report.transcript_digest:
-        builder.append("<div class='card'>")
-        for excerpt in report.transcript_digest:
-            builder.append("<p>")
-            builder.append(f"<strong>{_escape(excerpt.timestamp)} · {_escape(excerpt.stage.title())}</strong><br />")
-            builder.append(f"<span class='subtle'>{_escape(excerpt.speaker)}:</span> {_escape(excerpt.excerpt)}")
-            builder.append("</p>")
+    builder.append("<div class='card section'>")
+    builder.append("<h3>Full Transcript</h3>")
+    builder.append("<div class='transcript-full'>")
+    for turn in report.transcript_full:
+        text = _escape(turn.text).replace("\n", "<br />")
+        builder.append("<div class='transcript-turn'>")
+        builder.append(f"<span class='transcript-role'>{_escape(turn.role.title())}</span>")
+        builder.append(f"<p class='transcript-body'>{text}</p>")
         builder.append("</div>")
-    if report.transcript_full:
-        builder.append("<div class='card section'>")
-        builder.append("<h3>Full Transcript</h3>")
-        builder.append("<div class='transcript-full'>")
-        for turn in report.transcript_full:
-            text = _escape(turn.text).replace("\n", "<br />")
-            builder.append("<div class='transcript-turn'>")
-            builder.append(f"<span class='transcript-role'>{_escape(turn.role.title())}</span>")
-            builder.append(f"<p class='transcript-body'>{text}</p>")
-            builder.append("</div>")
-        builder.append("</div></div>")
+    builder.append("</div></div>")
     builder.append("</section>")
 
 
@@ -441,14 +432,6 @@ def _render_modern_html(report: InterviewReport) -> str:  # Builds pastel, moder
 
     builder.append("<div class='panel' style='margin-top:28px;'>")
     builder.append("<p class='section-subtitle'>Conversation Canvas</p>")
-    if report.transcript_digest:
-        builder.append("<div class='transcript'>")
-        for excerpt in report.transcript_digest:
-            builder.append("<div class='transcript-entry'>")
-            builder.append(f"<div class='transcript-meta'><span>{_escape(excerpt.stage)}</span><span>{_escape(excerpt.timestamp)}</span></div>")
-            builder.append(f"<p class='transcript-text'><strong>{_escape(excerpt.speaker)}:</strong> {_escape(excerpt.excerpt)}</p>")
-            builder.append("</div>")
-        builder.append("</div>")
     if report.transcript_full:
         builder.append("<div class='full-transcript'>")
         for turn in report.transcript_full:
@@ -458,7 +441,7 @@ def _render_modern_html(report: InterviewReport) -> str:  # Builds pastel, moder
             builder.append(f"<p class='full-transcript-text'>{text}</p>")
             builder.append("</div>")
         builder.append("</div>")
-    if not report.transcript_digest and not report.transcript_full:
+    else:
         builder.append("<p class='muted'>Transcript excerpts are not available.</p>")
     builder.append("</div>")
 

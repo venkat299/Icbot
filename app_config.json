@@ -23,6 +23,18 @@
         "requires_api_key": false,
         "enforce_json": false
       },
+      "qwen3-4b-directive": {
+        "provider": "openai",
+        "model": "qwen/qwen3-4b-2507",
+        "base_url": "http://localhost:1234/v1",
+        "endpoint": "/v1/chat/completions",
+        "timeout_seconds": 60,
+        "max_retries": 2,
+        "api_key_env": "LLM_API_KEY",
+        "requires_api_key": false,
+        "enforce_json": false,
+        "temperature": 2
+      },
       "qwen3-human": {
         "provider": "openai",
         "model": "qwen3-deckard-large-almost-human-6b-iii-150-i1",
@@ -74,8 +86,12 @@
         "schema_path": "icbot_backend.schemas.wrapup_summary.WrapupClosing"
       },
       "styles.directive": {
-        "route": "qwen3-4b-local",
+        "route": "qwen3-4b-directive",
         "schema_path": "icbot_backend.styles.base.DirectiveSchema"
+      },
+      "competency.transition": {
+        "route": "qwen3-4b-directive",
+        "schema_path": "icbot_backend.schemas.transition.CompetencyTransition"
       }
     }
   },

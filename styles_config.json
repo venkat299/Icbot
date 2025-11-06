@@ -8,7 +8,7 @@
             "task_catalog": {
                 "criterion_probe": {
                     "task_id": "criterion_probe",
-                    "objective": "Ask a concise interviewer question that explores the candidate's understanding of this criterion through definition, rationale, and practical evidence.",
+                    "objective": "Ask a direct interviewer question that begins with a definition prompt, then asks how the candidate applies the concept in their service work.",
                     "rubric_focus": [],
                     "evidence_tags": [
                         "definition",
@@ -16,9 +16,9 @@
                         "impact"
                     ],
                     "interviewer_actions": [
-                        "Vary question openers (e.g., 'How do you approach…', 'Walk me through…', 'What does … look like when…').",
-                        "Invite a concrete example tied to measurable impact or safeguards.",
-                        "Probe for trade-offs or constraints if the first answer omits them."
+                        "Choose a concise definition opener such as \"Define…\", \"In simple terms, how would you describe…\", or \"Explain how…\" before requesting an example from recent work.",
+                        "Ask for one concrete service scenario that shows how the concept is applied.",
+                        "Follow up with a question about trade-offs or safeguards only if the definition lacks operational detail."
                     ],
                     "response_shape": "Spoken response linking definition, example, and measurable impact in under two minutes."
                 },

@@ -8,6 +8,7 @@ from ..agents.warmup_agent import WarmupAgent  # Warm-up orchestration.
 from ..agents.evaluation_agent import EvaluationAgent  # Criterion scoring.
 from ..agents.wrapup_agent import WrapupAgent  # Wrap-up summarization.
 from ..agents.criterion_followup_agent import CriterionFollowUpAgent  # Criterion follow-up synthesis.
+from ..agents.competency_transition_agent import CompetencyTransitionAgent  # Competency transition messaging.
 from ..flow.criterion_graph import CriterionGraph
 from ..flow.directives import generate_criterion_directives
 from ..schemas.criterion import CriterionState
@@ -62,6 +63,7 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
             max_attempts=tuning.max_attempts,
         )
         self._wrapup_agent = WrapupAgent()
+        self._competency_transition_agent = CompetencyTransitionAgent()
 
     async def start(self, interview: ScheduledInterviewModel) -> InterviewSessionResponse:  # Initializes a session and returns warm-up prompt.
         session_id = uuid4().hex
@@ -92,7 +94,27 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
             for directive in directives
         ]
         if not state.criteria:
-            logger.warning("No rubric criteria available | session_id=%s interview_id=%s", session_id, interview.id)
+            competency_names = [competency.name for competency in interview.competencies]
+            rubric_categories = [
+                category.category for category in interview.rubric.evaluation_criteria
+            ]
+            logger.error(
+                "No rubric criteria matched interview | session_id=%s interview_id=%s competencies=%s rubric_categories=%s",
+                session_id,
+                interview.id,
+                competency_names,
+                rubric_categories,
+            )
+            raise ValueError(
+                "Interview configuration is missing rubric criteria aligned with the scheduled competencies. "
+                "Please regenerate the interview rubric before starting the session."
+            )
+        logger.info(
+            "Interview session seeded | session_id=%s interview_id=%s criteria=%s",
+            session_id,
+            interview.id,
+            len(state.criteria),
+        )
         self._store.save(state)
         messages = self._build_warmup_messages(warmup)
         for msg in messages:
@@ -107,7 +129,23 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
         )
 
     async def advance(self, session_id: str, payload: InterviewSessionEvent) -> InterviewSessionResponse:  # Applies an event and returns emitted messages.
-        state = self._store.get(session_id)
+        try:
+            state = self._store.get(session_id)
+        except KeyError as exc:
+            logger.error(
+                "Session advance failed: session not found | session_id=%s event=%s text_len=%s",
+                session_id,
+                payload.event,
+                len(payload.text),
+            )
+            raise
+        logger.info(
+            "Session advance request | session_id=%s event=%s stage=%s text_len=%s",
+            session_id,
+            payload.event,
+            state.stage,
+            len(payload.text),
+        )
         if state.stage == "completed":
             return InterviewSessionResponse(
                 session_id=session_id,
@@ -225,29 +263,55 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
             logger.info("All criteria complete | session_id=%s", state.session_id)
             return await self._complete_session(state, include_message=False)
 
-        question = (criterion.pending_question or criterion.directive.question).strip()
+        directive = criterion.directive
+        question = (criterion.pending_question or directive.question).strip()
         if _already_prompted(state, question):
             question = _dedupe_prompt(question)
         criterion.pending_question = question
+        is_first_in_competency = (
+            state.criterion_index == 0
+            or (
+                state.criterion_index > 0
+                and state.criteria[state.criterion_index - 1].directive.competency_id != directive.competency_id
+            )
+        )
+        message_text = question
+        if is_first_in_competency:
+            try:
+                transition_text = await self._competency_transition_agent.compose(
+                    candidate_name=state.interview.candidate_name,
+                    competency_name=directive.competency_name,
+                    criterion_name=directive.criterion_name,
+                    objective=directive.directive.task_brief,
+                )
+            except Exception as exc:
+                logger.exception(
+                    "Failed to compose competency transition | session_id=%s competency_id=%s | error=%s",
+                    state.session_id,
+                    directive.competency_id,
+                    exc,
+                )
+                transition_text = f"Let's shift into {directive.competency_name}."
+            message_text = f"{transition_text}\n\n{question}"
         message = SessionMessage(
             role="interviewer",
-            text=question,
+            text=message_text,
             expect_candidate_reply=True,
-            objective=criterion.directive.directive.task_brief,
+            objective=directive.directive.task_brief,
             metadata={
-                "competency_id": criterion.directive.competency_id,
-                "criterion_id": criterion.directive.criterion_id,
-                "criterion": criterion.directive.criterion_name,
+                "competency_id": directive.competency_id,
+                "criterion_id": directive.criterion_id,
+                "criterion": directive.criterion_name,
             },
-            interactive_question=criterion.directive.interactive_question,
+            interactive_question=directive.interactive_question,
         )
         state.transcript.append(TranscriptEntry(role="interviewer", text=message.text))
         _log_waiting_for_reply(state.session_id, "competency", message)
         logger.info(
             "Criterion prompt | session_id=%s competency_id=%s criterion_id=%s question=%s",
             state.session_id,
-            criterion.directive.competency_id,
-            criterion.directive.criterion_id,
+            directive.competency_id,
+            directive.criterion_id,
             question,
         )
         messages = list(seed_messages or [])
@@ -519,7 +583,7 @@ class InterviewSessionManager:  # Coordinates full interview flow across stages.
                 text="That concludes our interview. Thank you for spending this time with me today. If you have any feedback or final thoughts you'd like to share, I'm all ears. Thanks again for the great conversation!",
                 expect_candidate_reply=False,
             )
-        if final_message:
+        if final_message and final_message.role in ("interviewer", "candidate"):
             state.transcript.append(TranscriptEntry(role=final_message.role, text=final_message.text))
         self._persist_interview_results(state, wrapup_summary)
         self._store.delete(state.session_id)
@@ -615,10 +679,11 @@ def _competency_focus(interview: ScheduledInterviewModel) -> list[str]:  # Extra
 
 
 def _competency_notice(text: str) -> str:  # Ensures warm-up closing cues competency handoff.
-    base = text.strip() or "Thanks for warming up with me."
+    base = text.strip()
     if "competency" in base.lower():
         return base
-    return f"{base}\n\nWe'll move into competency-focused questions now."
+    prefix = f"{base}\n\n" if base else ""
+    return f"{prefix}We'll move into competency-focused questions now."
 
 
 def _already_prompted(state: InterviewSessionState, text: str) -> bool:  # Checks if interviewer already asked the same text.

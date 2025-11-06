@@ -94,7 +94,7 @@ def _build_model(route: LlmRoute, env: EnvConfig, schema: Type[BaseModel] | None
         "base_url": str(route.base_url),
         "max_retries": route.max_retries,
         "request_timeout": route.timeout_seconds,
-        "temperature": 0,
+        "temperature": route.temperature if route.temperature is not None else 0,
     }
     if model_kwargs:
         kwargs["model_kwargs"] = model_kwargs

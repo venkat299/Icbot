@@ -22,7 +22,6 @@ from ..schemas.report import (  # Defines report payload models.
     ScoringScale,
     ScoringThresholds,
     SessionSummary,
-    TranscriptExcerpt,
     WarmupOutcome,
 )
 
@@ -37,7 +36,6 @@ def build_interview_report(interview: ScheduledInterviewModel) -> InterviewRepor
     competency_progress = _build_competency_progress(interview)
     evaluation = _build_overall_evaluation(interview)
     competency_results = _build_competency_results(interview)
-    transcript_digest = _build_transcript_digest(interview)
     recommendations = _derive_recommendations(interview.wrapup_summary)
     attachments = Attachments(
         full_transcript_path=f"/interviews/{interview.id}/transcripts/full.json",
@@ -76,7 +74,6 @@ def build_interview_report(interview: ScheduledInterviewModel) -> InterviewRepor
         ),
         overall_evaluation=evaluation,
         competency_results=competency_results,
-        transcript_digest=transcript_digest,
         transcript_full=interview.transcript,
         recommendations=recommendations,
         attachments=attachments,
@@ -222,21 +219,6 @@ def _build_competency_results(interview: ScheduledInterviewModel) -> list[Compet
             )
         )
     return results
-
-
-def _build_transcript_digest(interview: ScheduledInterviewModel) -> list[TranscriptExcerpt]:  # Extracts transcript digest entries.
-    excerpts: list[TranscriptExcerpt] = []
-    for index, entry in enumerate(interview.transcript[:6]):
-        stage = "competency" if entry.role == "interviewer" else "response"
-        excerpts.append(
-            TranscriptExcerpt(
-                stage=stage,
-                speaker=entry.role,
-                excerpt=entry.text[:240],
-                timestamp=f"00:{index:02d}:00",
-            )
-        )
-    return excerpts
 
 
 def _collect_transcript_highlights(interview: ScheduledInterviewModel) -> dict[int, list[str]]:  # Collects transcript snippets per competency index.

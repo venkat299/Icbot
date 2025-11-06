@@ -3,9 +3,10 @@ from __future__ import annotations
 
 CRITERION_FOLLOW_UP_SYSTEM_PROMPT = (
     "You craft precise interviewer follow-up questions after hearing a candidate's reply. "
-    "Use the provided competency, criterion, and evaluation feedback to identify the most useful next probe. "
-    "Ask for concrete, experience-backed detail that exposes the candidate's practical depth. "
-    "Respond with a JSON object shaped as {\"question\": \"<follow-up question?>\"} and no additional keys or prose."
+    "Study what the candidate just said, detect the most essential gap, assumption, or detail that needs proof, and build a question that targets it explicitly. "
+    "Quote or paraphrase one element from the candidate's answer before steering the question toward verification, scenario grounding, or trade-off analysis. "
+    "Keep the tone direct and professional—no pleasantries or meta commentary. "
+    "Respond with a JSON object shaped as {{\"question\": \"<follow-up question?>\"}} and no additional keys or prose."
 )
 
 CRITERION_FOLLOW_UP_USER_TEMPLATE = (
@@ -20,12 +21,11 @@ CRITERION_FOLLOW_UP_USER_TEMPLATE = (
     "Candidate focus cues: {candidate_focus}\n"
     "Evidence focus cues: {evidence_focus}\n"
     "Attempt count: {attempt_count}\n"
-    "Compose one direct follow-up question that digs deeper into the criterion. "
-    "Keep it under 40 words, target a concrete example or verification path, and avoid prefacing with gratitude or meta instructions."
+    "Compose one follow-up question that names the specific concept or claim from the candidate's answer that needs proof, then asks for the missing evidence, example, metric, or safeguard. "
+    "Keep it under 40 words and avoid meta commentary or gratitude."
 )
 
 __all__ = [
     "CRITERION_FOLLOW_UP_SYSTEM_PROMPT",
     "CRITERION_FOLLOW_UP_USER_TEMPLATE",
 ]
-

@@ -33,7 +33,6 @@ STYLE_DIRECTIVE_USER_TEMPLATE = (
     "Task rubric cues: {task_rubric}\n"
     "Expected response shape: {task_response_shape}\n"
     "Resume excerpt: {resume_excerpt}\n"
-    "Transcript digest:\n{transcript_digest}\n"
     "Interactive question toolkit:\n"
     "- Use at most one interactive_question object per directive.\n"
     "- `type` must be one of: code, multiple-select, yes-no.\n"

@@ -19,7 +19,7 @@ from .base import (
     StyleState,
     StyleTaskTemplate,
 )
-from .toolkit import clamp_excerpt, format_inline, render_lines, summarize_transcript, transcript_to_messages
+from .toolkit import clamp_excerpt, format_inline, render_lines, transcript_to_messages
 
 
 logger = logging.getLogger(__name__)
@@ -159,7 +159,6 @@ def _compose_prompt_vars(
     request: StyleDirectiveRequest,
 ) -> dict:  # Builds the prompt variables passed to the runnable.
     transcript_messages = transcript_to_messages(request.transcript)
-    digest = summarize_transcript(request.transcript)
     highlights = render_lines(request.highlights)
     guidance = render_lines(request.guidance)
     rubric_focus = format_inline(request.rubric_focus) or "Unspecified"
@@ -182,7 +181,6 @@ def _compose_prompt_vars(
         "task_rubric": render_lines(task.rubric_focus),
         "task_response_shape": task.response_shape,
         "resume_excerpt": clamp_excerpt(request.resume_excerpt),
-        "transcript_digest": digest,
         "transcript": transcript_messages,
     }
 

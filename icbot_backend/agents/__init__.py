@@ -5,6 +5,7 @@ from .warmup_agent import WarmupAgent  # Re-exports warm-up agent.
 from .evaluation_agent import EvaluationAgent  # Re-exports criterion evaluator.
 from .wrapup_agent import WrapupAgent  # Re-exports wrap-up agent.
 from .criterion_followup_agent import CriterionFollowUpAgent  # Re-exports follow-up agent.
+from .competency_transition_agent import CompetencyTransitionAgent  # Re-exports transition agent.
 
 __all__ = [
     "CompetencyAgent",
@@ -14,4 +15,5 @@ __all__ = [
     "EvaluationAgent",
     "WrapupAgent",
     "CriterionFollowUpAgent",
+    "CompetencyTransitionAgent",
 ]  # Defines agent exports.

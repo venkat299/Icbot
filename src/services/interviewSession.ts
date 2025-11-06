@@ -152,6 +152,12 @@ export async function startInterviewSession(interviewId: string): Promise<Interv
 } // Creates a new interview session and returns initial step.
 
 export async function advanceInterviewSession(sessionId: string, request: SessionEventRequest): Promise<InterviewSessionResponse> {
+  console.info('advanceInterviewSession -> request', {
+    sessionId,
+    event: request.event,
+    textLength: request.text.length,
+    textPreview: request.text.slice(0, 120),
+  });
   const response = await fetch(`${API_BASE_URL}/api/interview_sessions/${sessionId}/advance`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

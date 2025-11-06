@@ -132,12 +132,6 @@ export interface InterviewReportData {
       evidence: string[];
     }[];
   }[];
-  transcript_digest: {
-    stage: string;
-    speaker: string;
-    excerpt: string;
-    timestamp: string;
-  }[];
   transcript_full: TranscriptTurn[];
   recommendations: string[];
   attachments?: {
@@ -502,47 +496,6 @@ export function InterviewReport({ data }: InterviewReportProps) {
                     </div>
                   </div>
                 )}
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Transcript Highlights */}
-        <Card className="
-          backdrop-blur-xl bg-white/80 border border-gray-200/50
-          rounded-2xl
-          shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)]
-        ">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="w-5 h-5 text-gray-600" />
-              Key Transcript Excerpts
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {data.transcript_digest.map((excerpt, idx) => (
-              <div 
-                key={idx}
-                className="
-                  backdrop-blur-xl bg-gradient-to-br from-white to-gray-50/50
-                  border border-gray-200/50 rounded-xl p-4
-                  shadow-[0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)]
-                "
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200 capitalize">
-                    {excerpt.stage}
-                  </Badge>
-                  <Badge variant="outline" className={
-                    excerpt.speaker === 'candidate' 
-                      ? 'bg-blue-50 text-blue-700 border-blue-200'
-                      : 'bg-purple-50 text-purple-700 border-purple-200'
-                  }>
-                    {excerpt.speaker}
-                  </Badge>
-                  <span className="text-xs text-gray-500 ml-auto">{excerpt.timestamp}</span>
-                </div>
-                <p className="text-xs text-gray-700 italic">"{excerpt.excerpt}"</p>
               </div>
             ))}
           </CardContent>

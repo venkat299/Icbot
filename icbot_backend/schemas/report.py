@@ -116,13 +116,6 @@ class CompetencyResult(BaseModel):  # Summarizes results for a competency.
     criteria: list[CriterionEvidence] = Field(default_factory=list)
 
 
-class TranscriptExcerpt(BaseModel):  # Stores transcript highlights.
-    stage: str = Field(..., min_length=1)
-    speaker: str = Field(..., min_length=1)
-    excerpt: str = Field(..., min_length=1)
-    timestamp: str = Field(..., min_length=1)
-
-
 class Attachments(BaseModel):  # References persisted artifacts.
     full_transcript_path: str = Field(..., min_length=1)
     rubric_snapshot_path: str = Field(..., min_length=1)
@@ -148,7 +141,6 @@ class InterviewReport(BaseModel):  # Represents the complete interview report pa
     session_summary: SessionSummary
     overall_evaluation: OverallEvaluation
     competency_results: list[CompetencyResult] = Field(default_factory=list)
-    transcript_digest: list[TranscriptExcerpt] = Field(default_factory=list)
     transcript_full: list[ScheduledTranscriptEntry] = Field(default_factory=list)
     recommendations: list[str] = Field(default_factory=list)
     attachments: Attachments

@@ -41,6 +41,7 @@ class LlmRoute(BaseModel):  # Describes a concrete LLM route definition.
     requires_api_key: bool = True
     sequential: bool = False
     enforce_json: bool = True
+    temperature: float | None = Field(default=None, ge=0.0, le=2.0)
 
 
 class LlmRegistryEntry(BaseModel):  # Maps call sites to routes and schemas.
