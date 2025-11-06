@@ -12,8 +12,9 @@ from .styles import STYLE_DIRECTIVE_SYSTEM_PROMPT, STYLE_DIRECTIVE_USER_TEMPLATE
 from .evaluation import EVALUATION_SYSTEM_PROMPT, EVALUATION_USER_TEMPLATE  # Exposes evaluation prompt assets.
 from .wrapup import WRAPUP_SYSTEM_PROMPT, WRAPUP_USER_TEMPLATE  # Exposes wrap-up prompt assets.
 from .criterion_followup import (  # Exposes criterion follow-up prompt assets.
-    CRITERION_FOLLOW_UP_SYSTEM_PROMPT,
-    CRITERION_FOLLOW_UP_USER_TEMPLATE,
+    CRITERION_FOLLOW_UP_SYSTEM_PROMPTS,
+    CRITERION_FOLLOW_UP_USER_INSTRUCTIONS,
+    pick_criterion_follow_up_prompts,
 )
 
 __all__ = [
@@ -33,6 +34,7 @@ __all__ = [
     "EVALUATION_USER_TEMPLATE",
     "WRAPUP_SYSTEM_PROMPT",
     "WRAPUP_USER_TEMPLATE",
-    "CRITERION_FOLLOW_UP_SYSTEM_PROMPT",
-    "CRITERION_FOLLOW_UP_USER_TEMPLATE",
+    "CRITERION_FOLLOW_UP_SYSTEM_PROMPTS",
+    "CRITERION_FOLLOW_UP_USER_INSTRUCTIONS",
+    "pick_criterion_follow_up_prompts",
 ]  # Defines public prompt exports.
