@@ -6,6 +6,16 @@
 - Node.js and npm
 - Python 3
 
+## Configure local LLM URL
+
+The backend calls an OpenAI-compatible local LLM using routes defined in `app_config.json` under `llm.routes`.
+
+- Update the `"base_url"` for each route (for example `http://localhost:1234/v1`) to match your local LLM server.
+- Optionally adjust `"model"` to the model id exposed by your server.
+- Keep `"endpoint"` aligned with your server’s chat completions path (for OpenAI-style APIs this is usually `/v1/chat/completions`).
+
+Changes to `app_config.json` are picked up on backend restart; no code changes are required.
+
 ## Start the app (recommended)
 
 From the project root:
