@@ -61,8 +61,8 @@ launch_python_app() {
     exit 1
   fi
 
-  echo "Starting Python backend with ${python_cmd} main.py"
-  "${python_cmd}" main.py &
+  echo "Starting icbot backend with ${python_cmd} -m icbot_backend.main"
+  "${python_cmd}" -m icbot_backend.main &
   PYTHON_APP_PID=$!
 }
 
